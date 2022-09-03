@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/move_login"
+        android:title="로그인" />
+    <item
+        android:id="@+id/move_my_alarm"
+        android:title="알람 " />
+    <item
+        android:id="@+id/move_home_edit"
+        android:title="홈 편집" />
+    <item
+        android:id="@+id/move_open_source"
+        android:title="오픈소스 정보" />
+</menu>

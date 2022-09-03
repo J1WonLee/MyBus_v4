@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="sch_lists"
+            type="com.example.mybus.apisearch.itemList.BusSchList" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/list_item_layout"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/city_name"
+            android:background="@color/gray"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="서울 / 경기" />
+
+        <TextView
+            android:id="@+id/list_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="노선, 정류장 이름" />
+
+        <TextView
+            android:id="@+id/list_desc"
+            android:layout_marginTop="6dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="노선, 정류장 설명" />
+
+    </LinearLayout>
+</layout>
