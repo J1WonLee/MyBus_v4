@@ -24,7 +24,6 @@ public class Intro extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
         connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        
         if (isNetwrokAvailable()){
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
