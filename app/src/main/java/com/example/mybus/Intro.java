@@ -16,7 +16,6 @@ import com.example.mybus.menu.LoginActivity;
 import com.kakao.sdk.user.UserApiClient;
 
 
-
 public class Intro extends AppCompatActivity {
     private ConnectivityManager connManager;
     @Override
