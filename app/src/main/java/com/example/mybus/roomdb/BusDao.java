@@ -53,6 +53,6 @@ public interface BusDao {
     @Query("update BUS_SEARCH_LIST set search_order = (select MAX(search_order) from BUS_SEARCH_LIST) +1 WHERE busRouteId =:busId")
     Completable updateRecentBusSch(String busId);
 
-    @Query("update STOP_SEARCH_LIST set search_order = (select MAX(search_order) from BUS_SEARCH_LIST) +1 WHERE stId =:stId")
+    @Query("update STOP_SEARCH_LIST set search_order = (select MAX(search_order) from STOP_SEARCH_LIST) +1 WHERE stId =:stId")
     Completable updateRecentStopSch(String stId);
 }
