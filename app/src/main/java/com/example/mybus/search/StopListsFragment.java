@@ -1,5 +1,6 @@
 package com.example.mybus.search;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
@@ -23,6 +24,7 @@ import com.example.mybus.R;
 import com.example.mybus.apisearch.itemList.StopSchList;
 import com.example.mybus.apisearch.wrapper.StopSearchUidWrap;
 import com.example.mybus.databinding.FragmentStopListsBinding;
+import com.example.mybus.searchDetail.StopDetailActivity;
 import com.example.mybus.viewmodel.SearchViewModel;
 
 import java.util.List;
@@ -105,6 +107,8 @@ public class StopListsFragment extends Fragment {
             public void onItemClick(View v, int position) {
                 Log.d("kkang", "position : " + stopLists.get(position).getArsId());
                 searchViewModel.insertRecentStopSch(stopLists.get(position));
+                Intent intent = new Intent(getActivity(), StopDetailActivity.class);
+                startActivity(intent);
             }
         });
     }
