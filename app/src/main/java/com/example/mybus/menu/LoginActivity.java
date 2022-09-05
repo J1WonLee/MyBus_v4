@@ -4,11 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.example.mybus.Main;
-import com.example.mybus.R;
+import com.example.mybus.MainActivity;
 import com.example.mybus.databinding.ActivityLoginBinding;
 import com.example.mybus.firebaserepo.FbRepository;
 import com.example.mybus.roomrepo.BusRepository;
@@ -36,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         binding.nologin.setOnClickListener(view -> {
-            Intent intent = new Intent(this, Main.class);
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         });
 
@@ -80,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
                //  Log.d("kkang" , "id : " + user.getId() +" name : " + user.getKakaoAccount().getProfile().getNickname() +  " thunbnail : " + user.getKakaoAccount().getProfile().getThumbnailImageUrl());
                 repository.register(new User(user.getId().toString(), user.getKakaoAccount().getProfile().getNickname(), user.getKakaoAccount().getProfile().getThumbnailImageUrl()));
                 fbRepository.insert(new User(user.getId().toString(), user.getKakaoAccount().getProfile().getNickname(), user.getKakaoAccount().getProfile().getThumbnailImageUrl()));
-                Intent intent = new Intent(this, Main.class);
+                Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
             }
             return null;

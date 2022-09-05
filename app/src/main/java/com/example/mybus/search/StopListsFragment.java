@@ -20,12 +20,14 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.apisearch.itemList.StopSchList;
 import com.example.mybus.apisearch.wrapper.StopSearchUidWrap;
 import com.example.mybus.databinding.FragmentStopListsBinding;
 import com.example.mybus.searchDetail.StopDetailActivity;
 import com.example.mybus.viewmodel.SearchViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 import java.util.Timer;
@@ -40,6 +42,7 @@ public class StopListsFragment extends Fragment {
     private StopSearchListAdapter stopListAdapter;
     private TextView emptyText;
     private List<StopSchList> stopLists;
+    private FloatingActionButton floatingActionButton;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +51,7 @@ public class StopListsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_stop_lists, container, false);
+        setFabClick();
         searchViewModel = new ViewModelProvider(getActivity()).get(SearchViewModel.class);
         searchViewModel.getSharedData().observe(requireActivity(), new Observer<String>() {
             @Override
@@ -105,9 +109,12 @@ public class StopListsFragment extends Fragment {
         stopListAdapter.setOnItemClickListener(new StopSearchListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                Log.d("kkang", "position : " + stopLists.get(position).getArsId());
+//                Log.d("kkang", "position : " + stopLists.get(position).getArsId());
                 searchViewModel.insertRecentStopSch(stopLists.get(position));
                 Intent intent = new Intent(getActivity(), StopDetailActivity.class);
+                Bundle args = new Bundle();
+                args.putParcelable("stopList", stopLists.get(position));
+                intent.putExtras(args);
                 startActivity(intent);
             }
         });
@@ -162,5 +169,14 @@ public class StopListsFragment extends Fragment {
                 }
         );
 
+    }
+
+    public void setFabClick(){
+        floatingActionButton = binding.floatingActionButton;
+        floatingActionButton.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+
+            startActivity(intent);
+        });
     }
 }

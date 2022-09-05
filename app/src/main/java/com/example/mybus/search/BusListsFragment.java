@@ -1,5 +1,6 @@
 package com.example.mybus.search;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,10 +19,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.databinding.FragmentBusListsBinding;
 import com.example.mybus.viewmodel.SearchViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 import java.util.Timer;
@@ -35,6 +38,7 @@ public class BusListsFragment extends Fragment {
     private RecyclerView recyclerView;
     private TextView emptyText;
     private List<BusSchList> busLists;
+    private FloatingActionButton floatingActionButton;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +49,7 @@ public class BusListsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bus_lists, container, false);
         initRecycler();
+        setFabClick();
         searchViewModel = new ViewModelProvider(requireActivity()).get(SearchViewModel.class);
         // 버스 목록 옵저버로 탐지
         searchViewModel.busLists.observe(getViewLifecycleOwner(), new Observer<List<BusSchList>>() {
@@ -146,5 +151,13 @@ public class BusListsFragment extends Fragment {
     public void onPause() {
         searchViewModel.setSharedData(binding.searchBusInput.getText().toString());
         super.onPause();
+    }
+
+    public void setFabClick(){
+        floatingActionButton = binding.floatingActionButton;
+        floatingActionButton.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            startActivity(intent);
+        });
     }
 }

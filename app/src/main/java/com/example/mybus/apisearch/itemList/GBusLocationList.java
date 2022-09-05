@@ -3,7 +3,7 @@ package com.example.mybus.apisearch.itemList;
 import com.google.gson.annotations.SerializedName;
 
 // 광역 버스 잔여 좌석 및 현재 위치
-public class GbusBusLocationList {
+public class GBusLocationList {
     @SerializedName("endBus")
     private Integer endBus;
     @SerializedName("routeId")

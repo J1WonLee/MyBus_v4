@@ -1,5 +1,6 @@
 package com.example.mybus.search;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +9,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mybus.MainActivity;
 import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.databinding.SearchListItemBinding;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -143,4 +146,6 @@ public class BusSearchListAdapter extends RecyclerView.Adapter<BusSearchListAdap
             });
         }
     }
+
+
 }

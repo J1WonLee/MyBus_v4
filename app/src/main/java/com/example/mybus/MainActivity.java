@@ -35,7 +35,7 @@ import com.kakao.sdk.user.UserApiClient;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class Main extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
     private KakaoLogin kakaoLogin;
     private ActivityMainBinding binding;
     private Toolbar toolbar;
@@ -122,13 +122,13 @@ public class Main extends AppCompatActivity {
                     txt.setText(user.getUser_name());
 
                     ImageView img = header.findViewById(R.id.profile);
-                    Glide.with(Main.this).load(user.getUser_thunbnail()).placeholder(R.drawable.ic_baseline_dehaze_24).error(R.drawable.ic_baseline_dehaze_24).into(img);
+                    Glide.with(MainActivity.this).load(user.getUser_thunbnail()).placeholder(R.drawable.ic_baseline_dehaze_24).error(R.drawable.ic_baseline_dehaze_24).into(img);
                 }else{
                     TextView txt = header.findViewById(R.id.name);
                     txt.setText("비회원");
 
                     ImageView img = header.findViewById(R.id.profile);
-                    Glide.with(Main.this).load(R.drawable.ic_baseline_home_24).placeholder(R.drawable.ic_baseline_dehaze_24).error(R.drawable.ic_baseline_dehaze_24).into(img);
+                    Glide.with(MainActivity.this).load(R.drawable.ic_baseline_home_24).placeholder(R.drawable.ic_baseline_dehaze_24).error(R.drawable.ic_baseline_dehaze_24).into(img);
                 }
             }
         });

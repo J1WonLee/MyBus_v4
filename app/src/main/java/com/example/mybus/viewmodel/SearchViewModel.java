@@ -48,8 +48,6 @@ public class SearchViewModel extends ViewModel {
     private List<StopUidSchList> uidSchLists = new ArrayList<>();   // 정류소 중 진행방향 나와 있는 목록
     public MutableLiveData<List<StopSchList>> searchorderLists = new MutableLiveData<>();
     private HashMap<String, String> schDirMap = new HashMap<>();
-
-
     public static String serviceKey;
     private  static int total = 0;
     static {
