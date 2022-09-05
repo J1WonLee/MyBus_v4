@@ -3,7 +3,7 @@ package com.example.mybus.apisearch.itemList;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class StopUidSchList {
+public class StopUidSchList implements Comparable<StopUidSchList> {
     @SerializedName("stId")
     @Expose
     public String stId;
@@ -576,5 +576,10 @@ public class StopUidSchList {
 
     public void setCongestion(String congestion) {
         this.congestion = congestion;
+    }
+
+    @Override
+    public int compareTo(StopUidSchList stopUidSch) {
+        return routeType.compareTo(stopUidSch.getRouteType());
     }
 }

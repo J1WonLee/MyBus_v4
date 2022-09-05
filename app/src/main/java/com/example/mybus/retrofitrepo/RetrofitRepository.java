@@ -49,6 +49,11 @@ public class RetrofitRepository implements RetrofitService {
         return retrofitService.schStopUidv2(servieKey, ardId, json);
     }
 
+
+
+
+
+
     @Override
     public Observable<StopSearchUidWrap> schStopUid(String servieKey, String arsId, String json) {
         return retrofitService.schStopUid(servieKey, arsId, json);

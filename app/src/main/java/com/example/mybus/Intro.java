@@ -65,7 +65,7 @@ public class Intro extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }else{
-                Intent intent = new Intent(this, Main.class);
+                Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 finish();
             }

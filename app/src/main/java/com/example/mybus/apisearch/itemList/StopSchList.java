@@ -1,14 +1,18 @@
 package com.example.mybus.apisearch.itemList;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
 @Entity(tableName = "STOP_SEARCH_LIST")
-public class StopSchList implements Comparable<StopSchList>{
+public class StopSchList implements Comparable<StopSchList>, Parcelable {
 
     @NonNull
     @PrimaryKey
@@ -31,6 +35,28 @@ public class StopSchList implements Comparable<StopSchList>{
     @NonNull
     @ColumnInfo(name = "search_order", defaultValue = "2")
     public int order=0;
+
+    public StopSchList() {
+    }
+
+    protected StopSchList(Parcel in) {
+        stId = in.readString();
+        stNm = in.readString();
+        arsId = in.readString();
+        nextDir = in.readString();
+    }
+
+    public static final Creator<StopSchList> CREATOR = new Creator<StopSchList>() {
+        @Override
+        public StopSchList createFromParcel(Parcel in) {
+            return new StopSchList(in);
+        }
+
+        @Override
+        public StopSchList[] newArray(int size) {
+            return new StopSchList[size];
+        }
+    };
 
     public int getOrder() {
         return order;
@@ -114,4 +140,18 @@ public class StopSchList implements Comparable<StopSchList>{
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+    
+    // protected 생성자와 요소들 순서 맞춰줘야함
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(stId);
+        parcel.writeString(stNm);
+        parcel.writeString(arsId);
+        parcel.writeString(nextDir);
+
+    }
 }
