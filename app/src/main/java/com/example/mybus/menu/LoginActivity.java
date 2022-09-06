@@ -9,7 +9,7 @@ import android.widget.Toast;
 import com.example.mybus.MainActivity;
 import com.example.mybus.databinding.ActivityLoginBinding;
 import com.example.mybus.firebaserepo.FbRepository;
-import com.example.mybus.roomrepo.BusRepository;
+import com.example.mybus.roomrepo.BusRoomRepository;
 import com.example.mybus.vo.User;
 import com.kakao.sdk.user.UserApiClient;
 
@@ -22,7 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
     private boolean isLogin = false;        // 로그인 성공 여부
     @Inject
-    public BusRepository repository;
+    public BusRoomRepository repository;
 
     @Inject
     public FbRepository fbRepository;

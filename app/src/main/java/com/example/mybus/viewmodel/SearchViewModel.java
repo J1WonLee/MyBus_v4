@@ -9,14 +9,13 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.mybus.apisearch.itemList.StopSchList;
 import com.example.mybus.apisearch.itemList.StopUidSchList;
-import com.example.mybus.apisearch.msgBody.StopSearchUid;
 import com.example.mybus.apisearch.wrapper.RouteSearchWrap;
 import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.apisearch.wrapper.StopSearchUidWrap;
 import com.example.mybus.apisearch.wrapper.StopSearchWrap;
 import com.example.mybus.retrofitrepo.RetrofitGbusRepository;
 import com.example.mybus.retrofitrepo.RetrofitRepository;
-import com.example.mybus.roomrepo.BusRepository;
+import com.example.mybus.roomrepo.BusRoomRepository;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -24,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -60,7 +58,7 @@ public class SearchViewModel extends ViewModel {
 
     private RetrofitRepository retrofitRepository;
     private RetrofitGbusRepository retrofitGbusRepository;
-    private BusRepository busRepository;
+    private BusRoomRepository busRoomRepository;
     // 버스 번호 조회 검색 목록을 담을 livedata
     public MutableLiveData<List<BusSchList>> busLists = new MutableLiveData<List<BusSchList>>();
 
@@ -72,10 +70,10 @@ public class SearchViewModel extends ViewModel {
     private boolean isDisposed = false;
 
     @Inject
-    public SearchViewModel(RetrofitRepository retrofitRepository, RetrofitGbusRepository retrofitGbusRepository, BusRepository busRepository) {
+    public SearchViewModel(RetrofitRepository retrofitRepository, RetrofitGbusRepository retrofitGbusRepository, BusRoomRepository busRoomRepository) {
         this.retrofitRepository = retrofitRepository;
         this.retrofitGbusRepository = retrofitGbusRepository;
-        this.busRepository = busRepository;
+        this.busRoomRepository = busRoomRepository;
     }
 
 
@@ -197,19 +195,19 @@ public class SearchViewModel extends ViewModel {
 
     // 상세보기로 간 버스 최근검색어에 저장
     public void insertRecentBusSch(BusSchList busSchList){
-        busRepository.regitRecentBusSch(busSchList);
+        busRoomRepository.regitRecentBusSch(busSchList);
     }
 
     // 상세보기로 간 정류장 최근검색어에 저장
     public void insertRecentStopSch(StopSchList stopSchList){
-        busRepository.regitRecentStopSch(stopSchList);
+        busRoomRepository.regitRecentStopSch(stopSchList);
     }
     
     // 최근 버스 검색어 불러오기
 
     public void getRecentBusSchList(){
         compositeDisposable.add(
-                busRepository.getRecentBusSchList()
+                busRoomRepository.getRecentBusSchList()
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(new DisposableSingleObserver<List<BusSchList>>(){
@@ -233,7 +231,7 @@ public class SearchViewModel extends ViewModel {
 
     public void getRecentStopSchList(){
         compositeDisposable.add(
-                busRepository.getRecentStopSchList()
+                busRoomRepository.getRecentStopSchList()
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(new DisposableSingleObserver<List<StopSchList>>() {
