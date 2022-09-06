@@ -7,7 +7,7 @@ import com.tickaroo.tikxml.annotation.Xml;
 
 import java.util.ArrayList;
 import java.util.List;
-
+// http://apis.data.go.kr/6410000/busrouteservice/getBusRouteInfoItem
 @Xml(name="msgBody")
 public class GBusRouteSearchWrap {
     @Element(name="busRouteInfoItem")

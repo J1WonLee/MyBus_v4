@@ -33,6 +33,10 @@ public class GBusLocationList {
         this.stationId = stationId;
     }
 
+    public GBusLocationList() {
+        this(null, null, null, null, null, null, null, null);
+    }
+
     public Integer getEndBus() {
         return endBus;
     }

@@ -7,6 +7,7 @@ import com.tickaroo.tikxml.annotation.Xml;
 import java.util.ArrayList;
 import java.util.List;
 
+//
 @Xml(name="msgBody")
 public class GBusLocationWrap {
     @Element(name="busLocationList")

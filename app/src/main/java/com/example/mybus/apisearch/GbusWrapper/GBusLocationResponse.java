@@ -3,6 +3,7 @@ package com.example.mybus.apisearch.GbusWrapper;
 import com.tickaroo.tikxml.annotation.Element;
 import com.tickaroo.tikxml.annotation.Xml;
 
+// http://apis.data.go.kr/6410000/buslocationservice/getBusLocationList
 @Xml(name="response")
 public class GBusLocationResponse {
     @Element
