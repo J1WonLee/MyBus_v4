@@ -1,25 +1,37 @@
 package com.example.mybus.apisearch.itemList;
 
 import com.google.gson.annotations.SerializedName;
+import com.tickaroo.tikxml.annotation.PropertyElement;
 
 // 광역 버스 잔여 좌석 및 현재 위치
 public class GBusLocationList {
-    @SerializedName("endBus")
+    @PropertyElement(name = "endBus")
     private Integer endBus;
-    @SerializedName("routeId")
+    @PropertyElement(name = "routeId")
     private Integer routeId;
-    @SerializedName("plateNo")
+    @PropertyElement(name = "plateNo")
     private String plateNo;
-    @SerializedName("plateType")
+    @PropertyElement(name = "plateType")
     private Integer plateType;
-    @SerializedName("remainSeatCnt")
+    @PropertyElement(name = "remainSeatCnt")
     private Integer remainSeatCnt;
-    @SerializedName("stationSeq")
+    @PropertyElement(name = "stationSeq")
     private Integer stationSeq;
-    @SerializedName("lowPlate")
+    @PropertyElement(name = "lowPlate")
     private Integer lowPlate;
-    @SerializedName("stationId")
+    @PropertyElement(name = "stationId")
     private Integer stationId;
+
+    public GBusLocationList(Integer endBus, Integer routeId, String plateNo, Integer plateType, Integer remainSeatCnt, Integer stationSeq, Integer lowPlate, Integer stationId) {
+        this.endBus = endBus;
+        this.routeId = routeId;
+        this.plateNo = plateNo;
+        this.plateType = plateType;
+        this.remainSeatCnt = remainSeatCnt;
+        this.stationSeq = stationSeq;
+        this.lowPlate = lowPlate;
+        this.stationId = stationId;
+    }
 
     public Integer getEndBus() {
         return endBus;
