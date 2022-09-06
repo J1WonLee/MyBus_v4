@@ -5,6 +5,7 @@ import com.example.mybus.apisearch.GbusWrapper.GBusRouteSearchWrap;
 import com.example.mybus.apisearch.msgBody.GBusBusLocation;
 import com.example.mybus.apisearch.GbusWrapper.GBusStopSearchResponse;
 
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -25,6 +26,12 @@ public interface RetrofitGbusService {
 
     @GET("busrouteservice/getBusRouteInfoItem")
     Single<GBusRouteSearchResponse> schRouteId(
+            @Query("serviceKey") String serviceKey,
+            @Query("routeId") String routeId
+    );
+
+    @GET("busrouteservice/getBusRouteInfoItem")
+    Observable<GBusRouteSearchResponse> schRouteIdv2(
             @Query("serviceKey") String serviceKey,
             @Query("routeId") String routeId
     );

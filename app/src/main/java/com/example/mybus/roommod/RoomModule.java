@@ -7,7 +7,7 @@ import androidx.room.Room;
 
 import com.example.mybus.roomdb.BusDao;
 import com.example.mybus.roomdb.BusRoomDatabase;
-import com.example.mybus.roomrepo.BusRepository;
+import com.example.mybus.roomrepo.BusRoomRepository;
 
 import javax.inject.Singleton;
 
@@ -35,8 +35,8 @@ public class RoomModule {
 
     @Singleton
     @Provides
-    BusRepository provideBusRepository(BusDao busDao) {
-        return new BusRepository(busDao);
+    BusRoomRepository provideBusRepository(BusDao busDao) {
+        return new BusRoomRepository(busDao);
     }
 
 

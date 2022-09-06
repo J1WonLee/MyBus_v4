@@ -4,10 +4,14 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.apisearch.itemList.StopSchList;
+import com.example.mybus.vo.DataWithFavStopBus;
+import com.example.mybus.vo.LocalFav;
+import com.example.mybus.vo.LocalFavStopBus;
 import com.example.mybus.vo.User;
 
 import java.util.List;
@@ -55,4 +59,20 @@ public interface BusDao {
 
     @Query("update STOP_SEARCH_LIST set search_order = (select MAX(search_order) from STOP_SEARCH_LIST) +1 WHERE stId =:stId")
     Completable updateRecentStopSch(String stId);
+
+    @Insert
+    Completable regitFav(LocalFav localFav);
+
+    @Insert
+    Completable regitFavStopBus(LocalFavStopBus localFavStopBus);
+
+    @Query("SELECT * FROM LOCAL_FAV where lf_id =:lfId")
+    Single<List<LocalFav>> getLocalFavIsSaved(String lfId);
+
+    @Transaction
+    @Query("SELECT * FROM LOCAL_FAV")
+    Single<List<DataWithFavStopBus>> getFavStopBus();
+
+    @Query("SELECT * FROM LOCAL_FAV_STOP_BUS WHERE lfb_id =:lfbid order by lfb_busId")
+    Single<List<LocalFavStopBus>> getLocalFavStopBusLists(String lfbid);
 }
