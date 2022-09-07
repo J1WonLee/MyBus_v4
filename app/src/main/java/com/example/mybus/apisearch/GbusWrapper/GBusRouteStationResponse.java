@@ -19,6 +19,9 @@ public class GBusRouteStationResponse {
         this.gBusRouteStationWrap = gBusRouteStationWrap;
     }
 
+    public GBusRouteStationResponse() {
+    }
+
     public ComMsgHeader getComMsgHeader() {
         return comMsgHeader;
     }

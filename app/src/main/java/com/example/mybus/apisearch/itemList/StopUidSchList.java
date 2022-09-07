@@ -161,6 +161,15 @@ public class StopUidSchList implements Comparable<StopUidSchList> {
     @Expose
     public String congestion;
 
+    public boolean flag;
+
+    public boolean getFlag() {
+        return flag;
+    }
+
+    public void setFlag(boolean flag) {
+        this.flag = flag;
+    }
 
     public String getStId() {
         return stId;

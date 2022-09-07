@@ -2,6 +2,7 @@ package com.example.mybus.roomrepo;
 
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.mybus.apisearch.itemList.BusSchList;
@@ -161,9 +162,19 @@ public class BusRoomRepository {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         () -> Log.d("kkang", "busroomrepository regitFavStopBus success"),
-                        error -> Log.d("kkang", "busroomrepository regitFavStopBus error message : " + error.getMessage())
+                        error -> deleteFavStopBus(localFavStopBus.getLfb_id(), localFavStopBus.getLfb_busId())
                 );
 
+    }
+
+    public void deleteFavStopBus(String lfbId, String lfBusId){
+        Completable completable = busDao.deleteFavStopBus(lfbId, lfBusId);
+        completable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        () -> Log.d("kkang", "deleteFavStopBus success!"),
+                        error -> Log.d("kkang", "delete failed!" + error.getMessage())
+                );
     }
 
     public void getLocalFavIsSaved(String lfId){
@@ -191,8 +202,8 @@ public class BusRoomRepository {
         return busDao.getFavStopBus();
     }
 
-    public Single<List<LocalFavStopBus>> getFavStopBusLists(String lfbId){
-        return busDao.getLocalFavStopBusLists(lfbId);
+    public Single<List<LocalFavStopBus>> getFavStopBusLists(String lsbId){
+        return busDao.getLocalFavStopBusLists(lsbId);
     }
 
 }

@@ -3,9 +3,11 @@ package com.example.mybus.retrofitrepo;
 import android.util.Log;
 
 import com.example.mybus.apisearch.itemList.StopSchList;
+import com.example.mybus.apisearch.wrapper.BusPositionSearchWrap;
 import com.example.mybus.apisearch.wrapper.RouteSearchWrap;
 import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.apisearch.itemList.BusStopList;
+import com.example.mybus.apisearch.wrapper.RouteStationWrap;
 import com.example.mybus.apisearch.wrapper.StopSearchUidWrap;
 import com.example.mybus.apisearch.wrapper.StopSearchWrap;
 
@@ -49,6 +51,18 @@ public class RetrofitRepository implements RetrofitService {
         return retrofitService.schStopUidv2(servieKey, ardId, json);
     }
 
+    // 노선 id에 해당하는 정류장 리스트
+    @Override
+    public Single<RouteStationWrap> getRouteStationList(String serviceKey, String busRouteId, String json) {
+        return retrofitService.getRouteStationList(serviceKey, busRouteId, json);
+    }
+
+    // 해당 노선의 현 위치(서울)
+    @Override
+    public Single<BusPositionSearchWrap> getBusPositionList(String serviceKey, String busRouteId, String json) {
+        return retrofitService.getBusPositionList(serviceKey, busRouteId, "json");
+    }
+
 
     @Override
     public Observable<StopSearchUidWrap> schStopUid(String servieKey, String arsId, String json) {
@@ -75,5 +89,7 @@ public class RetrofitRepository implements RetrofitService {
         }
         return null;
     }
+
+
 
 }

@@ -1,5 +1,7 @@
 package com.example.mybus.roomdb;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -66,6 +68,9 @@ public interface BusDao {
     @Insert
     Completable regitFavStopBus(LocalFavStopBus localFavStopBus);
 
+    @Query("delete from LOCAL_FAV_STOP_BUS where lfb_id =:lfbId and lfb_busId =:lbBisOd")
+    Completable deleteFavStopBus(String lfbId, String lbBisOd);
+
     @Query("SELECT * FROM LOCAL_FAV where lf_id =:lfId")
     Single<List<LocalFav>> getLocalFavIsSaved(String lfId);
 
@@ -73,6 +78,8 @@ public interface BusDao {
     @Query("SELECT * FROM LOCAL_FAV")
     Single<List<DataWithFavStopBus>> getFavStopBus();
 
-    @Query("SELECT * FROM LOCAL_FAV_STOP_BUS WHERE lfb_id =:lfbid order by lfb_busId")
-    Single<List<LocalFavStopBus>> getLocalFavStopBusLists(String lfbid);
+    @Query("SELECT * FROM LOCAL_FAV_STOP_BUS where lfb_id =:lsbId  order by lfb_busId")
+    Single<List<LocalFavStopBus>> getLocalFavStopBusLists(String lsbId);
+
+
 }

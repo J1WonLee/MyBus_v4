@@ -16,7 +16,7 @@ import com.example.mybus.menu.LoginActivity;
 import com.kakao.sdk.user.UserApiClient;
 
 
-public class Intro extends AppCompatActivity {
+public class IntroActivity extends AppCompatActivity {
     private ConnectivityManager connManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

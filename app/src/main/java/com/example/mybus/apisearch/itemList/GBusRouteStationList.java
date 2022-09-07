@@ -4,7 +4,7 @@ import com.tickaroo.tikxml.annotation.PropertyElement;
 import com.tickaroo.tikxml.annotation.Xml;
 
 @Xml
-public class BusRouteStationList {
+public class GBusRouteStationList {
     @PropertyElement(name="centerYn")
     private String centerYn;
     @PropertyElement(name="districtCd")
@@ -20,7 +20,7 @@ public class BusRouteStationList {
     @PropertyElement(name="stationSeq")
     private String stationSeq;
 
-    public BusRouteStationList(String centerYn, String districtCd, String mobileNo, String regionName, String stationId, String stationName, String stationSeq) {
+    public GBusRouteStationList(String centerYn, String districtCd, String mobileNo, String regionName, String stationId, String stationName, String stationSeq) {
         this.centerYn = centerYn;
         this.districtCd = districtCd;
         this.mobileNo = mobileNo;
@@ -30,7 +30,7 @@ public class BusRouteStationList {
         this.stationSeq = stationSeq;
     }
 
-    public BusRouteStationList() {
+    public GBusRouteStationList() {
         this(null, null, null, null, null, null, null);
     }
 

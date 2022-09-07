@@ -23,6 +23,8 @@ import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.databinding.FragmentBusListsBinding;
+import com.example.mybus.searchDetail.BusRouteDetailActivity;
+import com.example.mybus.searchDetail.StopDetailActivity;
 import com.example.mybus.viewmodel.SearchViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -96,8 +98,12 @@ public class BusListsFragment extends Fragment {
         busSearchListAdapter.setOnItemClickListener(new BusSearchListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                Log.d("kkang", "position : " + busLists.get(position).getBusRouteNm());
                 searchViewModel.insertRecentBusSch(busLists.get(position));
+                Intent intent = new Intent(getActivity(), BusRouteDetailActivity.class);
+                Bundle args = new Bundle();
+                args.putParcelable("busList", busLists.get(position));
+                intent.putExtras(args);
+                startActivity(intent);
             }
         });
     }
@@ -106,6 +112,7 @@ public class BusListsFragment extends Fragment {
     public void setInitContents(){
         if (binding.searchBusInput.getText().toString().length() <= 0){
             searchViewModel.getRecentBusSchList();
+
         }
     }
 
