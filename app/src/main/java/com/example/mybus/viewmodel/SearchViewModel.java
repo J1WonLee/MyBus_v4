@@ -4,6 +4,7 @@ import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -16,6 +17,7 @@ import com.example.mybus.apisearch.wrapper.StopSearchWrap;
 import com.example.mybus.retrofitrepo.RetrofitGbusRepository;
 import com.example.mybus.retrofitrepo.RetrofitRepository;
 import com.example.mybus.roomrepo.BusRoomRepository;
+import com.example.mybus.vo.LocalFavStopBus;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;

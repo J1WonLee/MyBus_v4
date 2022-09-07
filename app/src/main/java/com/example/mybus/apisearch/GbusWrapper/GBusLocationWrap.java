@@ -17,6 +17,9 @@ public class GBusLocationWrap {
         this.busLocationList = busLocationList;
     }
 
+    public GBusLocationWrap() {
+    }
+
     public List<GBusLocationList> getBusLocationList() {
         return busLocationList;
     }

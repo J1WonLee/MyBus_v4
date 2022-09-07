@@ -1,5 +1,8 @@
 package com.example.mybus.apisearch.itemList;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -15,7 +18,37 @@ import java.time.OffsetDateTime;
 // 노선 번호 검색 시 받아올 리스트들.
 // 검색창에서 노출시키는건 이름, 노선유형
 @Entity(tableName = "BUS_SEARCH_LIST")
-public class BusSchList implements Serializable, Comparable<BusSchList> {
+public class BusSchList implements Parcelable, Comparable<BusSchList> {
+
+    protected BusSchList(Parcel in) {
+        busRouteId = in.readString();
+        busRouteNm = in.readString();
+        routeType = in.readString();
+        stStationNm = in.readString();
+        edStationNm = in.readString();
+        term = in.readString();
+        lastBusYn = in.readString();
+        lastBusTm = in.readString();
+        firstBusTm = in.readString();
+        lastLowTm = in.readString();
+        firstLowTm = in.readString();
+        corpNm = in.readString();
+    }
+
+    public BusSchList() {
+    }
+
+    public static final Creator<BusSchList> CREATOR = new Creator<BusSchList>() {
+        @Override
+        public BusSchList createFromParcel(Parcel in) {
+            return new BusSchList(in);
+        }
+
+        @Override
+        public BusSchList[] newArray(int size) {
+            return new BusSchList[size];
+        }
+    };
 
     // 정렬
     @Override
@@ -193,5 +226,26 @@ public class BusSchList implements Serializable, Comparable<BusSchList> {
         this.corpNm = corpNm;
     }
 
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(busRouteId);
+        parcel.writeString(busRouteNm);
+        parcel.writeString(routeType);
+        parcel.writeString(stStationNm);
+        parcel.writeString(edStationNm);
+        parcel.writeString(term);
+        parcel.writeString(lastBusYn);
+        parcel.writeString(lastBusTm);
+        parcel.writeString(firstBusTm);
+        parcel.writeString(lastLowTm);
+        parcel.writeString(firstLowTm);
+        parcel.writeString(corpNm);
+    }
 
 }

@@ -1,8 +1,10 @@
 package com.example.mybus.retrofitrepo;
 
+import com.example.mybus.apisearch.wrapper.BusPositionSearchWrap;
 import com.example.mybus.apisearch.wrapper.RouteSearchWrap;
 import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.apisearch.itemList.BusStopList;
+import com.example.mybus.apisearch.wrapper.RouteStationWrap;
 import com.example.mybus.apisearch.wrapper.StopSearchUidWrap;
 import com.example.mybus.apisearch.wrapper.StopSearchWrap;
 
@@ -67,6 +69,22 @@ public interface RetrofitService {
     Single<StopSearchUidWrap> schStopUidv2(
             @Query("ServiceKey") String servieKey,
             @Query("arsId") String ardId,
+            @Query("resultType") String json
+    );
+
+    // 해당 버스 번호에 해당하는 정류장 목록
+    @GET("busRouteInfo/getStaionByRoute")
+    Single<RouteStationWrap> getRouteStationList(
+            @Query("serviceKey") String serviceKey,
+            @Query("busRouteId") String busRouteId,
+            @Query("resultType") String json
+    );
+
+    // 서울버스 현재 위치
+    @GET("buspos/getBusPosByRtid")
+    Single<BusPositionSearchWrap> getBusPositionList(
+            @Query("serviceKey") String serviceKey,
+            @Query("busRouteId") String busRouteId,
             @Query("resultType") String json
     );
 }

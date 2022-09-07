@@ -18,6 +18,9 @@ public class GBusRouteStationMsgHeader {
         this.resultMessage = resultMessage;
     }
 
+    public GBusRouteStationMsgHeader() {
+    }
+
     public String getResultCode() {
         return resultCode;
     }

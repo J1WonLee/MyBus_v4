@@ -8,7 +8,7 @@ import java.util.ArrayList;
 // 현재 버스의 위치 조회
 public class BusPositionSearch {
     @SerializedName("itemList")
-    public ArrayList<BusPosList> itemList;
+    private ArrayList<BusPosList> itemList;
     public ArrayList<BusPosList> getItemList() {
         return itemList;
     }

@@ -57,8 +57,10 @@ public class SearchDetailViewModel extends ViewModel {
     // 즐겨찾기한 정류장들 목록
     public MutableLiveData<List<LocalFavStopBus>> localFabStopBusList = new MutableLiveData<>();
 
-    // 즐겨찾기한 정류장 목록 해쉬맵
-    public MutableLiveData<Map<String, String>> localFabStopMap = new MutableLiveData<>();
+    public List<LocalFavStopBus> localFavStopBusList = new ArrayList<>();
+
+    public MutableLiveData<Integer> listsState = new MutableLiveData<>();
+
     // 서비스키 인코딩
     private static String serviceKey = "";
     private BusRoomRepository busRoomRepository;
@@ -194,22 +196,16 @@ public class SearchDetailViewModel extends ViewModel {
         );
     }
 
-    public void getFavStopBusList(String lfbId){
+    public void getFavStopBusList(String lsbId){
         compositeDisposable.add(
-                busRoomRepository.getFavStopBusLists(lfbId)
+                busRoomRepository.getFavStopBusLists(lsbId)
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(new DisposableSingleObserver<List<LocalFavStopBus>>() {
                             @Override
                             public void onSuccess(@NonNull List<LocalFavStopBus> localFavStopBuses) {
                                 if (localFavStopBuses != null){
-//                                    Map<String, String> maps = new HashMap<>();
                                     localFabStopBusList.setValue(localFavStopBuses);
-//                                    for (LocalFavStopBus lsb : localFavStopBuses){
-//                                        maps.put(lsb.getLfb_id(), "1");
-//                                    }
-
-//                                    localFabStopMap.setValue(maps);
                                 }
                             }
 
@@ -220,7 +216,6 @@ public class SearchDetailViewModel extends ViewModel {
                         })
         );
     }
-
     @Override
     protected void onCleared() {
         super.onCleared();

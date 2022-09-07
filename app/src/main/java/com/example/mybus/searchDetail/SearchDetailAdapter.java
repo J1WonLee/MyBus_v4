@@ -31,6 +31,8 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
     // 즐겨찾기 목록
     private List<LocalFavStopBus> localFavStopBusList;
 
+    public boolean isClicked = false;
+
     // 클릭 리스너
     private OnItemClickListener mListener;
     @NonNull
@@ -49,7 +51,7 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                 switch (stopUidSch.getRouteType()){
                     case "1":
                         // 공항 버스
-                        setFavImage(holder, stopUidSch.getBusRouteId());
+                        setFavImage(holder, stopUidSch);
                         holder.binding.BusSort.setVisibility(View.VISIBLE);
                         holder.binding.BusSort.setText("공항 버스");
                         holder.binding.busRouteName.setText(stopUidSch.getRtNm());
@@ -70,7 +72,7 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                         break;
                     case "3":
                         // 간선
-                        setFavImage(holder, stopUidSch.getBusRouteId());
+                        setFavImage(holder, stopUidSch);
                         holder.binding.BusSort.setVisibility(View.VISIBLE);
                         holder.binding.BusSort.setText("간선 버스");
                         holder.binding.busRouteName.setText(stopUidSch.getRtNm());
@@ -81,7 +83,7 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                         break;
                     case "4":
                         // 지선
-                        setFavImage(holder, stopUidSch.getBusRouteId());
+                        setFavImage(holder, stopUidSch);
                         holder.binding.BusSort.setVisibility(View.VISIBLE);
                         holder.binding.BusSort.setText("지선 버스");
                         holder.binding.busRouteName.setText(stopUidSch.getRtNm());
@@ -92,7 +94,7 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                         break;
                     case "5":
                         // 순환
-                        setFavImage(holder, stopUidSch.getBusRouteId());
+                        setFavImage(holder, stopUidSch);
                         holder.binding.BusSort.setVisibility(View.VISIBLE);
                         holder.binding.BusSort.setText("순환 버스");
                         holder.binding.busRouteName.setText(stopUidSch.getRtNm());
@@ -103,7 +105,7 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                         break;
                     case "6":
                         // 광역
-                        setFavImage(holder, stopUidSch.getBusRouteId());
+                        setFavImage(holder, stopUidSch);
                         holder.binding.BusSort.setVisibility(View.VISIBLE);
                         holder.binding.BusSort.setText("광역 버스");
                         holder.binding.busRouteName.setText(stopUidSch.getRtNm());
@@ -114,7 +116,7 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                         break;
                     case "7":
                         // 인천
-                        setFavImage(holder, stopUidSch.getBusRouteId());
+                        setFavImage(holder, stopUidSch);
                         holder.binding.BusSort.setVisibility(View.VISIBLE);
                         holder.binding.BusSort.setText("인천 버스");
                         holder.binding.busRouteName.setText(stopUidSch.getRtNm());
@@ -125,7 +127,7 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                         break;
                     case "8":
                         // 경기
-                        setFavImage(holder, stopUidSch.getBusRouteId());
+                        setFavImage(holder, stopUidSch);
                         holder.binding.BusSort.setVisibility(View.VISIBLE);
                         holder.binding.BusSort.setText("경기 버스");
                         holder.binding.busRouteName.setText(stopUidSch.getRtNm());
@@ -156,11 +158,12 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                         break;
                 }
             }else{
-                setFavImage(holder, stopUidSch.getBusRouteId());
+                setFavImage(holder, stopUidSch);
                 setContents(holder, stopUidSch, sBusStopList.get(position-1));
             }
         }else if (gBusStopList != null){
             BusArrivalList busArrival = gBusStopList.get(position);
+            setGbusFavImage(holder, busArrival);
             holder.binding.busRouteName.setText(busArrival.getRouteNm());
             gBusSetRemainTime(holder, busArrival.getPredictTime1(), 1);
             gBusSetRemainTime(holder, busArrival.getPredictTime2(), 2);
@@ -236,51 +239,6 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
 
 
         }
-//        if (!(time.contains("분") || time.contains("초"))){
-//            // 시간 설정x
-//            if (flag == 1){
-//                holder.binding.firstRemainTime.setText(time);
-//            }else{
-//                holder.binding.secondRemainTime.setText(time);
-//            }
-//
-//        }else{
-//
-//            long conversionTime = 0;
-//            String remainStops = time.substring(time.indexOf('[')+1, time.indexOf(']'));
-//            String getMinute = time.substring(0, time.indexOf("분"));
-//            String getSeconds = time.substring(time.indexOf("분")+1, time.indexOf("초"));
-//
-//            conversionTime = Long.valueOf(getMinute) * 60 * 1000 + Long.valueOf(getSeconds) * 1000;
-//
-//            countDownTimer = new CountDownTimer(conversionTime, 3000) {
-//                // fab 통해서 주기적으로 새로고침 시켜주기
-//                @Override
-//                public void onTick(long milliUntilFinished) {
-//                    long getMin = milliUntilFinished - (milliUntilFinished / (60 * 60 * 1000));
-//                    String min = String.valueOf(getMin / (60 * 1000));      // 몫
-//                    String second = String.valueOf((getMin % (60 * 1000)) / 1000);
-//
-//                    if (flag == 1){
-//                        holder.binding.firstRemainTime.setText(min +" 분 " + second +" 초 " + remainStops);
-//                    }else{
-//                        holder.binding.secondRemainTime.setText(min +" 분 " + second +" 초 " + remainStops);
-//                    }
-//
-//                }
-//
-//                @Override
-//                public void onFinish() {
-//                    if (flag == 1){
-//                        holder.binding.firstRemainTime.setText("시간 초과");
-//                    }else{
-//                        holder.binding.firstRemainTime.setText("시간 초과");
-//                    }
-//
-//                }
-//            }.start();
-//        }
-
     }
 
     public void gBusSetRemainTime(SearchDetailViewHolder holder, String time, int flag){
@@ -407,26 +365,50 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
             return 0;
         }
     }
+//
+//    // 서울 정류장
+//    public void updateSBusStopList(List<StopUidSchList> lists, List<LocalFavStopBus> localFavStopBusList){
+//        this.sBusStopList = lists;
+//        this.localFavStopBusList = localFavStopBusList;
+//        notifyDataSetChanged();
+////        Log.d("kkang", "call updatesbusstoplist" + sBusStopList.size() +" ");
+//    }
 
-    // 서울 정류장
-    public void updateSBusStopList(List<StopUidSchList> lists, List<LocalFavStopBus> localFavStopBusList){
-        this.sBusStopList = lists;
+    // 즐겨찾기 목록
+    public void updateFavList(List<LocalFavStopBus> localFavStopBusList){
         this.localFavStopBusList = localFavStopBusList;
         notifyDataSetChanged();
+    }
+
+    // 서울 정류장
+    public void updateSBusStopList(List<StopUidSchList> lists){
+        this.sBusStopList = lists;
+        notifyDataSetChanged();
+    }
+
+
+    public void updateLists(List<StopUidSchList> lists, List<LocalFavStopBus> localFavStopBusList){
+        this.sBusStopList = lists;
+        this.localFavStopBusList = localFavStopBusList;
+//        this.localFavStopBusList = localFavStopBusList;
+        notifyDataSetChanged();
 //        Log.d("kkang", "call updatesbusstoplist" + sBusStopList.size() +" ");
+    }
+
+    public void updateGbusLists(List<BusArrivalList> lists, List<LocalFavStopBus> localFavStopBusList){
+        this.gBusStopList = lists;  this.localFavStopBusList = localFavStopBusList;
+        notifyDataSetChanged();
     }
 
     // 경기도 정류장
     public void updateGBusStopList(List<BusArrivalList> lists){
         this.gBusStopList = lists;
         notifyDataSetChanged();
-//        Collections.sort(gBusStopList);
     }
 
     // 클릭 리스너
     public interface OnItemClickListener{
         void onItemClick(View v , int position);
-
         void onFabBtnClick(View v, int position);
     }
 
@@ -457,11 +439,44 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
         }
     }
 
-    public void setFavImage(SearchDetailViewHolder holder, String keyword){
-        for (LocalFavStopBus lsb:localFavStopBusList){
-            if (keyword.equals(lsb.lfb_busId)){
-                Log.d("kkang", "on searchdetailadapter set fav image");
+    // 서울 정류장 버스 즐겨찾기 표시
+    public void setFavImage(SearchDetailViewHolder holder, StopUidSchList stopUidSch) {
+        if (localFavStopBusList != null && !isClicked) {
+            for (LocalFavStopBus lsb : localFavStopBusList) {
+                if (stopUidSch.getBusRouteId().equals(lsb.lfb_busId)) {
+                    Log.d("kkang", "on searchdetailadapter set fav image");
+                    stopUidSch.setFlag(true);
+                    holder.binding.addFav.setImageResource(R.drawable.ic_baseline_star_24);
+                }
+            }
+        }else if (localFavStopBusList != null && isClicked){
+            if (stopUidSch.getFlag()){
+                stopUidSch.setFlag(true);
                 holder.binding.addFav.setImageResource(R.drawable.ic_baseline_star_24);
+            }else{
+                stopUidSch.setFlag(false);
+                holder.binding.addFav.setImageResource(R.drawable.ic_baseline_star_border_24);
+            }
+        }
+    }
+
+    // 경기도 정류장 버스 즐겨찾기 표시
+    public void setGbusFavImage(SearchDetailViewHolder holder, BusArrivalList busArrivalList) {
+        if (localFavStopBusList != null && !isClicked) {
+            for (LocalFavStopBus lsb : localFavStopBusList) {
+                if (busArrivalList.getRouteId().equals(lsb.lfb_busId)) {
+                    Log.d("kkang", "on searchdetailadapter set fav image");
+                    busArrivalList.setChkFlag(true);
+                    holder.binding.addFav.setImageResource(R.drawable.ic_baseline_star_24);
+                }
+            }
+        }else if (localFavStopBusList != null && isClicked){
+            if (busArrivalList.isChkFlag()){
+                busArrivalList.setChkFlag(true);
+                holder.binding.addFav.setImageResource(R.drawable.ic_baseline_star_24);
+            }else{
+                busArrivalList.setChkFlag(false);
+                holder.binding.addFav.setImageResource(R.drawable.ic_baseline_star_border_24);
             }
         }
     }

@@ -19,6 +19,9 @@ public class GBusLocationResponse {
         this.gBusStopSearchUidWrap = gBusStopSearchUidWrap;
     }
 
+    public GBusLocationResponse() {
+    }
+
     public ComMsgHeader getComMsgHeader() {
         return comMsgHeader;
     }

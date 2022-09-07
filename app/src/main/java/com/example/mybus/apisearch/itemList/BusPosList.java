@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 
 // 버스 위치 조회 (id로 검색)
-public class BusPosList {
+public class BusPosList implements Comparable<BusPosList>{
     @SerializedName("sectOrd")
     public String sectOrd;
     @SerializedName("fullSectDist")
@@ -270,5 +270,10 @@ public class BusPosList {
 
     public void setCongetion(String congetion) {
         this.congetion = congetion;
+    }
+
+    @Override
+    public int compareTo(BusPosList busPosList) {
+        return sectOrd.compareTo(busPosList.getSectOrd());
     }
 }

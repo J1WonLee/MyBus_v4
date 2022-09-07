@@ -41,8 +41,9 @@ public class StopDetailActivity extends AppCompatActivity {
     private AppBarLayout appBarLayout;
     private Menu menu;
     private StopSchList stopSchList;
-    private List<StopUidSchList> stopUidSchList = new ArrayList<>();
+    private List<StopUidSchList> stopUidSchList;
     private List<BusArrivalList> gbusBusLocationList = new ArrayList<>();
+    private List<LocalFavStopBus> localFavStopBusList = new ArrayList<>();
     private SearchDetailViewModel searchDetailViewModel;
     private String keyword;
     private RecyclerView recyclerView;
@@ -57,39 +58,10 @@ public class StopDetailActivity extends AppCompatActivity {
 
         initRecycler();
         getDataFromIntent();
+        getFavStopBusList();
         initView();
         setFabListener();
 
-
-
-
-        // 뷰모델 생성
-
-//        searchDetailViewModel.getSeoulStopUidSchResult(keyword);
-//        searchDetailViewModel.stopUidSchList.observe(this, new Observer<List<StopUidSchList>>() {
-//            @Override
-//            public void onChanged(List<StopUidSchList> stopUidSchLists) {
-//                if (stopUidSchLists != null){
-//                    stopUidSchList = stopUidSchLists;
-////                    Log.d("kkang", "size is : " + stopUidSchList.size());
-//                }else{
-//                    Log.d("kkang", "StopDetailActivity stopUidSchList is null!");
-//                }
-//            }
-//        });
-
-
-//        searchDetailViewModel.getGBusStopUidSchResult(keyword);
-//        searchDetailViewModel.gbusUidSchList.observe(this, new Observer<List<BusArrivalList>>() {
-//            @Override
-//            public void onChanged(List<BusArrivalList> busArrivalLists) {
-//                if (busArrivalLists != null){
-//                    gbusBusLocationList = busArrivalLists;
-//                }else{
-//                    Log.d("kkang", "StopDetailActivity busArrivalLists is null!");
-//                }
-//            }
-//        });
     }
 
 
@@ -203,10 +175,8 @@ public class StopDetailActivity extends AppCompatActivity {
             public void onChanged(List<StopUidSchList> stopUidSchLists) {
                 if (stopUidSchLists != null){
                     stopUidSchList = stopUidSchLists;
-                    getFavStopBusList(stopSchList.getArsId());
-//                    Log.d("kkang", "size is : " + stopUidSchList.size());
-//                    searchDetailAdapter.updateSBusStopList(stopUidSchList);
-
+                    Log.d("kkang", "size is : " + stopUidSchList.size());
+                    searchDetailAdapter.updateSBusStopList(stopUidSchList);
                 }else{
                     Log.d("kkang", "StopDetailActivity stopUidSchList is null!");
                 }
@@ -214,14 +184,23 @@ public class StopDetailActivity extends AppCompatActivity {
         });
     }
 
-    public void getFavStopBusList(String lsbId){
-        searchDetailViewModel.getFavStopBusList(lsbId);
-        searchDetailViewModel.localFabStopBusList.observe(this, new Observer<List<LocalFavStopBus>>() {
-            @Override
-            public void onChanged(List<LocalFavStopBus> localFavStopBuses) {
-                searchDetailAdapter.updateSBusStopList(stopUidSchList, localFavStopBuses);
-            }
-        });
+    public void getFavStopBusList(){
+        if (stopSchList.getStId().startsWith("1")){
+            // 서울시 인 경우
+            searchDetailViewModel.getFavStopBusList(stopSchList.getArsId());
+        }else{
+            // 경기도인 경우
+            searchDetailViewModel.getFavStopBusList(stopSchList.getStId());
+        }
+       searchDetailViewModel.localFabStopBusList.observe(this, new Observer<List<LocalFavStopBus>>() {
+           @Override
+           public void onChanged(List<LocalFavStopBus> localFavStopBusList) {
+               if (localFavStopBusList != null){
+                   Log.d("kkang", "getFavStopBusList!");
+                   searchDetailAdapter.updateFavList(localFavStopBusList);
+               }
+           }
+       });
     }
 
     public void getGbusArivalList(String keyword){
@@ -258,14 +237,14 @@ public class StopDetailActivity extends AppCompatActivity {
             @Override
             public void onItemClick(View v, int position) {
                 // 버스 상세보기로 이동
-                searchDetailViewModel.getFavStopBus();
+
             }
 
             @Override
             public void onFabBtnClick(View v, int position) {
                 Long now = System.currentTimeMillis();
                 Date date = new Date(now);
-                if (stopUidSchList.get(position) != null){
+                if (stopUidSchList != null){
                     LocalFav localFav = new LocalFav(stopUidSchList.get(position).getArsId()
                             , stopSchList.getStNm(), stopSchList.getNextDir(), 1,date);
                     LocalFavStopBus localFavStopBus = new LocalFavStopBus(localFav.getLf_id()
@@ -274,8 +253,17 @@ public class StopDetailActivity extends AppCompatActivity {
                     , stopUidSchList.get(position).getRtNm());
 
                     searchDetailViewModel.regitFavList(localFav, localFavStopBus);
+                    searchDetailViewModel.getFavStopBusList(stopSchList.getArsId());
+                    if (stopUidSchList.get(position).getFlag()) {
+                        stopUidSchList.get(position).setFlag(false);
+                    } else {
+                        stopUidSchList.get(position).setFlag(true);
+                    }
+                    searchDetailAdapter.notifyItemChanged(position);
+                    searchDetailAdapter.isClicked = true;
+                    searchDetailAdapter.updateLists(stopUidSchList,localFavStopBusList );
 
-                }else if (gbusBusLocationList.get(position) != null){
+                }else if (gbusBusLocationList != null){
                     LocalFav localFav = new LocalFav(gbusBusLocationList.get(position).getStationId()
                             , stopSchList.getStNm(), stopSchList.getNextDir(), 1,date);
                     LocalFavStopBus localFavStopBus = new LocalFavStopBus(localFav.getLf_id()
@@ -284,6 +272,15 @@ public class StopDetailActivity extends AppCompatActivity {
                             , gbusBusLocationList.get(position).getRouteNm());
 
                     searchDetailViewModel.regitFavList(localFav, localFavStopBus);
+                    searchDetailViewModel.getFavStopBusList(stopSchList.getStId());
+                    if (gbusBusLocationList.get(position).isChkFlag()) {
+                        gbusBusLocationList.get(position).setChkFlag(false);
+                    } else {
+                        gbusBusLocationList.get(position).setChkFlag(true);
+                    }
+                    searchDetailAdapter.notifyItemChanged(position);
+                    searchDetailAdapter.isClicked = true;
+                    searchDetailAdapter.updateGbusLists(gbusBusLocationList,localFavStopBusList );
                 }
             }
         });

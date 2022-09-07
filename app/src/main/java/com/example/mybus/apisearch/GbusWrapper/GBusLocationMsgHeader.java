@@ -18,6 +18,9 @@ public class GBusLocationMsgHeader {
         this.resultMessage = resultMessage;
     }
 
+    public GBusLocationMsgHeader() {
+    }
+
     public String getResultCode() {
         return resultCode;
     }

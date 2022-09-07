@@ -31,6 +31,16 @@ public class BusArrivalList implements Comparable<BusArrivalList>{
     @PropertyElement(name ="stationId")
     private String stationId;
 
+    private boolean chkFlag = false;
+
+    public boolean isChkFlag() {
+        return chkFlag;
+    }
+
+    public void setChkFlag(boolean chkFlag) {
+        this.chkFlag = chkFlag;
+    }
+
     private String routeNm;
 
     public String getRouteNm() {

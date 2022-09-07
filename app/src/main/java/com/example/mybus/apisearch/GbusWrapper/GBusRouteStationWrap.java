@@ -1,6 +1,6 @@
 package com.example.mybus.apisearch.GbusWrapper;
 
-import com.example.mybus.apisearch.itemList.BusRouteStationList;
+import com.example.mybus.apisearch.itemList.GBusRouteStationList;
 import com.tickaroo.tikxml.annotation.Element;
 import com.tickaroo.tikxml.annotation.Xml;
 
@@ -10,17 +10,20 @@ import java.util.List;
 @Xml(name="msgBody")
 public class GBusRouteStationWrap {
     @Element(name="busRouteStationList")
-    List<BusRouteStationList> busRouteStationList = new ArrayList();
+    List<GBusRouteStationList> GBusRouteStationList = new ArrayList();
 
-    public GBusRouteStationWrap(List<BusRouteStationList> busRouteStationList) {
-        this.busRouteStationList = busRouteStationList;
+    public GBusRouteStationWrap(List<GBusRouteStationList> GBusRouteStationList) {
+        this.GBusRouteStationList = GBusRouteStationList;
     }
 
-    public List<BusRouteStationList> getBusRouteStationList() {
-        return busRouteStationList;
+    public GBusRouteStationWrap() {
     }
 
-    public void setBusRouteStationList(List<BusRouteStationList> busRouteStationList) {
-        this.busRouteStationList = busRouteStationList;
+    public List<GBusRouteStationList> getBusRouteStationList() {
+        return GBusRouteStationList;
+    }
+
+    public void setBusRouteStationList(List<GBusRouteStationList> GBusRouteStationList) {
+        this.GBusRouteStationList = GBusRouteStationList;
     }
 }
