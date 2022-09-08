@@ -134,7 +134,7 @@ public class BusRouteSearchDetailViewModel extends ViewModel {
                             Log.d("kkang", "BusRouteSearchDetailViewModel getGbusStopList onSuccess ");
                             if (gBusRouteStationResponse != null){
                                 gBusRouteStationWrap = gBusRouteStationResponse.getgBusRouteStationWrap();
-                                Collections.sort(gBusRouteStationWrap.getBusRouteStationList());
+//                                Collections.sort(gBusRouteStationWrap.getBusRouteStationList());
                                 gBusStationList.setValue( gBusRouteStationWrap.getBusRouteStationList());
                             }else{
                                 gBusStationList.setValue(null);

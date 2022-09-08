@@ -19,11 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BusRouteDetailAdapter extends RecyclerView.Adapter<BusRouteDetailAdapter.BusRouteDetailViewHolder>{
+    private List<GBusRouteStationList> gBusRouteStation;
+    private List<GBusLocationList> gBusLocationList;
     private SearchDetailAdapter.OnItemClickListener mListener;
     private List<StationByRouteList> stationByRouteList;
     private List<BusPosList> busPosList;
-    private List<GBusRouteStationList> gBusRouteStation;
-    private List<GBusLocationList> gBusLocationList;
+
 
 
     @NonNull
@@ -35,15 +36,16 @@ public class BusRouteDetailAdapter extends RecyclerView.Adapter<BusRouteDetailAd
 
     @Override
     public void onBindViewHolder(@NonNull BusRouteDetailViewHolder holder, int position) {
-        Log.d("kkang", "onBindViewHolder called!");
+        Log.d("BusRouteDetailAdapter", "onBindViewHolder called!");
         holder.setIsRecyclable(false);
         if (stationByRouteList != null){
-            Log.d("kkang", "busroutedetalAdapter onBindViewHolder if state");
+            Log.d("BusRouteDetailAdapter", "busroutedetalAdapter onBindViewHolder if state");
             setStationList(holder, position);
             setBusPosition(holder, position);
-        }else{
-            Log.d("kkang", "busroutedetalAdapter onBindViewHolder else state");
+        }else if (gBusLocationList != null){
+            Log.d("BusRouteDetailAdapter", "busroutedetalAdapter onBindViewHolder else state");
             setGbusStationList(holder, position);
+            setGbusLocation(holder, position);
         }
 
     }
@@ -52,9 +54,12 @@ public class BusRouteDetailAdapter extends RecyclerView.Adapter<BusRouteDetailAd
     public int getItemCount() {
         if (stationByRouteList!=null){
             return stationByRouteList.size();
+        }else if (gBusRouteStation != null){
+            return gBusRouteStation.size();
         }else{
             return -1;
         }
+
     }
 
     // 서울시 정류장 정보
@@ -73,12 +78,10 @@ public class BusRouteDetailAdapter extends RecyclerView.Adapter<BusRouteDetailAd
 
     // 경기도 정류장 정보
     public void updateGbusStationInfo(List<GBusRouteStationList> gBusRouteStationLists){
-        Log.d("kkang", "busroutedetailadapter updateGbusStationInfo called");
+//        Log.d("kkang", "busroutedetailadapter updateGbusStationInfo called");
         this.gBusRouteStation = gBusRouteStationLists;
-//        this.gBusRouteStation = new ArrayList<>();
-//        this.gBusRouteStation.addAll(gBusRouteStationLists);
-        Log.d("kkang" , " busroutedetailadapter size of updateGbusStationInfo gBusRouteStationList size  :  " + gBusRouteStation.size());
-        this.notifyDataSetChanged();
+        Log.d("BusRouteDetailAdapter" , " busroutedetailadapter size of updateGbusStationInfo gBusRouteStationList size  :  " + gBusRouteStation.size());
+        notifyDataSetChanged();
     }
 
     // 경기도 버스 위치 정보
@@ -112,6 +115,7 @@ public class BusRouteDetailAdapter extends RecyclerView.Adapter<BusRouteDetailAd
         }
     }
 
+    // 버스의 현재 위치를 보여준다.
     public void setBusPosition(BusRouteDetailViewHolder holder, int position){
         if (busPosList != null){
             for (BusPosList lists : busPosList){
@@ -125,7 +129,6 @@ public class BusRouteDetailAdapter extends RecyclerView.Adapter<BusRouteDetailAd
                             holder.binding.busThirdImage.setVisibility(View.VISIBLE);
                         }
 //                        holder.binding.busRouteFirstName.setText(lists.getNextStId());
-
                     }
                 }
             }
@@ -133,7 +136,6 @@ public class BusRouteDetailAdapter extends RecyclerView.Adapter<BusRouteDetailAd
     }
 
     public void setGbusStationList(BusRouteDetailViewHolder holder, int position){
-        Log.d("kkang" , "busroutedetailAdapter stestationlist  gBusRouteStationList ");
         if (position == 0){
             holder.binding.busRouteLineFirst.setVisibility(View.GONE);
         }else if (position == gBusLocationList.size()-1){
@@ -144,6 +146,19 @@ public class BusRouteDetailAdapter extends RecyclerView.Adapter<BusRouteDetailAd
         }
         holder.binding.busRouteStopName.setText(gBusRouteStation.get(position).getStationName());
         holder.binding.busRouteStopId.setText("첫차 시간 : " + gBusRouteStation.get(position).getStationId());
+
+
+    }
+
+    public void setGbusLocation(BusRouteDetailViewHolder holder, int position){
+        if (gBusLocationList != null){
+            for (GBusLocationList gbusLists : gBusLocationList){
+                if (gbusLists.getStationId().equals(gBusRouteStation.get(position).getStationId())){
+                    // 버스가 도착한 상태 일 경우
+                    holder.binding.busSecondImage.setVisibility(View.VISIBLE);
+                }
+            }
+        }
     }
 
     public interface OnItemClickListener{

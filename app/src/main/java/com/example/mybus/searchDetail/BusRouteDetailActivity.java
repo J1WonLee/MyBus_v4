@@ -43,6 +43,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
     private BusSchList busSchList;
     private RecyclerView recyclerView;
     private BusRouteDetailAdapter adapter;
+    private GBusRouteDetailAdapter gbusAdapter;
     private BusRouteSearchDetailViewModel busRouteSearchDetailViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,8 +108,8 @@ public class BusRouteDetailActivity extends AppCompatActivity {
         adapter = new BusRouteDetailAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
@@ -123,7 +124,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case R.id.action_add_fav:
-                Log.d("kkang", "stopdetail activity , actionaddfav clicked");
+                Log.d("BusRouteDetailActivity", "stopdetail activity , actionaddfav clicked");
                 Long now = System.currentTimeMillis();
                 Date date = new Date(now);
                 LocalFav localFav = new LocalFav(busSchList.getBusRouteId() , busSchList.getBusRouteNm(), busSchList.getCorpNm(), 0, date);
@@ -155,7 +156,6 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                 // 경기도 버스인 경우
                 setGbusRouteStation();
             }
-
         }else{
             // 정류장 상세보기에서 온 경우 routeId를 받아와야 함
         }
@@ -191,9 +191,8 @@ public class BusRouteDetailActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<GBusRouteStationList> gBusRouteStationLists) {
                 if (gBusRouteStationLists != null){
-                    Log.d("kkang", "BusRouteDetail setGbusRouteStation gBusRouteStationLists : " +gBusRouteStationLists.size() );
+                    Log.d("BusRouteDetailActivity", "BusRouteDetail setGbusRouteStation gBusRouteStationLists : " +gBusRouteStationLists.size() );
                     adapter.updateGbusStationInfo(gBusRouteStationLists);
-                    adapter.notifyDataSetChanged();
                 }
             }
         });
@@ -202,10 +201,9 @@ public class BusRouteDetailActivity extends AppCompatActivity {
         busRouteSearchDetailViewModel.gBusLocationList.observe(this, new Observer<List<GBusLocationList>>() {
             @Override
             public void onChanged(List<GBusLocationList> gBusLocationLists) {
-                Log.d("kkang", "BusRouteDetail setGbusRouteStation gBusLocationLists : " +gBusLocationLists.size() );
+                Log.d("BusRouteDetailActivity", "BusRouteDetail setGbusRouteStation gBusLocationLists : " +gBusLocationLists.size() );
                 if (gBusLocationLists != null){
                     adapter.updateGbusLocationList(gBusLocationLists);
-                    adapter.notifyDataSetChanged();
                 }
             }
         });
