@@ -11,12 +11,12 @@ public class GBusLocationResponse {
     @Element
     GBusRouteSearchMsgHeader header;
     @Element
-    GBusRouteSearchWrap gBusStopSearchUidWrap;
+    GBusLocationWrap gBusLocationWrap;
 
-    public GBusLocationResponse(ComMsgHeader comMsgHeader, GBusRouteSearchMsgHeader header, GBusRouteSearchWrap gBusStopSearchUidWrap) {
+    public GBusLocationResponse(ComMsgHeader comMsgHeader, GBusRouteSearchMsgHeader header, GBusLocationWrap gBusLocationWrap) {
         this.comMsgHeader = comMsgHeader;
         this.header = header;
-        this.gBusStopSearchUidWrap = gBusStopSearchUidWrap;
+        this.gBusLocationWrap = gBusLocationWrap;
     }
 
     public GBusLocationResponse() {
@@ -38,11 +38,11 @@ public class GBusLocationResponse {
         this.header = header;
     }
 
-    public GBusRouteSearchWrap getgBusStopSearchUidWrap() {
-        return gBusStopSearchUidWrap;
+    public GBusLocationWrap getgBusLocationWrap() {
+        return gBusLocationWrap;
     }
 
-    public void setgBusStopSearchUidWrap(GBusRouteSearchWrap gBusStopSearchUidWrap) {
-        this.gBusStopSearchUidWrap = gBusStopSearchUidWrap;
+    public void setgBusLocationWrap(GBusLocationWrap gBusLocationWrap) {
+        this.gBusLocationWrap = gBusLocationWrap;
     }
 }

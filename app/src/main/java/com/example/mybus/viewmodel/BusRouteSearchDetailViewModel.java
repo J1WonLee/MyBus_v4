@@ -5,13 +5,20 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.mybus.apisearch.GbusWrapper.GBusLocationResponse;
+import com.example.mybus.apisearch.GbusWrapper.GBusLocationWrap;
+import com.example.mybus.apisearch.GbusWrapper.GBusRouteStationResponse;
+import com.example.mybus.apisearch.GbusWrapper.GBusRouteStationWrap;
 import com.example.mybus.apisearch.itemList.BusPosList;
+import com.example.mybus.apisearch.itemList.GBusLocationList;
+import com.example.mybus.apisearch.itemList.GBusRouteStationList;
 import com.example.mybus.apisearch.itemList.StationByRouteList;
 import com.example.mybus.apisearch.wrapper.BusPositionSearchWrap;
 import com.example.mybus.apisearch.wrapper.RouteStationWrap;
 import com.example.mybus.retrofitrepo.RetrofitGbusRepository;
 import com.example.mybus.retrofitrepo.RetrofitRepository;
 import com.example.mybus.roomrepo.BusRoomRepository;
+import com.example.mybus.vo.LocalFav;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -36,10 +43,14 @@ public class BusRouteSearchDetailViewModel extends ViewModel {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private RouteStationWrap routeStationWrap = new RouteStationWrap();
     private BusPositionSearchWrap busPositionSearchWrap;
+    private GBusRouteStationWrap gBusRouteStationWrap;
+    private GBusLocationWrap gBusLocationWrap;
 
 
     public MutableLiveData<List<StationByRouteList>> stationRouteList = new MutableLiveData<>();
     public MutableLiveData<List<BusPosList>> busPosList = new MutableLiveData<>();
+    public MutableLiveData<List<GBusRouteStationList>> gBusStationList = new MutableLiveData<>();
+    public MutableLiveData<List<GBusLocationList>> gBusLocationList = new MutableLiveData<>();
 
     private static String serviceKey = "";
     static {
@@ -67,8 +78,13 @@ public class BusRouteSearchDetailViewModel extends ViewModel {
                             @Override
                             public void onSuccess(@NonNull RouteStationWrap routeStationWraps) {
                                 Log.d("kkang", "BusRouteSearchDetailViewModel getStationRouteList Success");
-                                routeStationWrap = routeStationWraps;
-                                stationRouteList.setValue(routeStationWrap.getRouteByStation().getStationByRouteLists());
+                                if (routeStationWraps != null){
+                                    routeStationWrap = routeStationWraps;
+                                    stationRouteList.setValue(routeStationWrap.getRouteByStation().getStationByRouteLists());
+                                }else{
+                                    stationRouteList.setValue(null);
+                                }
+
                             }
 
                             @Override
@@ -89,9 +105,14 @@ public class BusRouteSearchDetailViewModel extends ViewModel {
                             @Override
                             public void onSuccess(@NonNull BusPositionSearchWrap busPositionSearchWraps) {
                                 Log.d("kkang", "BusRouteSearchDetailViewModel getBusPositionList onSuccess ");
-                                busPositionSearchWrap = busPositionSearchWraps;
-                                Collections.sort(busPositionSearchWrap.getBusPositionSearch().getItemList());
-                                busPosList.setValue(busPositionSearchWrap.getBusPositionSearch().getItemList());
+                                if (busPositionSearchWraps.getBusPositionSearch().getItemList() != null ){
+                                    busPositionSearchWrap = busPositionSearchWraps;
+                                    Collections.sort(busPositionSearchWrap.getBusPositionSearch().getItemList());
+                                    busPosList.setValue(busPositionSearchWrap.getBusPositionSearch().getItemList());
+                                }else{
+                                    busPosList.setValue(null);
+                                }
+
                             }
 
                             @Override
@@ -102,7 +123,69 @@ public class BusRouteSearchDetailViewModel extends ViewModel {
         );
     }
 
+    // 경기도 버스의 정류장 목록을 불러온다.
+    public void getGbusStopList(String routeId){
+        compositeDisposable.add(
+            retrofitGbusRepository.getGbusRouteStationList(serviceKey, routeId)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeWith(new DisposableSingleObserver<GBusRouteStationResponse>() {
+                        @Override
+                        public void onSuccess(@NonNull GBusRouteStationResponse gBusRouteStationResponse) {
+                            Log.d("kkang", "BusRouteSearchDetailViewModel getGbusStopList onSuccess ");
+                            if (gBusRouteStationResponse != null){
+                                gBusRouteStationWrap = gBusRouteStationResponse.getgBusRouteStationWrap();
+//                                Collections.sort(gBusRouteStationWrap.getBusRouteStationList());
+                                gBusStationList.setValue( gBusRouteStationWrap.getBusRouteStationList());
+                            }else{
+                                gBusStationList.setValue(null);
+                            }
 
+                        }
 
+                        @Override
+                        public void onError(@NonNull Throwable e) {
+                            Log.d("kkang", "BusRouteSearchDetailViewModel getGbusStopList error : " + e.getMessage());
+                        }
+                    })
+        );
+    }
 
+    // 경기도 버스의 현 위치를 불러온다.
+    public void getGbusLocationList(String routeId){
+        compositeDisposable.add(
+            retrofitGbusRepository.getGbusPositionList(serviceKey, routeId)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeWith(new DisposableSingleObserver<GBusLocationResponse>() {
+                        @Override
+                        public void onSuccess(@NonNull GBusLocationResponse gBusLocationResponse) {
+                            Log.d("kkang", "BusRouteSearchDetailViewModel getGbusLocationList onSuccess ");
+                            if (gBusLocationResponse != null){
+                                gBusLocationWrap = gBusLocationResponse.getgBusLocationWrap();
+                                Collections.sort(gBusLocationWrap.getBusLocationList());
+                                gBusLocationList.setValue(gBusLocationWrap.getBusLocationList());
+                            }else{
+                                gBusLocationList.setValue(null);
+                            }
+                        }
+
+                        @Override
+                        public void onError(@NonNull Throwable e) {
+                            Log.d("kkang", "BusRouteSearchDetailViewModel getGbusLocationList error : " + e.getMessage());
+                        }
+                    })
+        );
+    }
+
+    // 즐겨찾기 기능
+    public void regitFav(LocalFav localFav){
+        busRoomRepository.regitFav(localFav);
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        compositeDisposable.dispose();
+    }
 }

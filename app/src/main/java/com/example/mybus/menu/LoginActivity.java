@@ -35,7 +35,9 @@ public class LoginActivity extends AppCompatActivity {
 
         binding.nologin.setOnClickListener(view -> {
             Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
         });
 
         binding.kakaoLogin.setOnClickListener(view -> {
@@ -80,6 +82,7 @@ public class LoginActivity extends AppCompatActivity {
                 fbRepository.insert(new User(user.getId().toString(), user.getKakaoAccount().getProfile().getNickname(), user.getKakaoAccount().getProfile().getThumbnailImageUrl()));
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
             return null;
         });
