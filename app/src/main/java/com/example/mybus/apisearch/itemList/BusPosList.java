@@ -1,6 +1,8 @@
 package com.example.mybus.apisearch.itemList;
 
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.room.PrimaryKey;
 
@@ -60,17 +62,6 @@ public class BusPosList implements Comparable<BusPosList>{
     @SerializedName("congetion")
     public String congetion;
 
-    @NonNull
-    @PrimaryKey(autoGenerate = true)
-    public int seq;
-
-    public int getSeq() {
-        return seq;
-    }
-
-    public void setSeq(int seq) {
-        this.seq = seq;
-    }
 
     public String getSectOrd() {
         return sectOrd;

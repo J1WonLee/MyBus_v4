@@ -17,6 +17,8 @@ import android.view.MenuItem;
 import com.example.mybus.R;
 import com.example.mybus.apisearch.itemList.BusPosList;
 import com.example.mybus.apisearch.itemList.BusSchList;
+import com.example.mybus.apisearch.itemList.GBusLocationList;
+import com.example.mybus.apisearch.itemList.GBusRouteStationList;
 import com.example.mybus.apisearch.itemList.StationByRouteList;
 import com.example.mybus.databinding.ActivityBusRouteDetailBinding;
 import com.example.mybus.viewmodel.BusRouteSearchDetailViewModel;
@@ -51,9 +53,10 @@ public class BusRouteDetailActivity extends AppCompatActivity {
         busRouteSearchDetailViewModel = new ViewModelProvider(this).get(BusRouteSearchDetailViewModel.class);
 
         initView();
+        initRecycler();
         getDataFromIntent();
         setText();
-        initRecycler();
+
     }
 
     public void setText(){
@@ -145,9 +148,16 @@ public class BusRouteDetailActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         busSchList = bundle.getParcelable("busList");
         if (busSchList != null){
-            setRouteStation();
+            if (busSchList.getBusRouteId().startsWith("1")){
+                // 서울시 버스 인 경우
+                setRouteStation();
+            }else if(busSchList.getBusRouteId().startsWith("2")){
+                // 경기도 버스인 경우
+                setGbusRouteStation();
+            }
+
         }else{
-            // 정류장 상세보기에서 온 경우
+            // 정류장 상세보기에서 온 경우 routeId를 받아와야 함
         }
     }
 
@@ -156,7 +166,10 @@ public class BusRouteDetailActivity extends AppCompatActivity {
         busRouteSearchDetailViewModel.stationRouteList.observe(this, new Observer<List<StationByRouteList>>() {
             @Override
             public void onChanged(List<StationByRouteList> stationByRouteLists) {
-                adapter.updateRouteStationInfo(stationByRouteLists);
+                if (stationByRouteLists != null){
+                    adapter.updateRouteStationInfo(stationByRouteLists);
+                }
+
             }
         });
 
@@ -164,7 +177,36 @@ public class BusRouteDetailActivity extends AppCompatActivity {
         busRouteSearchDetailViewModel.busPosList.observe(this, new Observer<List<BusPosList>>() {
             @Override
             public void onChanged(List<BusPosList> busPosLists) {
-                adapter.updateRoutePosInfo(busPosLists);
+                if (busPosLists != null){
+                    adapter.updateRoutePosInfo(busPosLists);
+                }
+
+            }
+        });
+    }
+
+    public void setGbusRouteStation(){
+        busRouteSearchDetailViewModel.getGbusStopList(busSchList.getBusRouteId());
+        busRouteSearchDetailViewModel.gBusStationList.observe(this, new Observer<List<GBusRouteStationList>>() {
+            @Override
+            public void onChanged(List<GBusRouteStationList> gBusRouteStationLists) {
+                if (gBusRouteStationLists != null){
+                    Log.d("kkang", "BusRouteDetail setGbusRouteStation gBusRouteStationLists : " +gBusRouteStationLists.size() );
+                    adapter.updateGbusStationInfo(gBusRouteStationLists);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+
+        busRouteSearchDetailViewModel.getGbusLocationList(busSchList.getBusRouteId());
+        busRouteSearchDetailViewModel.gBusLocationList.observe(this, new Observer<List<GBusLocationList>>() {
+            @Override
+            public void onChanged(List<GBusLocationList> gBusLocationLists) {
+                Log.d("kkang", "BusRouteDetail setGbusRouteStation gBusLocationLists : " +gBusLocationLists.size() );
+                if (gBusLocationLists != null){
+                    adapter.updateGbusLocationList(gBusLocationLists);
+                    adapter.notifyDataSetChanged();
+                }
             }
         });
     }

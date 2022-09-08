@@ -4,7 +4,7 @@ import com.tickaroo.tikxml.annotation.PropertyElement;
 import com.tickaroo.tikxml.annotation.Xml;
 
 @Xml
-public class GBusRouteStationList {
+public class GBusRouteStationList implements Comparable<GBusRouteStationList> {
     @PropertyElement(name="centerYn")
     private String centerYn;
     @PropertyElement(name="districtCd")
@@ -19,8 +19,10 @@ public class GBusRouteStationList {
     private String stationName;
     @PropertyElement(name="stationSeq")
     private String stationSeq;
+    @PropertyElement(name="turnYn")
+    private String turnYn;
 
-    public GBusRouteStationList(String centerYn, String districtCd, String mobileNo, String regionName, String stationId, String stationName, String stationSeq) {
+    public GBusRouteStationList(String centerYn, String districtCd, String mobileNo, String regionName, String stationId, String stationName, String stationSeq, String turnYn) {
         this.centerYn = centerYn;
         this.districtCd = districtCd;
         this.mobileNo = mobileNo;
@@ -28,10 +30,16 @@ public class GBusRouteStationList {
         this.stationId = stationId;
         this.stationName = stationName;
         this.stationSeq = stationSeq;
+        this.turnYn = turnYn;
+    }
+
+    @Override
+    public int compareTo(GBusRouteStationList gBusRouteStationList) {
+        return stationSeq.compareTo(gBusRouteStationList.getStationSeq());
     }
 
     public GBusRouteStationList() {
-        this(null, null, null, null, null, null, null);
+        this(null, null, null, null, null, null, null, null);
     }
 
     public String getCenterYn() {
@@ -89,4 +97,14 @@ public class GBusRouteStationList {
     public void setStationSeq(String stationSeq) {
         this.stationSeq = stationSeq;
     }
+
+    public String getTurnYn() {
+        return turnYn;
+    }
+
+    public void setTurnYn(String turnYn) {
+        this.turnYn = turnYn;
+    }
+
+
 }

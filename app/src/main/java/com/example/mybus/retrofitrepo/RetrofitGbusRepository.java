@@ -1,7 +1,9 @@
 package com.example.mybus.retrofitrepo;
 
+import com.example.mybus.apisearch.GbusWrapper.GBusLocationResponse;
 import com.example.mybus.apisearch.GbusWrapper.GBusRouteSearchResponse;
 import com.example.mybus.apisearch.GbusWrapper.GBusRouteSearchWrap;
+import com.example.mybus.apisearch.GbusWrapper.GBusRouteStationResponse;
 import com.example.mybus.apisearch.msgBody.GBusBusLocation;
 import com.example.mybus.apisearch.GbusWrapper.GBusStopSearchResponse;
 
@@ -36,5 +38,17 @@ public class RetrofitGbusRepository implements RetrofitGbusService {
     @Override
     public Observable<GBusRouteSearchResponse> schRouteIdv2(String serviceKey, String routeId) {
         return retrofitGbusService.schRouteIdv2(serviceKey, routeId);
+    }
+
+    // 경기도 버스에 해당하는 정류장 목록
+    @Override
+    public Single<GBusRouteStationResponse> getGbusRouteStationList(String serviceKey, String routeId) {
+        return retrofitGbusService.getGbusRouteStationList(serviceKey,routeId);
+    }
+
+    // 경기도 버스 현재 위치
+    @Override
+    public Single<GBusLocationResponse> getGbusPositionList(String serviceKey, String routeId) {
+        return retrofitGbusService.getGbusPositionList(serviceKey, routeId);
     }
 }
