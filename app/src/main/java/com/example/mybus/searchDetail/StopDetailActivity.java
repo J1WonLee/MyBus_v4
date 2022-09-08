@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -15,11 +16,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.apisearch.itemList.BusArrivalList;
 import com.example.mybus.apisearch.itemList.StopSchList;
 import com.example.mybus.apisearch.itemList.StopUidSchList;
 import com.example.mybus.databinding.ActivityStopDetailBinding;
+import com.example.mybus.search.SearchActivity;
 import com.example.mybus.viewmodel.SearchDetailViewModel;
 import com.example.mybus.vo.LocalFav;
 import com.example.mybus.vo.LocalFavStopBus;
@@ -101,6 +104,16 @@ public class StopDetailActivity extends AppCompatActivity {
                 }
             }
         });
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(StopDetailActivity.this, SearchActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
     }
 
     // 정류장 정보를 받아온다.
@@ -144,6 +157,12 @@ public class StopDetailActivity extends AppCompatActivity {
                     searchDetailViewModel.regitFav(localFav);
                 }
                 break;
+
+            case R.id.action_home:
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                break;
+
             default:
                 break;
         }

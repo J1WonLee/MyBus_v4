@@ -18,6 +18,7 @@ import com.example.mybus.apisearch.wrapper.RouteStationWrap;
 import com.example.mybus.retrofitrepo.RetrofitGbusRepository;
 import com.example.mybus.retrofitrepo.RetrofitRepository;
 import com.example.mybus.roomrepo.BusRoomRepository;
+import com.example.mybus.vo.LocalFav;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -175,6 +176,11 @@ public class BusRouteSearchDetailViewModel extends ViewModel {
                         }
                     })
         );
+    }
+
+    // 즐겨찾기 기능
+    public void regitFav(LocalFav localFav){
+        busRoomRepository.regitFav(localFav);
     }
 
     @Override

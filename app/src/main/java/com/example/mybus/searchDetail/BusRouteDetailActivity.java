@@ -8,12 +8,15 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.apisearch.itemList.BusPosList;
 import com.example.mybus.apisearch.itemList.BusSchList;
@@ -21,6 +24,7 @@ import com.example.mybus.apisearch.itemList.GBusLocationList;
 import com.example.mybus.apisearch.itemList.GBusRouteStationList;
 import com.example.mybus.apisearch.itemList.StationByRouteList;
 import com.example.mybus.databinding.ActivityBusRouteDetailBinding;
+import com.example.mybus.search.SearchActivity;
 import com.example.mybus.viewmodel.BusRouteSearchDetailViewModel;
 import com.example.mybus.vo.LocalFav;
 import com.google.android.material.appbar.AppBarLayout;
@@ -80,8 +84,10 @@ public class BusRouteDetailActivity extends AppCompatActivity {
         collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.CollapsingToolbar_TitleText);
 
         collapsingToolbarLayout.setTitle("");
-
+        collapsingToolbarLayout.setBackgroundColor(getResources().getColor(R.color.green));
         appBarLayout = binding.stopAppbar;
+
+
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = false;
             int scrollRange = -1;
@@ -91,7 +97,8 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbarLayout.setTitle("정류장 이름");
+                    collapsingToolbarLayout.setTitle(busSchList.getBusRouteNm());
+                    collapsingToolbarLayout.setBackgroundColor(getResources().getColor(R.color.green));
                     showOption(R.id.action_add_fav);
                     isShow = true;
                 } else if (isShow) {
@@ -99,6 +106,15 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                     hideOption(R.id.action_add_fav);
                     isShow = false;
                 }
+            }
+        });
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(BusRouteDetailActivity.this, SearchActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
@@ -128,6 +144,13 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                 Long now = System.currentTimeMillis();
                 Date date = new Date(now);
                 LocalFav localFav = new LocalFav(busSchList.getBusRouteId() , busSchList.getBusRouteNm(), busSchList.getCorpNm(), 0, date);
+                // 뷰 모델에서 즐겨찾기 작업 추가
+                busRouteSearchDetailViewModel.regitFav(localFav);
+                break;
+
+            case R.id.action_home:
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;
@@ -144,6 +167,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
         MenuItem item = menu.findItem(id);
         item.setVisible(false);
     }
+
 
     public void getDataFromIntent(){
         Bundle bundle = getIntent().getExtras();
