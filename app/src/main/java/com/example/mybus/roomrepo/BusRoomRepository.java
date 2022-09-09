@@ -40,7 +40,7 @@ public class BusRoomRepository {
         completable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        () -> Log.d("kkang", "insert success"),
+                        () -> Log.d("BusRoomRepository", "insert success"),
                         error -> logIn(user.getUser_tk())
                 );
     }
@@ -51,8 +51,8 @@ public class BusRoomRepository {
         completable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        () -> Log.d("kkang", "delete success"),
-                        error -> Log.d("kkang", error.getMessage())
+                        () -> Log.d("BusRoomRepository", "delete success"),
+                        error -> Log.d("BusRoomRepository", error.getMessage())
                 );
     }
 
@@ -61,8 +61,8 @@ public class BusRoomRepository {
         completable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        () -> Log.d("kkang", "out success"),
-                        error -> Log.d("kkang", error.getMessage())
+                        () -> Log.d("BusRoomRepository", "out success"),
+                        error -> Log.d("BusRoomRepository", error.getMessage())
                 );
     }
 
@@ -72,8 +72,8 @@ public class BusRoomRepository {
         completable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        () -> Log.d("kkang", "again in success"),
-                        error -> Log.d("kkang", error.getMessage())
+                        () -> Log.d("BusRoomRepository", "again in success"),
+                        error -> Log.d("BusRoomRepository", error.getMessage())
                 );
     }
 
@@ -119,8 +119,8 @@ public class BusRoomRepository {
         completable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        () -> Log.d("kkang", "update recentbusschlist"),
-                        error -> Log.d("kkang", error.getMessage() +" error on update recentbusschlist")
+                        () -> Log.d("BusRoomRepository", "update recentbusschlist"),
+                        error -> Log.d("BusRoomRepository", error.getMessage() +" error on update recentbusschlist")
                 );
     }
 
@@ -130,8 +130,8 @@ public class BusRoomRepository {
         completable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        () -> Log.d("kkang", "update recentbusschlist"),
-                        error -> Log.d("kkang", error.getMessage() +" error on update recentbusschlist")
+                        () -> Log.d("BusRoomRepository", "update recentbusschlist"),
+                        error -> Log.d("BusRoomRepository", error.getMessage() +" error on update recentbusschlist")
                 );
     }
 
@@ -141,8 +141,8 @@ public class BusRoomRepository {
         completable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        () -> Log.d("kkang", "busroomrepository regitFav success"),
-                        error -> Log.d("kkang", "busroomrepository regitFav error message : " + error.getMessage())
+                        () -> Log.d("BusRoomRepository", "busroomrepository regitFav success"),
+                        error -> Log.d("BusRoomRepository", "busroomrepository regitFav error message : " + error.getMessage())
                 );
     }
 
@@ -161,7 +161,7 @@ public class BusRoomRepository {
         completable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        () -> Log.d("kkang", "busroomrepository regitFavStopBus success"),
+                        () -> Log.d("BusRoomRepository", "busroomrepository regitFavStopBus success"),
                         error -> deleteFavStopBus(localFavStopBus.getLfb_id(), localFavStopBus.getLfb_busId())
                 );
 
@@ -172,30 +172,23 @@ public class BusRoomRepository {
         completable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        () -> Log.d("kkang", "deleteFavStopBus success!"),
-                        error -> Log.d("kkang", "delete failed!" + error.getMessage())
+                        () -> Log.d("BusRoomRepository", "deleteFavStopBus success!"),
+                        error -> Log.d("BusRoomRepository", "delete failed!" + error.getMessage())
                 );
     }
 
-    public void getLocalFavIsSaved(String lfId){
-        CompositeDisposable compositeDisposable = new CompositeDisposable();
-        compositeDisposable.add(
-                busDao.getLocalFavIsSaved(lfId)
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(new DisposableSingleObserver<List<LocalFav>>() {
-                            @Override
-                            public void onSuccess(@NonNull List<LocalFav> localFavs) {
-                                localFavSize.setValue(localFavs.size());
-                            }
+    public void deleteLocalFav(String lfId){
+        Completable completable = busDao.deleteLocalFav(lfId);
+        completable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        () -> Log.d("BusRoomRepository", "deletelocalFav success"),
+                        error -> Log.d("BusRoomRepository", "delete localfav failed!"+error.getMessage())
+                );
+    }
 
-                            @Override
-                            public void onError(@NonNull Throwable e) {
-                                Log.d("kkang", "busroomrepository getLocalFavIsSaved error message : " + e.getMessage());
-                                localFavSize.setValue(-2);
-                            }
-                        })
-        );
+    public Single<List<LocalFav>> getLocalFavIsSaved(String lfId){
+        return busDao.getLocalFavIsSaved(lfId);
     }
 
     public Single<List<DataWithFavStopBus>> getFavStopBus(){

@@ -51,6 +51,7 @@ public class BusRouteSearchDetailViewModel extends ViewModel {
     public MutableLiveData<List<BusPosList>> busPosList = new MutableLiveData<>();
     public MutableLiveData<List<GBusRouteStationList>> gBusStationList = new MutableLiveData<>();
     public MutableLiveData<List<GBusLocationList>> gBusLocationList = new MutableLiveData<>();
+    public MutableLiveData<Integer> isFavSaved = new MutableLiveData<>();
 
     private static String serviceKey = "";
     static {
@@ -181,6 +182,35 @@ public class BusRouteSearchDetailViewModel extends ViewModel {
     // 즐겨찾기 기능
     public void regitFav(LocalFav localFav){
         busRoomRepository.regitFav(localFav);
+    }
+
+    // 즐겨찾기 저장 여부를 불러온다.
+    public void getLocalFavIsSaved(String lfId){
+        compositeDisposable.add(
+                busRoomRepository.getLocalFavIsSaved(lfId)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<List<LocalFav>>() {
+                            @Override
+                            public void onSuccess(@NonNull List<LocalFav> localFavs) {
+                                if (localFavs != null){
+                                    isFavSaved.setValue(localFavs.size());
+                                }else{
+                                    isFavSaved.setValue(-1);
+                                }
+                            }
+
+                            @Override
+                            public void onError(@NonNull Throwable e) {
+                                Log.d("BusRouteSearchViewModel", "getLocalFavIsSaved error msg :" + e.getMessage());
+                            }
+                        })
+
+        );
+    }
+
+    public void deleteLocalFav(String lfId){
+        busRoomRepository.deleteLocalFav(lfId);
     }
 
     @Override

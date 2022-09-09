@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.example.mybus.MainActivity;
 import com.example.mybus.R;
@@ -23,6 +24,7 @@ import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.apisearch.itemList.GBusLocationList;
 import com.example.mybus.apisearch.itemList.GBusRouteStationList;
 import com.example.mybus.apisearch.itemList.StationByRouteList;
+import com.example.mybus.apisearch.itemList.StopSchList;
 import com.example.mybus.databinding.ActivityBusRouteDetailBinding;
 import com.example.mybus.search.SearchActivity;
 import com.example.mybus.viewmodel.BusRouteSearchDetailViewModel;
@@ -47,8 +49,11 @@ public class BusRouteDetailActivity extends AppCompatActivity {
     private BusSchList busSchList;
     private RecyclerView recyclerView;
     private BusRouteDetailAdapter adapter;
-    private GBusRouteDetailAdapter gbusAdapter;
     private BusRouteSearchDetailViewModel busRouteSearchDetailViewModel;
+    private ImageView favImage;
+    private boolean isFavSaved = false;
+    private List<StationByRouteList> stationByRouteList;
+    private List<GBusRouteStationList> gBusRouteStationList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +64,9 @@ public class BusRouteDetailActivity extends AppCompatActivity {
 
         initView();
         initRecycler();
+        setFabListener();
         getDataFromIntent();
+        getIsFaved();
         setText();
 
     }
@@ -71,6 +78,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
     }
 
     public void initView(){
+        favImage = binding.stopDetailAddFav;
         toolbar = binding.stopDetailToolbar;
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -117,13 +125,31 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        favImage.setOnClickListener(view -> {
+            if (isFavSaved){
+                busRouteSearchDetailViewModel.deleteLocalFav(busSchList.getBusRouteId());
+                isFavSaved = false;
+                favImage.setImageResource(R.drawable.ic_baseline_star_border_24);
+            }else{
+                Long now = System.currentTimeMillis();
+                Date date = new Date(now);
+                LocalFav localFav = new LocalFav(busSchList.getBusRouteId() , busSchList.getBusRouteNm(), busSchList.getCorpNm(), 0, date);
+                // 뷰 모델에서 즐겨찾기 작업 추가
+                busRouteSearchDetailViewModel.regitFav(localFav);
+                isFavSaved = true;
+                favImage.setImageResource(R.drawable.ic_baseline_star_24);
+            }
+        });
     }
+
 
     public void initRecycler(){
         recyclerView = binding.stopDetailRecycler;
         adapter = new BusRouteDetailAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+        setRecyclerListener();
     }
 
 
@@ -141,11 +167,21 @@ public class BusRouteDetailActivity extends AppCompatActivity {
         switch(item.getItemId()){
             case R.id.action_add_fav:
                 Log.d("BusRouteDetailActivity", "stopdetail activity , actionaddfav clicked");
-                Long now = System.currentTimeMillis();
-                Date date = new Date(now);
-                LocalFav localFav = new LocalFav(busSchList.getBusRouteId() , busSchList.getBusRouteNm(), busSchList.getCorpNm(), 0, date);
                 // 뷰 모델에서 즐겨찾기 작업 추가
-                busRouteSearchDetailViewModel.regitFav(localFav);
+                if ( isFavSaved){
+                    isFavSaved = !isFavSaved;
+                    busRouteSearchDetailViewModel.deleteLocalFav(busSchList.getBusRouteId());
+                    item.setIcon(R.drawable.ic_baseline_star_border_24);
+                    favImage.setImageResource(R.drawable.ic_baseline_star_border_24);
+                }else if (!isFavSaved){
+                    isFavSaved = !isFavSaved;
+                    Long now = System.currentTimeMillis();
+                    Date date = new Date(now);
+                    LocalFav localFav = new LocalFav(busSchList.getBusRouteId() , busSchList.getBusRouteNm(), busSchList.getCorpNm(), 0, date);
+                    busRouteSearchDetailViewModel.regitFav(localFav);
+                    item.setIcon(R.drawable.ic_baseline_star_24);
+                    favImage.setImageResource(R.drawable.ic_baseline_star_24);
+                }
                 break;
 
             case R.id.action_home:
@@ -160,6 +196,8 @@ public class BusRouteDetailActivity extends AppCompatActivity {
 
     public void showOption(int id){
         MenuItem item = menu.findItem(id);
+        if (isFavSaved)     item.setIcon(R.drawable.ic_baseline_star_24);
+        else                item.setIcon(R.drawable.ic_baseline_star_border_24);
         item.setVisible(true);
     }
 
@@ -191,7 +229,8 @@ public class BusRouteDetailActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<StationByRouteList> stationByRouteLists) {
                 if (stationByRouteLists != null){
-                    adapter.updateRouteStationInfo(stationByRouteLists);
+                    stationByRouteList = stationByRouteLists;
+                    adapter.updateRouteStationInfo(stationByRouteLists, busSchList.getStId());
                 }
 
             }
@@ -215,8 +254,9 @@ public class BusRouteDetailActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<GBusRouteStationList> gBusRouteStationLists) {
                 if (gBusRouteStationLists != null){
-                    Log.d("BusRouteDetailActivity", "BusRouteDetail setGbusRouteStation gBusRouteStationLists : " +gBusRouteStationLists.size() );
-                    adapter.updateGbusStationInfo(gBusRouteStationLists);
+//                    Log.d("BusRouteDetailActivity", "BusRouteDetail setGbusRouteStation gBusRouteStationLists : " +gBusRouteStationLists.size() );
+                    gBusRouteStationList = gBusRouteStationLists;
+                    adapter.updateGbusStationInfo(gBusRouteStationLists, busSchList.getStId());
                 }
             }
         });
@@ -230,6 +270,64 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                     adapter.updateGbusLocationList(gBusLocationLists);
                 }
             }
+        });
+    }
+
+    public void getIsFaved(){
+        busRouteSearchDetailViewModel.getLocalFavIsSaved(busSchList.getBusRouteId());
+        busRouteSearchDetailViewModel.isFavSaved.observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                if (integer > 0 ){
+                    isFavSaved = true;
+                    favImage.setImageResource(R.drawable.ic_baseline_star_24);
+                }else{
+                    isFavSaved = false;
+                    favImage.setImageResource(R.drawable.ic_baseline_star_border_24);
+                }
+
+            }
+        });
+    }
+
+    public void setRecyclerListener() {
+        adapter.setOnItemClickListener(new BusRouteDetailAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                StopSchList stopSchList = new StopSchList();
+                stopSchList.setBusId(busSchList.getBusRouteId());
+                Intent intent = new Intent(v.getContext(), StopDetailActivity.class);
+                Bundle args = new Bundle();
+                if (stationByRouteList != null && !(stationByRouteList.get(position).getArsId().equals(0))){
+                    stopSchList.setNextDir(stationByRouteList.get(position).getDirection());
+                    stopSchList.setArsId(stationByRouteList.get(position).getArsId());
+                    stopSchList.setStId(stationByRouteList.get(position).getStation());
+                    stopSchList.setStNm(stationByRouteList.get(position).getStationNm());
+                    args.putParcelable("stopList", stopSchList);
+                    intent.putExtras(args);
+                    startActivity(intent);
+                }else if(gBusRouteStationList != null){
+                    stopSchList.setStId(gBusRouteStationList.get(position).getStationId());
+                    stopSchList.setStNm(gBusRouteStationList.get(position).getStationName());
+                    if (position < gBusRouteStationList.size()-1)     stopSchList.setNextDir(gBusRouteStationList.get(position+1).getStationName());
+                    else                                            stopSchList.setNextDir("종점");
+                    args.putParcelable("stopList", stopSchList);
+                    intent.putExtras(args);
+                    startActivity(intent);
+                }
+
+            }
+        });
+    }
+
+    public void setFabListener(){
+        floatingActionButton.setOnClickListener(view -> {
+            if (busSchList.getBusRouteId().startsWith("1")){
+                busRouteSearchDetailViewModel.getBusPositionList(busSchList.getBusRouteId());
+            }else if (busSchList.getBusRouteId().startsWith("2")){
+                busRouteSearchDetailViewModel.getGbusLocationList(busSchList.getBusRouteId());
+            }
+
         });
     }
 }

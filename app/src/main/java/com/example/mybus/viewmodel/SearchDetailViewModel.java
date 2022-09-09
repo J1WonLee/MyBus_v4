@@ -56,10 +56,9 @@ public class SearchDetailViewModel extends ViewModel {
     private Map<String, String> busRouteMatchMap = new HashMap<>();
     // 즐겨찾기한 정류장들 목록
     public MutableLiveData<List<LocalFavStopBus>> localFabStopBusList = new MutableLiveData<>();
-
     public List<LocalFavStopBus> localFavStopBusList = new ArrayList<>();
-
     public MutableLiveData<Integer> listsState = new MutableLiveData<>();
+    public MutableLiveData<Integer> isFavSaved = new MutableLiveData<>();
 
     // 서비스키 인코딩
     private static String serviceKey = "";
@@ -110,7 +109,12 @@ public class SearchDetailViewModel extends ViewModel {
                             @Override
                             public void onSuccess(@NonNull GBusStopSearchResponse gBusStopSearchResponse) {
 //                                gbusUidSchList.setValue(gBusStopSearchResponse.getgBusStopSearchUidWrap().getBusArrivalListList());
-                                if (gBusStopSearchResponse != null){
+                                if (gBusStopSearchResponse.getgBusStopSearchUidWrap() == null){
+//                                    busArrivalLists = gBusStopSearchResponse.getgBusStopSearchUidWrap().getBusArrivalListList();
+//                                    Collections.sort(busArrivalLists);
+//                                    getGBusRouteName(busArrivalLists);
+                                    gbusUidSchList.setValue(null);
+                                }else{
                                     busArrivalLists = gBusStopSearchResponse.getgBusStopSearchUidWrap().getBusArrivalListList();
                                     Collections.sort(busArrivalLists);
                                     getGBusRouteName(busArrivalLists);
@@ -216,6 +220,37 @@ public class SearchDetailViewModel extends ViewModel {
                         })
         );
     }
+
+    public void getLocalFavIsSaved(String lfId){
+        compositeDisposable.add(
+                busRoomRepository.getLocalFavIsSaved(lfId)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<List<LocalFav>>() {
+                            @Override
+                            public void onSuccess(@NonNull List<LocalFav> localFavs) {
+                                if (localFavs != null){
+                                    isFavSaved.setValue(localFavs.size());
+                                }else{
+                                    isFavSaved.setValue(-1);
+                                }
+                            }
+
+                            @Override
+                            public void onError(@NonNull Throwable e) {
+                                Log.d("SearchDetailViewModel", "getLocalFavIsSaved error msg :" + e.getMessage());
+                            }
+                        })
+
+        );
+    }
+
+    public void deleteLocalFav(String lfId){
+        busRoomRepository.deleteLocalFav(lfId);
+    }
+
+
+
     @Override
     protected void onCleared() {
         super.onCleared();

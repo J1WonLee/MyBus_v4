@@ -1,11 +1,13 @@
 package com.example.mybus.searchDetail;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mybus.R;
@@ -21,11 +23,10 @@ import java.util.List;
 public class BusRouteDetailAdapter extends RecyclerView.Adapter<BusRouteDetailAdapter.BusRouteDetailViewHolder>{
     private List<GBusRouteStationList> gBusRouteStation;
     private List<GBusLocationList> gBusLocationList;
-    private SearchDetailAdapter.OnItemClickListener mListener;
+    private OnItemClickListener mListener;
     private List<StationByRouteList> stationByRouteList;
     private List<BusPosList> busPosList;
-
-
+    private String stId = null;
 
     @NonNull
     @Override
@@ -42,10 +43,12 @@ public class BusRouteDetailAdapter extends RecyclerView.Adapter<BusRouteDetailAd
             Log.d("BusRouteDetailAdapter", "busroutedetalAdapter onBindViewHolder if state");
             setStationList(holder, position);
             setBusPosition(holder, position);
+            setBackgroundColor(holder, position);
         }else if (gBusLocationList != null){
             Log.d("BusRouteDetailAdapter", "busroutedetalAdapter onBindViewHolder else state");
             setGbusStationList(holder, position);
             setGbusLocation(holder, position);
+            setGBusBackgroundColor(holder, position);
         }
 
     }
@@ -63,8 +66,9 @@ public class BusRouteDetailAdapter extends RecyclerView.Adapter<BusRouteDetailAd
     }
 
     // 서울시 정류장 정보
-    public void updateRouteStationInfo(List<StationByRouteList> stationByRouteLists){
+    public void updateRouteStationInfo(List<StationByRouteList> stationByRouteLists ,  @Nullable String stId){
         this.stationByRouteList = stationByRouteLists;
+        if (stId != null)       this.stId = stId;
         this.notifyDataSetChanged();
     }
 
@@ -77,9 +81,10 @@ public class BusRouteDetailAdapter extends RecyclerView.Adapter<BusRouteDetailAd
     }
 
     // 경기도 정류장 정보
-    public void updateGbusStationInfo(List<GBusRouteStationList> gBusRouteStationLists){
+    public void updateGbusStationInfo(List<GBusRouteStationList> gBusRouteStationLists, @Nullable String stId){
 //        Log.d("kkang", "busroutedetailadapter updateGbusStationInfo called");
         this.gBusRouteStation = gBusRouteStationLists;
+        if (stId != null)       this.stId = stId;
         Log.d("BusRouteDetailAdapter" , " busroutedetailadapter size of updateGbusStationInfo gBusRouteStationList size  :  " + gBusRouteStation.size());
         notifyDataSetChanged();
     }
@@ -161,11 +166,26 @@ public class BusRouteDetailAdapter extends RecyclerView.Adapter<BusRouteDetailAd
         }
     }
 
+    @SuppressLint("ResourceAsColor")
+    public void setBackgroundColor(BusRouteDetailViewHolder holder , int position){
+        if (stId != null && stationByRouteList.get(position).getStation().equals(this.stId)){
+            Log.d("BusRouteDetailVH", "setBackgroundColor if state called");
+            holder.binding.busRouteStopsList.setBackgroundColor(R.color.yellow);
+        }
+    }
+
+    @SuppressLint("ResourceAsColor")
+    public void setGBusBackgroundColor(BusRouteDetailViewHolder holder , int position){
+        if (stId != null && gBusRouteStation.get(position).getStationId().equals(this.stId)){
+            holder.binding.busRouteStopsList.setBackgroundColor(R.color.yellow);
+        }
+    }
+
     public interface OnItemClickListener{
         void onItemClick(View v , int position);
     }
 
-    public void setOnItemClickListener(SearchDetailAdapter.OnItemClickListener onItemClickListener){
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
         this.mListener = onItemClickListener;
     }
 
@@ -176,7 +196,7 @@ public class BusRouteDetailAdapter extends RecyclerView.Adapter<BusRouteDetailAd
         BusRouteDetailItemBinding binding;
         public BusRouteDetailViewHolder(BusRouteDetailItemBinding binding) {
             super(binding.getRoot());
-            Log.d("kkang" , "::::::::: BusRouteDetailViewHolder ");
+//            Log.d("kkang" , "::::::::: BusRouteDetailViewHolder ");
             this.binding = binding;
 
             binding.busRouteItemWrap.setOnClickListener(new View.OnClickListener() {

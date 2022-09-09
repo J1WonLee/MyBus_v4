@@ -68,11 +68,17 @@ public interface BusDao {
     @Insert
     Completable regitFavStopBus(LocalFavStopBus localFavStopBus);
 
+    // 정류장 버스 즐겨찾기 목록 조회
     @Query("delete from LOCAL_FAV_STOP_BUS where lfb_id =:lfbId and lfb_busId =:lbBisOd")
     Completable deleteFavStopBus(String lfbId, String lbBisOd);
 
+    // 즐겨찾기 목록 조회
     @Query("SELECT * FROM LOCAL_FAV where lf_id =:lfId")
     Single<List<LocalFav>> getLocalFavIsSaved(String lfId);
+
+    // 즐겨찾기 삭제
+    @Query("delete FROM LOCAL_FAV WHERE LF_ID =:lfId")
+    Completable deleteLocalFav(String lfId);
 
     @Transaction
     @Query("SELECT * FROM LOCAL_FAV")
