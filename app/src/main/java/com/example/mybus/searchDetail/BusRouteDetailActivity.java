@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,14 +16,18 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.apisearch.itemList.BusPosList;
 import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.apisearch.itemList.GBusLocationList;
+import com.example.mybus.apisearch.itemList.GBusRouteList;
 import com.example.mybus.apisearch.itemList.GBusRouteStationList;
+import com.example.mybus.apisearch.itemList.RouteInfoList;
 import com.example.mybus.apisearch.itemList.StationByRouteList;
 import com.example.mybus.apisearch.itemList.StopSchList;
 import com.example.mybus.databinding.ActivityBusRouteDetailBinding;
@@ -51,9 +56,11 @@ public class BusRouteDetailActivity extends AppCompatActivity {
     private BusRouteDetailAdapter adapter;
     private BusRouteSearchDetailViewModel busRouteSearchDetailViewModel;
     private ImageView favImage;
+    private ImageView dialogImage;
     private boolean isFavSaved = false;
     private List<StationByRouteList> stationByRouteList;
     private List<GBusRouteStationList> gBusRouteStationList;
+    private Dialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +86,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
 
     public void initView(){
         favImage = binding.stopDetailAddFav;
+        dialogImage = binding.showRouteInfoIcon;
         toolbar = binding.stopDetailToolbar;
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -140,6 +148,10 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                 isFavSaved = true;
                 favImage.setImageResource(R.drawable.ic_baseline_star_24);
             }
+        });
+
+        dialogImage.setOnClickListener(view -> {
+            initDialog();
         });
     }
 
@@ -329,5 +341,58 @@ public class BusRouteDetailActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    public void initDialog(){
+        Log.d("BusRouteDetailActivity", "initDialog!");
+        dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.route_detail_dialog);
+        TextView wdays = dialog.findViewById(R.id.route_detail_term_contents);
+        TextView term = dialog.findViewById(R.id.route_detail_term_contents);
+        TextView firstLastSt = dialog.findViewById(R.id.route_detail_first_last_station_contents);
+        // 다이얼 로그 클릭시 정보 가져와서 보여준다.
+        if (busSchList.getBusRouteId().startsWith("1")){
+            busRouteSearchDetailViewModel.getRouteInfo(busSchList.getBusRouteId());
+            busRouteSearchDetailViewModel.routeInfoList.observe(this, new Observer<List<RouteInfoList>>() {
+                @Override
+                public void onChanged(List<RouteInfoList> routeInfoLists) {
+                    if (routeInfoLists != null){
+                        try{
+                            wdays.setText(routeInfoLists.get(0).getFirstBusTm().substring(8, 10) + ":" + routeInfoLists.get(0).getFirstBusTm().substring(10, 12) +
+                                    " / " + routeInfoLists.get(0).getLastBusTm().substring(8, 10) + ":" + routeInfoLists.get(0).getLastBusTm().substring(10, 12) );
+                            term.setText(routeInfoLists.get(0).getTerm() + "분");
+                            firstLastSt.setText(routeInfoLists.get(0).getStStationNm() +"\n" +"<-> \n" + routeInfoLists.get(0).getEdStationNm());
+                        }catch(Exception e){
+                            wdays.setText("정보가 없습니다");
+                            term.setText("정보가 없습니다");
+                        }
+                        dialog.show();
+                    }
+                }
+            });
+        }else if (busSchList.getBusRouteId().startsWith("2")){
+            busRouteSearchDetailViewModel.getGbusRouteInfo(busSchList.getBusRouteId());
+            busRouteSearchDetailViewModel.gBusRouteInfoList.observe(this, new Observer<List<GBusRouteList>>() {
+                @Override
+                public void onChanged(List<GBusRouteList> gBusRouteLists) {
+                    if (gBusRouteLists != null){
+                        try{
+                            wdays.setText(gBusRouteLists.get(0).getUpFirstTime() + " / " + gBusRouteLists.get(0).getDownLastTime());
+                            String termText = gBusRouteLists.get(0).getPeekAlloc() == null ? " " : gBusRouteLists.get(0).getPeekAlloc() + " 분 /";
+                            termText += gBusRouteLists.get(0).getNpeekAlloc() == null ? " " : gBusRouteLists.get(0).getNpeekAlloc();
+//                            term.setText(gBusRouteLists.get(0).getPeekAlloc() + "분 / " + gBusRouteLists.get(0).getNpeekAlloc()+"분");
+                            firstLastSt.setText(gBusRouteLists.get(0).getStartStationName() +"\n" +"<-> \n" + gBusRouteLists.get(0).getEndStationName());
+                            term.setText(termText);
+                        }catch(Exception e){
+                            wdays.setText("정보가 없습니다");      term.setText("정보가 없습니다");
+                        }
+                        dialog.show();
+                        
+                    }
+                }
+            });
+        }
+
     }
 }

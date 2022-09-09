@@ -51,4 +51,10 @@ public class RetrofitGbusRepository implements RetrofitGbusService {
     public Single<GBusLocationResponse> getGbusPositionList(String serviceKey, String routeId) {
         return retrofitGbusService.getGbusPositionList(serviceKey, routeId);
     }
+
+    // 해당 노선의 상세정보를 받아온다
+    @Override
+    public Single<GBusRouteSearchResponse> getGbusRouteInfo(String serviceKey, String routeId) {
+        return retrofitGbusService.getGbusRouteInfo(serviceKey, routeId);
+    }
 }

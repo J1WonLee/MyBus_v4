@@ -1,6 +1,7 @@
 package com.example.mybus.retrofitrepo;
 
 import com.example.mybus.apisearch.wrapper.BusPositionSearchWrap;
+import com.example.mybus.apisearch.wrapper.RouteInfoWrap;
 import com.example.mybus.apisearch.wrapper.RouteSearchWrap;
 import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.apisearch.itemList.BusStopList;
@@ -87,4 +88,12 @@ public interface RetrofitService {
             @Query("busRouteId") String busRouteId,
             @Query("resultType") String json
     );
+
+    @GET("busRouteInfo/getRouteInfo")
+    Single<RouteInfoWrap> getRouteInfo(
+            @Query("serviceKey") String serviceKey,
+            @Query("busRouteId") String busRouteId,
+            @Query("resultType") String json
+    );
+
 }

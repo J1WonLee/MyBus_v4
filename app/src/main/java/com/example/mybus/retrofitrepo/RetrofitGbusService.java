@@ -52,5 +52,11 @@ public interface RetrofitGbusService {
             @Query("routeId") String routeId
     );
 
+    @GET("busrouteservice/getBusRouteInfoItem")
+    Single<GBusRouteSearchResponse> getGbusRouteInfo(
+            @Query("serviceKey") String serviceKey,
+            @Query("routeId") String routeId
+    );
+
 
 }

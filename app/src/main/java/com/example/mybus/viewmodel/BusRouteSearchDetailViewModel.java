@@ -7,13 +7,17 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.mybus.apisearch.GbusWrapper.GBusLocationResponse;
 import com.example.mybus.apisearch.GbusWrapper.GBusLocationWrap;
+import com.example.mybus.apisearch.GbusWrapper.GBusRouteSearchResponse;
 import com.example.mybus.apisearch.GbusWrapper.GBusRouteStationResponse;
 import com.example.mybus.apisearch.GbusWrapper.GBusRouteStationWrap;
 import com.example.mybus.apisearch.itemList.BusPosList;
 import com.example.mybus.apisearch.itemList.GBusLocationList;
+import com.example.mybus.apisearch.itemList.GBusRouteList;
 import com.example.mybus.apisearch.itemList.GBusRouteStationList;
+import com.example.mybus.apisearch.itemList.RouteInfoList;
 import com.example.mybus.apisearch.itemList.StationByRouteList;
 import com.example.mybus.apisearch.wrapper.BusPositionSearchWrap;
+import com.example.mybus.apisearch.wrapper.RouteInfoWrap;
 import com.example.mybus.apisearch.wrapper.RouteStationWrap;
 import com.example.mybus.retrofitrepo.RetrofitGbusRepository;
 import com.example.mybus.retrofitrepo.RetrofitRepository;
@@ -52,6 +56,8 @@ public class BusRouteSearchDetailViewModel extends ViewModel {
     public MutableLiveData<List<GBusRouteStationList>> gBusStationList = new MutableLiveData<>();
     public MutableLiveData<List<GBusLocationList>> gBusLocationList = new MutableLiveData<>();
     public MutableLiveData<Integer> isFavSaved = new MutableLiveData<>();
+    public MutableLiveData<List<RouteInfoList>> routeInfoList = new MutableLiveData<>();
+    public MutableLiveData<List<GBusRouteList>> gBusRouteInfoList = new MutableLiveData<>();
 
     private static String serviceKey = "";
     static {
@@ -209,10 +215,54 @@ public class BusRouteSearchDetailViewModel extends ViewModel {
         );
     }
 
+    // 즐겨찾기 제거
     public void deleteLocalFav(String lfId){
         busRoomRepository.deleteLocalFav(lfId);
     }
 
+    // 다이얼로그에서 보여줄 노선 정보(서울)
+    public void getRouteInfo(String routeId){
+        compositeDisposable.add(
+                retrofitRepository.getRouteInfo(serviceKey, routeId, "json")
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<RouteInfoWrap>() {
+                            @Override
+                            public void onSuccess(@NonNull RouteInfoWrap routeInfoWrap) {
+                                if (routeInfoWrap.getRouteInfo() != null){
+                                    routeInfoList.setValue( routeInfoWrap.getRouteInfo().getRouteInfoLists());
+                                }
+                            }
+
+                            @Override
+                            public void onError(@NonNull Throwable e) {
+                                Log.d("BusRouteSearchViewModel", "getRouteInfo error : " + e.getMessage());
+                            }
+                        })
+        );
+    }
+
+    // // 다이얼로그에서 보여줄 노선 정보(경기)
+    public void getGbusRouteInfo(String routeId){
+        compositeDisposable.add(
+                retrofitGbusRepository.getGbusRouteInfo(serviceKey, routeId)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<GBusRouteSearchResponse>() {
+                            @Override
+                            public void onSuccess(@NonNull GBusRouteSearchResponse gBusRouteSearchResponse) {
+                                if (gBusRouteSearchResponse.getgBusStopSearchUidWrap() != null){
+                                    gBusRouteInfoList.setValue(gBusRouteSearchResponse.getgBusStopSearchUidWrap().getgBusRouteList());
+                                }
+                            }
+
+                            @Override
+                            public void onError(@NonNull Throwable e) {
+                                Log.d("BusRouteSearchViewModel", "getGbusRouteInfo error : " + e.getMessage());
+                            }
+                        })
+        );
+    }
     @Override
     protected void onCleared() {
         super.onCleared();
