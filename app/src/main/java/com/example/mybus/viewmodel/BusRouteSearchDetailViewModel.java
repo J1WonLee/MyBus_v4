@@ -19,6 +19,7 @@ import com.example.mybus.apisearch.itemList.StationByRouteList;
 import com.example.mybus.apisearch.wrapper.BusPositionSearchWrap;
 import com.example.mybus.apisearch.wrapper.RouteInfoWrap;
 import com.example.mybus.apisearch.wrapper.RouteStationWrap;
+import com.example.mybus.firebaserepo.FbRepository;
 import com.example.mybus.retrofitrepo.RetrofitGbusRepository;
 import com.example.mybus.retrofitrepo.RetrofitRepository;
 import com.example.mybus.roomrepo.BusRoomRepository;
@@ -43,6 +44,7 @@ public class BusRouteSearchDetailViewModel extends ViewModel {
     private BusRoomRepository busRoomRepository;
     private RetrofitRepository retrofitRepository;
     private RetrofitGbusRepository retrofitGbusRepository;
+    private FbRepository fbRepository;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private RouteStationWrap routeStationWrap = new RouteStationWrap();
@@ -69,10 +71,11 @@ public class BusRouteSearchDetailViewModel extends ViewModel {
     }
 
     @Inject
-    public BusRouteSearchDetailViewModel(BusRoomRepository busRoomRepository, RetrofitRepository retrofitRepository, RetrofitGbusRepository retrofitGbusRepository) {
+    public BusRouteSearchDetailViewModel(BusRoomRepository busRoomRepository, RetrofitRepository retrofitRepository, RetrofitGbusRepository retrofitGbusRepository, FbRepository fbRepository) {
         this.busRoomRepository = busRoomRepository;
         this.retrofitRepository = retrofitRepository;
         this.retrofitGbusRepository = retrofitGbusRepository;
+        this.fbRepository = fbRepository;
     }
 
     // 해당 노선에 속하는 정류장 목록을 불러온다.
@@ -263,6 +266,15 @@ public class BusRouteSearchDetailViewModel extends ViewModel {
                         })
         );
     }
+
+    public void insertFbFav(LocalFav localFav, String logInId){
+        fbRepository.insertFbFav(localFav, logInId);
+    }
+
+    public void deleteFbFab(String lfbId, String logInId){
+        fbRepository.deleteFbFab(lfbId, logInId);
+    }
+
     @Override
     protected void onCleared() {
         super.onCleared();

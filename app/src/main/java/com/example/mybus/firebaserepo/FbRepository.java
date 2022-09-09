@@ -2,6 +2,7 @@ package com.example.mybus.firebaserepo;
 
 import android.util.Log;
 
+import com.example.mybus.vo.LocalFav;
 import com.example.mybus.vo.User;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
@@ -27,5 +28,25 @@ public class FbRepository implements FbService{
     @Override
     public void insert(User user) {
         databaseReference.child("users").child(user.getUser_tk()).setValue(user);
+    }
+
+    @Override
+    public void insertFbFav(LocalFav localFav, String loginId) {
+        try{
+            Log.d("FbRepository", "INSERT FBFAV!!");
+            databaseReference.child("FavList").child(loginId).child(localFav.getLf_id()).setValue(localFav);
+        }catch(Exception e){
+            Log.d("FbRepository", "ERROR ON INSERTFBFAV " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteFbFab(String lfbId, String logInId) {
+        try{
+            Log.d("FbRepository", "deleteFbFab FBFAV!!");
+            databaseReference.child("FavList").child(logInId).child(lfbId).removeValue();
+        }catch(Exception e){
+            Log.d("FbRepository", "ERROR ON INSERTFBFAV " + e.getMessage());
+        }
     }
 }

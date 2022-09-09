@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -31,6 +32,7 @@ import com.example.mybus.apisearch.itemList.RouteInfoList;
 import com.example.mybus.apisearch.itemList.StationByRouteList;
 import com.example.mybus.apisearch.itemList.StopSchList;
 import com.example.mybus.databinding.ActivityBusRouteDetailBinding;
+import com.example.mybus.menu.LoginActivity;
 import com.example.mybus.search.SearchActivity;
 import com.example.mybus.viewmodel.BusRouteSearchDetailViewModel;
 import com.example.mybus.vo.LocalFav;
@@ -61,6 +63,8 @@ public class BusRouteDetailActivity extends AppCompatActivity {
     private List<StationByRouteList> stationByRouteList;
     private List<GBusRouteStationList> gBusRouteStationList;
     private Dialog dialog;
+    private SharedPreferences sharedPreferences;
+    private String loginId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +75,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
 
         initView();
         initRecycler();
+//        getLoginId();
         setFabListener();
         getDataFromIntent();
         getIsFaved();
@@ -139,6 +144,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                 busRouteSearchDetailViewModel.deleteLocalFav(busSchList.getBusRouteId());
                 isFavSaved = false;
                 favImage.setImageResource(R.drawable.ic_baseline_star_border_24);
+                busRouteSearchDetailViewModel.deleteFbFab(busSchList.getBusRouteId(), "001234");
             }else{
                 Long now = System.currentTimeMillis();
                 Date date = new Date(now);
@@ -147,6 +153,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                 busRouteSearchDetailViewModel.regitFav(localFav);
                 isFavSaved = true;
                 favImage.setImageResource(R.drawable.ic_baseline_star_24);
+                busRouteSearchDetailViewModel.insertFbFav(localFav, "001234");
             }
         });
 
@@ -185,6 +192,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                     busRouteSearchDetailViewModel.deleteLocalFav(busSchList.getBusRouteId());
                     item.setIcon(R.drawable.ic_baseline_star_border_24);
                     favImage.setImageResource(R.drawable.ic_baseline_star_border_24);
+                    busRouteSearchDetailViewModel.deleteFbFab(busSchList.getBusRouteId(), "001234");
                 }else if (!isFavSaved){
                     isFavSaved = !isFavSaved;
                     Long now = System.currentTimeMillis();
@@ -193,6 +201,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                     busRouteSearchDetailViewModel.regitFav(localFav);
                     item.setIcon(R.drawable.ic_baseline_star_24);
                     favImage.setImageResource(R.drawable.ic_baseline_star_24);
+                    insertFbFav(localFav, "001234");
                 }
                 break;
 
@@ -393,6 +402,14 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                 }
             });
         }
+    }
 
+    public void getLoginId(){
+        sharedPreferences = getSharedPreferences(LoginActivity.sharedId, MODE_PRIVATE);
+        loginId = sharedPreferences.getString("loginId", null);
+    }
+
+    public void insertFbFav(LocalFav  localFav,String loginId){
+        busRouteSearchDetailViewModel.insertFbFav(localFav, loginId);
     }
 }
