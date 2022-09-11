@@ -58,5 +58,12 @@ public interface RetrofitGbusService {
             @Query("routeId") String routeId
     );
 
+    // 메인화면에서 쓸 버스도착정보
+    @GET("busarrivalservice/getBusArrivalList")
+    Observable<GBusStopSearchResponse> schStopUidv2(
+            @Query("serviceKey") String serviceKey,
+            @Query("stationId") String stationId
+    );
+
 
 }

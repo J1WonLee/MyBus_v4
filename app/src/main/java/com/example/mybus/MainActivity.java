@@ -8,6 +8,8 @@ import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,18 +21,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.mybus.apisearch.itemList.BusArrivalList;
+import com.example.mybus.apisearch.itemList.StopUidSchList;
 import com.example.mybus.databinding.ActivityMainBinding;
 import com.example.mybus.databinding.NaviHeaderBinding;
 import com.example.mybus.kakaoLogin.KakaoLogin;
+import com.example.mybus.mainadapter.MainFavAdapter;
 import com.example.mybus.menu.HomeEditActivity;
 import com.example.mybus.menu.LoginActivity;
 import com.example.mybus.menu.MyAlarmActivity;
 import com.example.mybus.menu.OpenSourceActivity;
 import com.example.mybus.search.SearchActivity;
 import com.example.mybus.viewmodel.MainViewModel;
+import com.example.mybus.vo.DataWithFavStopBus;
+import com.example.mybus.vo.LocalFav;
 import com.example.mybus.vo.User;
 import com.google.android.material.navigation.NavigationView;
 import com.kakao.sdk.user.UserApiClient;
+
+import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -44,6 +53,11 @@ public class MainActivity extends AppCompatActivity {
     private MainViewModel mainViewModel;
     private View header;
     private NaviHeaderBinding headerBinding;
+    private RecyclerView recyclerView;
+    private MainFavAdapter adapter;
+    private List<DataWithFavStopBus> dataWithFavStopBus;
+    private List<BusArrivalList> busArrivalList;
+    private List<StopUidSchList> stopUidSchList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +68,13 @@ public class MainActivity extends AppCompatActivity {
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         mainViewModel.getUser();
         chkUser();
+//        getFavList();
+        initRecycler();
+        getFavBusList();
+        if (dataWithFavStopBus != null){
+            getFavArrTime();
+        }
+
 
     }
 
@@ -166,6 +187,66 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
         return true;
+    }
+
+    public void initRecycler(){
+        recyclerView = binding.mainRecycler;
+        adapter = new MainFavAdapter();
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+
+    }
+
+    public void getFavList(){
+        mainViewModel.getFavList();
+        mainViewModel.localFavLists.observe(this, new Observer<List<LocalFav>>() {
+            @Override
+            public void onChanged(List<LocalFav> localFavs) {
+                Log.d("MainActivity", localFavs.size() +" ");
+            }
+        });
+    }
+
+    public void getFavBusList(){
+        mainViewModel.getFavStopBus();
+        mainViewModel.localFavStopBusLists.observe(this, new Observer<List<DataWithFavStopBus>>() {
+            @Override
+            public void onChanged(List<DataWithFavStopBus> dataWithFavStopBuses) {
+                Log.d("MainActivity", "size is : " + dataWithFavStopBuses.size() +" ");
+                dataWithFavStopBus = dataWithFavStopBuses;
+                getFavArrTime();
+//                adapter.updateDataWithFavStopBusList(dataWithFavStopBuses);
+            }
+        });
+    }
+
+    public void getFavArrTime(){
+        Log.d("MainActivity", "called getfavtime");
+        if (dataWithFavStopBus!=null){
+            mainViewModel.getFavArrTime(dataWithFavStopBus);
+            mainViewModel.stopUidSchList.observe(this, new Observer<List<StopUidSchList>>() {
+                @Override
+                public void onChanged(List<StopUidSchList> stopUidSchLists) {
+                    if (stopUidSchLists != null){
+                        adapter.updateDataWithFavStopBusList(dataWithFavStopBus, stopUidSchLists);
+                        stopUidSchList = stopUidSchLists;
+                    }
+                }
+            });
+
+            mainViewModel.getGbusFavArrTime(dataWithFavStopBus);
+            mainViewModel.busArrivalList.observe(this, new Observer<List<BusArrivalList>>() {
+                @Override
+                public void onChanged(List<BusArrivalList> busArrivalLists) {
+                    if (busArrivalLists != null){
+                       busArrivalList = busArrivalLists;
+                        adapter.updateDataWithFavStopBusList(dataWithFavStopBus, stopUidSchList, busArrivalList);
+                    }
+                }
+            });
+
+        }
+
     }
 }
 

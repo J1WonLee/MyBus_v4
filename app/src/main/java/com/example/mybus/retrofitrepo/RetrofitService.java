@@ -95,5 +95,4 @@ public interface RetrofitService {
             @Query("busRouteId") String busRouteId,
             @Query("resultType") String json
     );
-
 }

@@ -57,4 +57,9 @@ public class RetrofitGbusRepository implements RetrofitGbusService {
     public Single<GBusRouteSearchResponse> getGbusRouteInfo(String serviceKey, String routeId) {
         return retrofitGbusService.getGbusRouteInfo(serviceKey, routeId);
     }
+
+    @Override
+    public Observable<GBusStopSearchResponse> schStopUidv2(String serviceKey, String stationId) {
+        return retrofitGbusService.schStopUidv2(serviceKey, stationId);
+    }
 }
