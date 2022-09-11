@@ -15,6 +15,10 @@ public class LocalFav {
     @PrimaryKey
     private String lf_id;   // 즐겨찾기 id로 버스, 정류장 id를 의미함. 정류장에 저장되는 버스들은 별도에 테이블에서 관리
 
+    private String st_id;   // 정류장 번호(특정 노선 도착 정보에 필요해서 넣어줌)
+
+    private String lf_ord;  // 정류소 순번
+
     private String lf_name; // 정류장 혹은 버스의 이름
 
     private String lf_desc; // 정류장 버스의 설명으로 방면을 저장함
@@ -27,8 +31,10 @@ public class LocalFav {
     }
 
     @Ignore
-    public LocalFav(@NonNull String lf_id, String lf_name, String lf_desc, int lf_isBus, Date lf_order) {
+    public LocalFav(@NonNull String lf_id, String st_id, String lf_ord, String lf_name, String lf_desc, int lf_isBus, Date lf_order) {
         this.lf_id = lf_id;
+        this.st_id = st_id;
+        this.lf_ord = lf_ord;
         this.lf_name = lf_name;
         this.lf_desc = lf_desc;
         this.lf_isBus = lf_isBus;
@@ -42,6 +48,22 @@ public class LocalFav {
 
     public void setLf_id(@NonNull String lf_id) {
         this.lf_id = lf_id;
+    }
+
+    public String getSt_id() {
+        return st_id;
+    }
+
+    public void setSt_id(String st_id) {
+        this.st_id = st_id;
+    }
+
+    public String getLf_ord() {
+        return lf_ord;
+    }
+
+    public void setLf_ord(String lf_ord) {
+        this.lf_ord = lf_ord;
     }
 
     public String getLf_name() {

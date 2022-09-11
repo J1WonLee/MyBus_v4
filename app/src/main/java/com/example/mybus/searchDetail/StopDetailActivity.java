@@ -126,23 +126,28 @@ public class StopDetailActivity extends AppCompatActivity {
 
 
         favImage.setOnClickListener(view -> {
+            String lfid=null;
+            if (stopSchList.getStId().startsWith("1")){
+                lfid = stopSchList.getArsId();
+            }else if (stopSchList.getStId().startsWith("2")){
+                lfid = stopSchList.getStId();
+            }
+
             if (isFavSaved){
                 searchDetailViewModel.deleteLocalFav(stopSchList.getArsId());
                 isFavSaved = false;
                 favImage.setImageResource(R.drawable.ic_baseline_star_border_24);
+                searchDetailViewModel.deleteFbFabInStopDetail(lfid, "001234");
             }else{
-                String lfid=null;
                 Long now = System.currentTimeMillis();
                 Date date = new Date(now);
-                if (stopSchList.getStId().startsWith("1")){
-                    lfid = stopSchList.getArsId();
-                }else if (stopSchList.getStId().startsWith("2")){
-                    lfid = stopSchList.getStId();
-                }
-                LocalFav localFav = new LocalFav(lfid , stopSchList.getStNm(), stopSchList.getNextDir(), 1, date);
+                LocalFav localFav = new LocalFav(lfid ,stopSchList.getStId()
+                        , "0"
+                        ,stopSchList.getStNm(), stopSchList.getNextDir(), 1, date);
                 searchDetailViewModel.regitFav(localFav);
                 isFavSaved = true;
                 favImage.setImageResource(R.drawable.ic_baseline_star_24);
+                searchDetailViewModel.insertFbFav(localFav, "001234");
             }
         });
 
@@ -189,12 +194,19 @@ public class StopDetailActivity extends AppCompatActivity {
                     searchDetailViewModel.deleteLocalFav(lfid);
                     item.setIcon(R.drawable.ic_baseline_star_border_24);
                     favImage.setImageResource(R.drawable.ic_baseline_star_border_24);
+                    // 삭제
+                    searchDetailViewModel.deleteFbFabInStopDetail(lfid, "001234");
                 }else if (lfid != null && !isFavSaved){
                     isFavSaved = !isFavSaved;
-                    LocalFav localFav = new LocalFav(lfid , stopSchList.getStNm(), stopSchList.getNextDir(), 1, date);
+                    LocalFav localFav = new LocalFav(lfid
+                            , stopSchList.getStId()
+                            , stopUidSchList.get(0).getStaOrd()
+                            , stopSchList.getStNm(), stopSchList.getNextDir(), 1, date);
                     searchDetailViewModel.regitFav(localFav);
                     item.setIcon(R.drawable.ic_baseline_star_24);
                     favImage.setImageResource(R.drawable.ic_baseline_star_24);
+                    // 추가
+                    searchDetailViewModel.insertFbFav(localFav, "001234");
                 }
                 break;
 
@@ -325,7 +337,8 @@ public class StopDetailActivity extends AppCompatActivity {
                 Long now = System.currentTimeMillis();
                 Date date = new Date(now);
                 if (stopUidSchList != null){
-                    LocalFav localFav = new LocalFav(stopUidSchList.get(position).getArsId()
+                    LocalFav localFav = new LocalFav(stopUidSchList.get(position).getArsId(), stopUidSchList.get(position).getStId()
+                            , stopUidSchList.get(position).getStaOrd()
                             , stopSchList.getStNm(), stopSchList.getNextDir(), 1,date);
                     LocalFavStopBus localFavStopBus = new LocalFavStopBus(localFav.getLf_id()
                             , date
@@ -336,15 +349,22 @@ public class StopDetailActivity extends AppCompatActivity {
                     searchDetailViewModel.getFavStopBusList(stopSchList.getArsId());
                     if (stopUidSchList.get(position).getFlag()) {
                         stopUidSchList.get(position).setFlag(false);
+                        // 삭제
+                        searchDetailViewModel.deleteFbStopFav(localFav.getLf_id(), localFavStopBus.getLfb_busId(), "001234");
                     } else {
                         stopUidSchList.get(position).setFlag(true);
+                        // 추가
+                        searchDetailViewModel.insertFbStopFav(localFav, localFavStopBus,"001234");
                     }
                     searchDetailAdapter.notifyItemChanged(position);
                     searchDetailAdapter.isClicked = true;
+
                     searchDetailAdapter.updateLists(stopUidSchList,localFavStopBusList );
 
                 }else if (gbusBusLocationList != null){
                     LocalFav localFav = new LocalFav(gbusBusLocationList.get(position).getStationId()
+                            , gbusBusLocationList.get(position).getStationId()
+                            , gbusBusLocationList.get(position).getStaOrder()
                             , stopSchList.getStNm(), stopSchList.getNextDir(), 1,date);
                     LocalFavStopBus localFavStopBus = new LocalFavStopBus(localFav.getLf_id()
                             , date
@@ -355,8 +375,12 @@ public class StopDetailActivity extends AppCompatActivity {
                     searchDetailViewModel.getFavStopBusList(stopSchList.getStId());
                     if (gbusBusLocationList.get(position).isChkFlag()) {
                         gbusBusLocationList.get(position).setChkFlag(false);
+                        // 삭제
+                        searchDetailViewModel.deleteFbStopFav(localFav.getLf_id(), localFavStopBus.getLfb_busId(), "001234");
                     } else {
                         gbusBusLocationList.get(position).setChkFlag(true);
+                        // 추가
+                        searchDetailViewModel.insertFbStopFav(localFav, localFavStopBus,"001234");
                     }
                     searchDetailAdapter.notifyItemChanged(position);
                     searchDetailAdapter.isClicked = true;
