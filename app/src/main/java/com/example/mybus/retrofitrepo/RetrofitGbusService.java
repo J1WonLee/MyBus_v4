@@ -2,8 +2,8 @@ package com.example.mybus.retrofitrepo;
 
 import com.example.mybus.apisearch.GbusWrapper.GBusLocationResponse;
 import com.example.mybus.apisearch.GbusWrapper.GBusRouteSearchResponse;
-import com.example.mybus.apisearch.GbusWrapper.GBusRouteSearchWrap;
 import com.example.mybus.apisearch.GbusWrapper.GBusRouteStationResponse;
+import com.example.mybus.apisearch.GbusWrapper.GBusStopRouteResponse;
 import com.example.mybus.apisearch.msgBody.GBusBusLocation;
 import com.example.mybus.apisearch.GbusWrapper.GBusStopSearchResponse;
 
@@ -56,6 +56,20 @@ public interface RetrofitGbusService {
     Single<GBusRouteSearchResponse> getGbusRouteInfo(
             @Query("serviceKey") String serviceKey,
             @Query("routeId") String routeId
+    );
+
+    // 메인화면에서 쓸 버스도착정보
+    @GET("busarrivalservice/getBusArrivalList")
+    Observable<GBusStopSearchResponse> schStopUidv2(
+            @Query("serviceKey") String serviceKey,
+            @Query("stationId") String stationId
+    );
+
+    // 특정 정류장 지나는 버스 목록
+    @GET("busstationservice/getBusStationViaRouteList")
+    Single<GBusStopRouteResponse> getGStopRouteList(
+            @Query("serviceKey") String serviceKey,
+            @Query("stationId") String stationId
     );
 
 

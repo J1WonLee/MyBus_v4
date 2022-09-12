@@ -199,4 +199,8 @@ public class BusRoomRepository {
         return busDao.getLocalFavStopBusLists(lsbId);
     }
 
+    public Single<List<LocalFav>> getLocalFavList(){
+        return busDao.getLocalFavList();
+    }
+
 }

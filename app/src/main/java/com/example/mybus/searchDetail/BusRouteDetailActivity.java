@@ -148,7 +148,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
             }else{
                 Long now = System.currentTimeMillis();
                 Date date = new Date(now);
-                LocalFav localFav = new LocalFav(busSchList.getBusRouteId() , busSchList.getBusRouteNm(), busSchList.getCorpNm(), 0, date);
+                LocalFav localFav = new LocalFav(busSchList.getBusRouteId(), "0", "0" , busSchList.getBusRouteNm(), busSchList.getCorpNm(), 0, date);
                 // 뷰 모델에서 즐겨찾기 작업 추가
                 busRouteSearchDetailViewModel.regitFav(localFav);
                 isFavSaved = true;
@@ -197,7 +197,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                     isFavSaved = !isFavSaved;
                     Long now = System.currentTimeMillis();
                     Date date = new Date(now);
-                    LocalFav localFav = new LocalFav(busSchList.getBusRouteId() , busSchList.getBusRouteNm(), busSchList.getCorpNm(), 0, date);
+                    LocalFav localFav = new LocalFav(busSchList.getBusRouteId(), "0", "0" , busSchList.getBusRouteNm(), busSchList.getCorpNm(), 0, date);
                     busRouteSearchDetailViewModel.regitFav(localFav);
                     item.setIcon(R.drawable.ic_baseline_star_24);
                     favImage.setImageResource(R.drawable.ic_baseline_star_24);
