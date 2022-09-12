@@ -1,11 +1,14 @@
 package com.example.mybus.apisearch.itemList;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 import com.tickaroo.tikxml.annotation.PropertyElement;
 import com.tickaroo.tikxml.annotation.Xml;
 
 @Xml
-public class BusArrivalList implements Comparable<BusArrivalList>{
+public class BusArrivalList implements Comparable<BusArrivalList> {
     @PropertyElement(name = "flag")
     private String flag;
     @PropertyElement(name = "locationNo1")
@@ -170,4 +173,6 @@ public class BusArrivalList implements Comparable<BusArrivalList>{
     public int compareTo(BusArrivalList busArrivalList) {
         return routeId.compareTo(busArrivalList.getRouteId());
     }
+
+
 }

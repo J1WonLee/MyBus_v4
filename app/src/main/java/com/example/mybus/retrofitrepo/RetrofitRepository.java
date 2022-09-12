@@ -4,10 +4,12 @@ import android.util.Log;
 
 import com.example.mybus.apisearch.itemList.StopSchList;
 import com.example.mybus.apisearch.wrapper.BusPositionSearchWrap;
+import com.example.mybus.apisearch.wrapper.RouteInfoWrap;
 import com.example.mybus.apisearch.wrapper.RouteSearchWrap;
 import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.apisearch.itemList.BusStopList;
 import com.example.mybus.apisearch.wrapper.RouteStationWrap;
+import com.example.mybus.apisearch.wrapper.StopRouteListWrap;
 import com.example.mybus.apisearch.wrapper.StopSearchUidWrap;
 import com.example.mybus.apisearch.wrapper.StopSearchWrap;
 
@@ -61,6 +63,18 @@ public class RetrofitRepository implements RetrofitService {
     @Override
     public Single<BusPositionSearchWrap> getBusPositionList(String serviceKey, String busRouteId, String json) {
         return retrofitService.getBusPositionList(serviceKey, busRouteId, "json");
+    }
+
+    // 해당 노선의 정보를 받아온다(노선 상세보기에 -> 다이얼로그 창)
+    @Override
+    public Single<RouteInfoWrap> getRouteInfo(String serviceKey, String busRouteId, String json) {
+        return retrofitService.getRouteInfo(serviceKey, busRouteId, "json");
+    }
+
+    // 특정 정류장 지나는 버스 목록
+    @Override
+    public Single<StopRouteListWrap> getStopRouteList(String serviceKey, String ardId, String json) {
+        return retrofitService.getStopRouteList(serviceKey,ardId,"json");
     }
 
 

@@ -33,6 +33,7 @@ public class BusSchList implements Parcelable, Comparable<BusSchList> {
         lastLowTm = in.readString();
         firstLowTm = in.readString();
         corpNm = in.readString();
+        stId = in.readString();
     }
 
     public BusSchList() {
@@ -101,6 +102,16 @@ public class BusSchList implements Parcelable, Comparable<BusSchList> {
     @SerializedName("corpNm")
     @Expose
     public String corpNm;
+
+    private String stId;
+
+    public String getStId() {
+        return stId;
+    }
+
+    public void setStId(String stId) {
+        this.stId = stId;
+    }
 
     @NonNull
     @ColumnInfo(name = "search_order", defaultValue = "2")
@@ -246,6 +257,7 @@ public class BusSchList implements Parcelable, Comparable<BusSchList> {
         parcel.writeString(lastLowTm);
         parcel.writeString(firstLowTm);
         parcel.writeString(corpNm);
+        parcel.writeString(stId);
     }
 
 }

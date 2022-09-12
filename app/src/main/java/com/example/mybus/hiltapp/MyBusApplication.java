@@ -28,6 +28,9 @@ public class MyBusApplication extends Application {
         instance = this;
         KakaoSdk.init(this, this.getString(R.string.kakao_app_key));
 
+
+
+
         RxJavaPlugins.setErrorHandler(throwable -> {
                     if (throwable instanceof UndeliverableException) {
                         Log.d("kkang", "UndeliverableException" + throwable.getMessage() + "cause is : " + throwable.getCause());

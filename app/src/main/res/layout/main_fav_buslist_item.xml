@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp">
+
+    <LinearLayout
+        android:padding="10dp"
+        android:orientation="horizontal"
+        android:id="@+id/fav_contents"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/bus_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="버스 이름" />
+
+        <View
+            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical"
+            android:id="@+id/bus_remain_time_wrap"
+            android:layout_width="140dp"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:gravity="center_vertical"
+                android:id="@+id/first_remain_time"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:text="남은 시간 + n 전"
+                android:textSize="10sp" />
+
+
+            <TextView
+                android:gravity="center_vertical"
+                android:id="@+id/second_remain_time"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:text="남은 시간2 + n 전"
+                android:textSize="10sp" />
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:src="@drawable/ic_baseline_add_alarm_24"
+            android:id="@+id/bus_alarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="버스"
+            android:layout_gravity="left" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

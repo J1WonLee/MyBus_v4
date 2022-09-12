@@ -11,7 +11,7 @@ import com.example.mybus.vo.LocalFav;
 import com.example.mybus.vo.LocalFavStopBus;
 import com.example.mybus.vo.User;
 
-@Database(entities = {User.class, BusSchList.class, StopSchList.class, LocalFav.class, LocalFavStopBus.class}, version = 11, exportSchema = false)
+@Database(entities = {User.class, BusSchList.class, StopSchList.class, LocalFav.class, LocalFavStopBus.class}, version = 14, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class BusRoomDatabase extends RoomDatabase {
     public abstract BusDao getDao();

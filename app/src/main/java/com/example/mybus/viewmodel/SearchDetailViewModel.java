@@ -15,6 +15,7 @@ import com.example.mybus.apisearch.itemList.BusArrivalList;
 import com.example.mybus.apisearch.itemList.StopUidSchList;
 import com.example.mybus.apisearch.GbusWrapper.GBusStopSearchResponse;
 import com.example.mybus.apisearch.wrapper.StopSearchUidWrap;
+import com.example.mybus.firebaserepo.FbRepository;
 import com.example.mybus.retrofitrepo.RetrofitGbusRepository;
 import com.example.mybus.retrofitrepo.RetrofitGbusService;
 import com.example.mybus.retrofitrepo.RetrofitRepository;
@@ -47,6 +48,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class SearchDetailViewModel extends ViewModel {
     private RetrofitRepository retrofitRepository;
     private RetrofitGbusService retrofitGbusService;
+    private FbRepository fbRepository;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     // 서울 정류장 버스 도착 조회
     public MutableLiveData<List<StopUidSchList>> stopUidSchList = new MutableLiveData<>();
@@ -56,10 +58,9 @@ public class SearchDetailViewModel extends ViewModel {
     private Map<String, String> busRouteMatchMap = new HashMap<>();
     // 즐겨찾기한 정류장들 목록
     public MutableLiveData<List<LocalFavStopBus>> localFabStopBusList = new MutableLiveData<>();
-
     public List<LocalFavStopBus> localFavStopBusList = new ArrayList<>();
-
     public MutableLiveData<Integer> listsState = new MutableLiveData<>();
+    public MutableLiveData<Integer> isFavSaved = new MutableLiveData<>();
 
     // 서비스키 인코딩
     private static String serviceKey = "";
@@ -74,10 +75,11 @@ public class SearchDetailViewModel extends ViewModel {
 
 
     @Inject
-    public SearchDetailViewModel(RetrofitRepository retrofitRepository, RetrofitGbusRepository retrofitGbusRepository, BusRoomRepository busRoomRepository){
+    public SearchDetailViewModel(RetrofitRepository retrofitRepository, RetrofitGbusRepository retrofitGbusRepository, BusRoomRepository busRoomRepository, FbRepository fbRepository){
         this.retrofitRepository = retrofitRepository;
         this.retrofitGbusService = retrofitGbusRepository;
         this.busRoomRepository = busRoomRepository;
+        this.fbRepository = fbRepository;
     }
 
     // 서울시 버스 정류장인 경우 검색 (arsId)
@@ -110,7 +112,12 @@ public class SearchDetailViewModel extends ViewModel {
                             @Override
                             public void onSuccess(@NonNull GBusStopSearchResponse gBusStopSearchResponse) {
 //                                gbusUidSchList.setValue(gBusStopSearchResponse.getgBusStopSearchUidWrap().getBusArrivalListList());
-                                if (gBusStopSearchResponse != null){
+                                if (gBusStopSearchResponse.getgBusStopSearchUidWrap() == null){
+//                                    busArrivalLists = gBusStopSearchResponse.getgBusStopSearchUidWrap().getBusArrivalListList();
+//                                    Collections.sort(busArrivalLists);
+//                                    getGBusRouteName(busArrivalLists);
+                                    gbusUidSchList.setValue(null);
+                                }else{
                                     busArrivalLists = gBusStopSearchResponse.getgBusStopSearchUidWrap().getBusArrivalListList();
                                     Collections.sort(busArrivalLists);
                                     getGBusRouteName(busArrivalLists);
@@ -216,6 +223,59 @@ public class SearchDetailViewModel extends ViewModel {
                         })
         );
     }
+
+    public void getLocalFavIsSaved(String lfId){
+        compositeDisposable.add(
+                busRoomRepository.getLocalFavIsSaved(lfId)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<List<LocalFav>>() {
+                            @Override
+                            public void onSuccess(@NonNull List<LocalFav> localFavs) {
+                                if (localFavs != null){
+                                    isFavSaved.setValue(localFavs.size());
+                                }else{
+                                    isFavSaved.setValue(-1);
+                                }
+                            }
+
+                            @Override
+                            public void onError(@NonNull Throwable e) {
+                                Log.d("SearchDetailViewModel", "getLocalFavIsSaved error msg :" + e.getMessage());
+                            }
+                        })
+
+        );
+    }
+
+    public void deleteLocalFav(String lfId){
+        busRoomRepository.deleteLocalFav(lfId);
+    }
+
+
+    // fb db 즐겨찾기 추가
+    public void insertFbFav(LocalFav localFav, String loginId){
+        fbRepository.insertFbFav(localFav, loginId);
+    }
+
+    // fb db 즐겨찾기 삭제
+    public void deleteFbFab(String lbId, String loginId){
+        fbRepository.deleteFbFab(lbId, loginId);
+    }
+
+    public void insertFbStopFav(LocalFav localFav, LocalFavStopBus localFavStopBus, String loginId){
+        fbRepository.insertFbStopFav(localFav, localFavStopBus, loginId);
+    }
+
+    public void deleteFbFabInStopDetail(String lfId, String loginId){
+        fbRepository.deleteFbFabInStopDetail(lfId, loginId);
+    }
+
+    public void deleteFbStopFav(String lfId, String lfbid, String loginId){
+        fbRepository.deleteFbStopFav(lfId, lfbid, loginId);
+    }
+
+
     @Override
     protected void onCleared() {
         super.onCleared();

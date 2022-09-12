@@ -2,6 +2,8 @@ package com.example.mybus.firebaserepo;
 
 import android.util.Log;
 
+import com.example.mybus.vo.LocalFav;
+import com.example.mybus.vo.LocalFavStopBus;
 import com.example.mybus.vo.User;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
@@ -27,5 +29,54 @@ public class FbRepository implements FbService{
     @Override
     public void insert(User user) {
         databaseReference.child("users").child(user.getUser_tk()).setValue(user);
+    }
+
+    @Override
+    public void insertFbFav(LocalFav localFav, String loginId) {
+        try{
+            Log.d("FbRepository", "INSERT FBFAV!!");
+            databaseReference.child("FavList").child(loginId).child(localFav.getLf_id()).setValue(localFav);
+        }catch(Exception e){
+            Log.d("FbRepository", "ERROR ON INSERTFBFAV " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteFbFab(String lfId, String logInId) {
+        try{
+            Log.d("FbRepository", "deleteFbFab FBFAV!!");
+            databaseReference.child("FavList").child(logInId).child(lfId).removeValue();
+        }catch(Exception e){
+            Log.d("FbRepository", "ERROR ON INSERTFBFAV " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void insertFbStopFav(LocalFav localFav, LocalFavStopBus localFavStopBus, String loginId) {
+        try{
+            databaseReference.child("FavList").child(loginId).child(localFav.getLf_id()).setValue(localFav);
+            databaseReference.child("FsbList").child(loginId).child(localFav.getLf_id()).child(localFavStopBus.getLfb_busId()).setValue(localFavStopBus);
+        }catch(Exception e){
+            Log.d("FbRepository", "ERROR ON insertFbStopFav " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteFbStopFav(String lfId, String lfbId, String loginId) {
+        try{
+            databaseReference.child("FsbList").child(loginId).child(lfId).child(lfbId).removeValue();
+        }catch(Exception e){
+            Log.d("FbRepository", "ERROR ON deleteFbStopFav " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteFbFabInStopDetail(String lfId, String loginId) {
+        try{
+            databaseReference.child("FavList").child(loginId).child(lfId).removeValue();
+            databaseReference.child("FsbList").child(loginId).child(lfId).removeValue();
+        }catch(Exception e){
+            Log.d("FbRepository", "ERROR ON deleteFbFabInStopDetail " + e.getMessage());
+        }
     }
 }

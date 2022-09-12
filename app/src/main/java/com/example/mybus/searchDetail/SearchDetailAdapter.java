@@ -1,12 +1,15 @@
 package com.example.mybus.searchDetail;
 
+import android.annotation.SuppressLint;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -32,7 +35,7 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
     private List<LocalFavStopBus> localFavStopBusList;
 
     public boolean isClicked = false;
-
+    private String busId = null;
     // 클릭 리스너
     private OnItemClickListener mListener;
     @NonNull
@@ -59,6 +62,7 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                         holder.binding.secondRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag2(), stopUidSch.getArrmsgSec2()));
                         setRemainTime(holder, stopUidSch.getArrmsgSec1(), 1);
                         setRemainTime(holder, stopUidSch.getArrmsgSec2(), 2);
+                        setBackGroundColor(holder, position);
                         break;
                     case "2":
                         // 마을
@@ -69,6 +73,7 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                         holder.binding.secondRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag2(), stopUidSch.getArrmsgSec2()));
                         setRemainTime(holder, stopUidSch.getArrmsgSec1(), 1);
                         setRemainTime(holder, stopUidSch.getArrmsgSec2(), 2);
+                        setBackGroundColor(holder, position);
                         break;
                     case "3":
                         // 간선
@@ -80,6 +85,7 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                         holder.binding.secondRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag2(), stopUidSch.getArrmsgSec2()));
                         setRemainTime(holder, stopUidSch.getArrmsgSec1(), 1);
                         setRemainTime(holder, stopUidSch.getArrmsgSec2(), 2);
+                        setBackGroundColor(holder, position);
                         break;
                     case "4":
                         // 지선
@@ -156,10 +162,14 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                         setRemainTime(holder, stopUidSch.getArrmsgSec1(), 1);
                         setRemainTime(holder, stopUidSch.getArrmsgSec2(), 2);
                         break;
+                    default:
+                        setBackGroundColor(holder, position);
+                        break;
                 }
             }else{
                 setFavImage(holder, stopUidSch);
                 setContents(holder, stopUidSch, sBusStopList.get(position-1));
+                setBackGroundColor(holder, position);
             }
         }else if (gBusStopList != null){
             BusArrivalList busArrival = gBusStopList.get(position);
@@ -169,6 +179,7 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
             gBusSetRemainTime(holder, busArrival.getPredictTime2(), 2);
             gBusSetRemainSeat(holder, busArrival.getRemainSeatCnt1(), 1);
             gBusSetRemainSeat(holder, busArrival.getRemainSeatCnt2(), 2);
+            setGbusBackGroundColor(holder, position);
         }
     }
 
@@ -381,8 +392,9 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
     }
 
     // 서울 정류장
-    public void updateSBusStopList(List<StopUidSchList> lists){
+    public void updateSBusStopList(List<StopUidSchList> lists, @Nullable String busId){
         this.sBusStopList = lists;
+        if (busId != null)  this.busId = busId;
         notifyDataSetChanged();
     }
 
@@ -401,8 +413,9 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
     }
 
     // 경기도 정류장
-    public void updateGBusStopList(List<BusArrivalList> lists){
+    public void updateGBusStopList(List<BusArrivalList> lists , @Nullable String busId){
         this.gBusStopList = lists;
+        if (busId != null)          this.busId = busId;
         notifyDataSetChanged();
     }
 
@@ -478,6 +491,19 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                 busArrivalList.setChkFlag(false);
                 holder.binding.addFav.setImageResource(R.drawable.ic_baseline_star_border_24);
             }
+        }
+    }
+
+    @SuppressLint("ResourceAsColor")
+    public void setBackGroundColor(SearchDetailViewHolder holder, int position){
+        if (this.busId != null && sBusStopList.get(position).getBusRouteId().equals(busId)){
+            holder.binding.stopDetailListLayout.setBackgroundColor(R.color.yellow);
+        }
+    }
+    @SuppressLint("ResourceAsColor")
+    public void setGbusBackGroundColor(SearchDetailViewHolder holder, int position){
+        if (this.busId != null && gBusStopList.get(position).getRouteId().equals(busId)){
+            holder.binding.stopDetailListLayout.setBackgroundColor(R.color.yellow);
         }
     }
 

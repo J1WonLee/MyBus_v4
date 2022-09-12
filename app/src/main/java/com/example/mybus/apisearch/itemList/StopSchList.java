@@ -32,6 +32,16 @@ public class StopSchList implements Comparable<StopSchList>, Parcelable {
     @SerializedName("arsId")
     public String arsId;
 
+    private String busId;
+
+    public String getBusId() {
+        return busId;
+    }
+
+    public void setBusId(String busId) {
+        this.busId = busId;
+    }
+
     @NonNull
     @ColumnInfo(name = "search_order", defaultValue = "2")
     public int order=0;
@@ -44,6 +54,7 @@ public class StopSchList implements Comparable<StopSchList>, Parcelable {
         stNm = in.readString();
         arsId = in.readString();
         nextDir = in.readString();
+        busId = in.readString();
     }
 
     public static final Creator<StopSchList> CREATOR = new Creator<StopSchList>() {
@@ -152,6 +163,6 @@ public class StopSchList implements Comparable<StopSchList>, Parcelable {
         parcel.writeString(stNm);
         parcel.writeString(arsId);
         parcel.writeString(nextDir);
-
+        parcel.writeString(busId);
     }
 }
