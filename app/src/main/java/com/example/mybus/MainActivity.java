@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,6 +33,7 @@ import com.example.mybus.menu.LoginActivity;
 import com.example.mybus.menu.MyAlarmActivity;
 import com.example.mybus.menu.OpenSourceActivity;
 import com.example.mybus.search.SearchActivity;
+import com.example.mybus.searchDetail.BusRouteDetailAdapter;
 import com.example.mybus.viewmodel.MainViewModel;
 import com.example.mybus.vo.DataWithFavStopBus;
 import com.example.mybus.vo.LocalFav;
@@ -58,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
     private List<DataWithFavStopBus> dataWithFavStopBus;
     private List<BusArrivalList> busArrivalList;
     private List<StopUidSchList> stopUidSchList;
+    private View slidingPanel;
+    private boolean isUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         if (dataWithFavStopBus != null){
             getFavArrTime();
         }
+        setRecyclerListener();
 
 
     }
@@ -81,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
     public void initMenu(){
         kakaoLogin = new KakaoLogin();
         toolbar = binding.toolbar;
+        slidingPanel = binding.slidingPanel;
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -246,7 +252,43 @@ public class MainActivity extends AppCompatActivity {
             });
 
         }
+    }
 
+    public void setRecyclerListener(){
+        adapter.setOnItemClickListener(new MainFavAdapter.OnItemClickListener() {
+            @Override
+            public void onBtnClick(View v, int position) {
+                if (isUp){
+                    slideDown();
+                }else{
+                    slideUp();
+                }
+                isUp = !isUp;
+            }
+        });
+    }
+
+    public void slideUp(){
+        slidingPanel.setVisibility(View.VISIBLE);
+        TranslateAnimation animate = new TranslateAnimation(
+                0,                 // fromXDelta
+                0,                 // toXDelta
+                slidingPanel.getHeight(),  // fromYDelta
+                0);                // toYDelta
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        slidingPanel.startAnimation(animate);
+    }
+
+    public void slideDown(){
+        TranslateAnimation animate = new TranslateAnimation(
+                0,                 // fromXDelta
+                0,                 // toXDelta
+                0,                 // fromYDelta
+                slidingPanel.getHeight()); // toYDelta
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        slidingPanel.startAnimation(animate);
     }
 }
 

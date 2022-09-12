@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mybus.apisearch.itemList.BusArrivalList;
 import com.example.mybus.apisearch.itemList.StopUidSchList;
 import com.example.mybus.databinding.MainFavItemBinding;
+import com.example.mybus.searchDetail.BusRouteDetailAdapter;
 import com.example.mybus.vo.DataWithFavStopBus;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class MainFavAdapter extends RecyclerView.Adapter<MainFavAdapter.MainFavV
     private List<DataWithFavStopBus> dataWithFavStopBusList;
     private List<StopUidSchList> stopUidSchList;
     private List<BusArrivalList> busArrivalList;
+    private OnItemClickListener mListener;
     @NonNull
     @Override
     public MainFavViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -65,12 +67,31 @@ public class MainFavAdapter extends RecyclerView.Adapter<MainFavAdapter.MainFavV
         notifyDataSetChanged();
     }
 
+    public interface OnItemClickListener{
+        void onBtnClick(View v , int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+        this.mListener = onItemClickListener;
+    }
+
+
     class MainFavViewHolder extends RecyclerView.ViewHolder{
         MainFavItemBinding mainFavItemBinding;
 
         public MainFavViewHolder(MainFavItemBinding binding) {
             super(binding.getRoot());
             mainFavItemBinding = binding;
+
+            mainFavItemBinding.stopBusListBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION && mListener != null){
+                        mListener.onBtnClick(view, pos);
+                    }
+                }
+            });
         }
     }
 }
