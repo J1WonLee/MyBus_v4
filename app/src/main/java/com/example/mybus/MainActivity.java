@@ -261,14 +261,14 @@ public class MainActivity extends AppCompatActivity {
                 if (isUp){
                     slideDown();
                 }else{
-                    slideUp();
+                    slideUp(dataWithFavStopBus.get(position).localFav.getLf_id());
                 }
                 isUp = !isUp;
             }
         });
     }
 
-    public void slideUp(){
+    public void slideUp(String lfId){
         slidingPanel.setVisibility(View.VISIBLE);
         TranslateAnimation animate = new TranslateAnimation(
                 0,                 // fromXDelta
@@ -277,6 +277,13 @@ public class MainActivity extends AppCompatActivity {
                 0);                // toYDelta
         animate.setDuration(500);
         animate.setFillAfter(true);
+        if (lfId.length() <= 5){
+        // 서울 시 정류장 인 경우
+            mainViewModel.getStopRouteList(lfId);
+        }else{
+        // 경기도 정류장 인 경우
+            mainViewModel.getGBusStopRouteList(lfId);
+        }
         slidingPanel.startAnimation(animate);
     }
 

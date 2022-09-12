@@ -6,6 +6,7 @@ import com.example.mybus.apisearch.wrapper.RouteSearchWrap;
 import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.apisearch.itemList.BusStopList;
 import com.example.mybus.apisearch.wrapper.RouteStationWrap;
+import com.example.mybus.apisearch.wrapper.StopRouteListWrap;
 import com.example.mybus.apisearch.wrapper.StopSearchUidWrap;
 import com.example.mybus.apisearch.wrapper.StopSearchWrap;
 
@@ -93,6 +94,14 @@ public interface RetrofitService {
     Single<RouteInfoWrap> getRouteInfo(
             @Query("serviceKey") String serviceKey,
             @Query("busRouteId") String busRouteId,
+            @Query("resultType") String json
+    );
+
+    // 해당 정류소를 지나는 버스 목록
+    @GET("stationinfo/getRouteByStation")
+    Single<StopRouteListWrap> getStopRouteList(
+            @Query("serviceKey") String serviceKey,
+            @Query("arsId") String ardId,
             @Query("resultType") String json
     );
 }

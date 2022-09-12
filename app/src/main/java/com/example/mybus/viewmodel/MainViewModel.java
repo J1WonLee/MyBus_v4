@@ -6,9 +6,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.mybus.apisearch.GbusWrapper.GBusStopRouteResponse;
 import com.example.mybus.apisearch.GbusWrapper.GBusStopSearchResponse;
 import com.example.mybus.apisearch.itemList.BusArrivalList;
 import com.example.mybus.apisearch.itemList.StopUidSchList;
+import com.example.mybus.apisearch.wrapper.StopRouteListWrap;
 import com.example.mybus.apisearch.wrapper.StopSearchUidWrap;
 import com.example.mybus.firebaserepo.FbRepository;
 import com.example.mybus.retrofitrepo.RetrofitGbusRepository;
@@ -206,6 +208,49 @@ public class MainViewModel extends ViewModel {
                     })
         );
 
+    }
+
+    public void getStopRouteList(String arsId){
+        compositeDisposable.add(
+            retrofitRepository.getStopRouteList(serviceKey, arsId, "json")
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeWith(new DisposableSingleObserver<StopRouteListWrap>() {
+                        @Override
+                        public void onSuccess(@NonNull StopRouteListWrap stopRouteListWrap) {
+                            if (stopRouteListWrap.getStopRouteList() != null){
+                                Log.d("MainViewModel", "getStopRouteList success");
+                            }
+                        }
+
+                        @Override
+                        public void onError(@NonNull Throwable e) {
+                            Log.d("MainViewModel", "getStopRouteList onError");
+                        }
+                    })
+
+        );
+    }
+
+    public void getGBusStopRouteList(String stId){
+        compositeDisposable.add(
+            retrofitGbusRepository.getGStopRouteList(serviceKey, stId)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<GBusStopRouteResponse>() {
+                    @Override
+                    public void onSuccess(@NonNull GBusStopRouteResponse gBusStopRouteResponse) {
+                        if (gBusStopRouteResponse.getgBusRouteStationWrap() != null){
+                            Log.d("MainViewModel", "getGBusStopRouteList success");
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        Log.d("MainViewModel", "getGBusStopRouteList onError");
+                    }
+                })
+        );
     }
 
     @Override
