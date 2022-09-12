@@ -259,6 +259,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onBtnClick(View v, int position) {
                 if (isUp){
+                    // 숨길때는 해당 정류장 목록 보여주는 어뎁터에서 숨겨줘야 함.
                     slideDown();
                 }else{
                     slideUp(dataWithFavStopBus.get(position).localFav.getLf_id());

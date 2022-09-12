@@ -22,6 +22,7 @@ public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapte
     private List<StopUidSchList> stopUidSchList;
     private List<BusArrivalList> busArrivalList;
     private CountDownTimer countDownTimer;
+    private ChileOnItemClickListener mListener;
 
     public MainFavChildAdapter(List<LocalFavStopBus> localFavStopBusList, List<StopUidSchList> stopUidSchLists, List<BusArrivalList> busArrivalLists) {
         this.localFavStopBusList = localFavStopBusList;
@@ -168,6 +169,14 @@ public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapte
                 holder.favBuslistItemBinding.secondRemainTime.setText("도착 정보가 없습니다");
             }
         }
+    }
+
+    public interface ChileOnItemClickListener{
+        void onBtnClick(View v , int position);
+    }
+
+    public void setOnItemClickListener(ChileOnItemClickListener onItemClickListener){
+        this.mListener = onItemClickListener;
     }
 
 

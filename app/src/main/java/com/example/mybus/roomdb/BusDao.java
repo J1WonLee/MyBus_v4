@@ -73,7 +73,7 @@ public interface BusDao {
     Completable deleteFavStopBus(String lfbId, String lbBisOd);
 
     // 즐겨찾기 목록 조회(전체)
-    @Query("SELECT * FROM LOCAL_FAV")
+    @Query("SELECT * FROM LOCAL_FAV order by lf_order desc")
     Single<List<LocalFav>> getLocalFavList();
 
     // 즐겨찾기 목록 조회(특정)
@@ -85,7 +85,7 @@ public interface BusDao {
     Completable deleteLocalFav(String lfId);
 
     @Transaction
-    @Query("SELECT * FROM LOCAL_FAV")
+    @Query("SELECT * FROM LOCAL_FAV order by lf_order desc")
     Single<List<DataWithFavStopBus>> getFavStopBus();
 
     @Query("SELECT * FROM LOCAL_FAV_STOP_BUS where lfb_id =:lsbId  order by lfb_busId")
