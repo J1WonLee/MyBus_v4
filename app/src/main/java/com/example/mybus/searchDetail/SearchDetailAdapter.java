@@ -33,7 +33,8 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
     private CountDownTimer countDownTimer;
     // 즐겨찾기 목록
     private List<LocalFavStopBus> localFavStopBusList;
-
+    // 정류장 즐겨찾기 삭제 시 별 표시 해줄 플래그
+    public boolean isFaved = false;
     public boolean isClicked = false;
     private String busId = null;
     // 클릭 리스너

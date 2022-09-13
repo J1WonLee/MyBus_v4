@@ -41,9 +41,10 @@
                 app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:background="@drawable/dialog_custom_border"
                 android:id="@+id/main_recycler"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="40dp"
                 android:layout_marginTop="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -57,17 +58,17 @@
 
             <!-- 슬라이딩 -->
             <LinearLayout
-                android:background="@color/gray"
                 android:id="@+id/sliding_panel"
                 android:layout_width="350dp"
-                android:layout_height="500dp"
+                android:layout_height="wrap_content"
+                android:background="@color/gray"
                 android:orientation="vertical"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/main_recycler"
-                app:layout_constraintVertical_bias="1.0">
+                app:layout_constraintVertical_bias="1.0"
+                app:layout_constraintTop_toTopOf="@+id/main_recycler">
 
                 <LinearLayout
                     android:layout_width="350dp"
@@ -92,15 +93,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
-                        android:text="버스" />
+                        android:text="닫기" />
 
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/panel_recycler"
                     android:layout_width="400dp"
-                    android:layout_height="0dp"
-                    android:background="@color/black" />
+                    android:layout_height="400dp" />
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -79,4 +79,14 @@ public class FbRepository implements FbService{
             Log.d("FbRepository", "ERROR ON deleteFbFabInStopDetail " + e.getMessage());
         }
     }
+
+    // 매인화면에서 정류장 경유 버스 즐겨찾기 저장
+    @Override
+    public void insertFbStopFavFromMain(LocalFavStopBus localFavStopBus, String loginId) {
+        try{
+            databaseReference.child("FsbList").child(loginId).child(localFavStopBus.getLfb_id()).child(localFavStopBus.getLfb_busId()).setValue(localFavStopBus);
+        }catch(Exception e){
+            Log.d("FbRepository", "ERROR ON insertFbStopFavFromMain " + e.getMessage());
+        }
+    }
 }

@@ -166,7 +166,8 @@ public class BusRoomRepository {
                 );
 
     }
-
+    
+    // 정류장 즐겨찾기의 버스 목록 삭제(특정)
     public void deleteFavStopBus(String lfbId, String lfBusId){
         Completable completable = busDao.deleteFavStopBus(lfbId, lfBusId);
         completable.subscribeOn(Schedulers.newThread())
@@ -177,12 +178,25 @@ public class BusRoomRepository {
                 );
     }
 
+    // 정류장 즐겨찾기의 버스 목록 삭제(전체)
+    public void deleteFavStopBus(String lfbId){
+        Completable completable = busDao.deleteFavStopBusAll(lfbId);
+        completable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        () -> Log.d("BusRoomRepository", "deleteFavStopBus success!"),
+                        error -> Log.d("BusRoomRepository", "delete failed!" + error.getMessage())
+                );
+    }
+    
+    // 즐겨찾기 삭제
     public void deleteLocalFav(String lfId){
         Completable completable = busDao.deleteLocalFav(lfId);
         completable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        () -> Log.d("BusRoomRepository", "deletelocalFav success"),
+//                        () -> Log.d("BusRoomRepository", "deletelocalFav success"),
+                        () -> deleteFavStopBus(lfId),
                         error -> Log.d("BusRoomRepository", "delete localfav failed!"+error.getMessage())
                 );
     }

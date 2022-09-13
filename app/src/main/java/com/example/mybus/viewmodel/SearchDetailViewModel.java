@@ -91,8 +91,11 @@ public class SearchDetailViewModel extends ViewModel {
                           .subscribeWith(new DisposableSingleObserver<StopSearchUidWrap>() {
                               @Override
                               public void onSuccess(@NonNull StopSearchUidWrap stopSearchUidWrap) {
-                                  Collections.sort(stopSearchUidWrap.getStopSearchUid().getItemLists());
-                                  stopUidSchList.setValue(stopSearchUidWrap.getStopSearchUid().getItemLists());
+                                  if (stopSearchUidWrap.getStopSearchUid().getItemLists() != null){
+                                      Collections.sort(stopSearchUidWrap.getStopSearchUid().getItemLists());
+                                      stopUidSchList.setValue(stopSearchUidWrap.getStopSearchUid().getItemLists());
+                                  }
+
                               }
                               @Override
                               public void onError(@NonNull Throwable e) {

@@ -2,39 +2,37 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp">
+    android:layout_height="50dp">
 
     <LinearLayout
-        android:padding="10dp"
-        android:orientation="horizontal"
         android:id="@+id/fav_contents"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:padding="10dp">
 
         <TextView
             android:id="@+id/bus_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:text="버스 이름" />
+            android:layout_gravity="center_vertical"
+            android:text="버스 이름"
+            android:textSize="20sp" />
 
         <View
-            android:layout_height="0dp"
             android:layout_width="0dp"
-            android:layout_weight="1" />
-
-        <View
             android:layout_height="0dp"
-            android:layout_width="0dp"
             android:layout_weight="1" />
 
         <ImageView
-            android:src="@drawable/ic_baseline_star_border_24"
-            android:id="@+id/bus_alarm"
+            android:id="@+id/bus_faved"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="버스"
-            android:layout_gravity="left" />
+            android:layout_gravity="left"
+            android:layout_marginRight="80dp"
+            android:padding="5dp"
+            android:src="@drawable/ic_baseline_star_border_24"
+            android:text="버스" />
 
     </LinearLayout>
 

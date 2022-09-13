@@ -22,6 +22,10 @@ public interface FbService {
 
     void deleteFbFabInStopDetail(String lfId, String loginId);
 
+    void insertFbStopFavFromMain(LocalFavStopBus localFavStopBus, String loginId);
+
+
+
 }
 
 

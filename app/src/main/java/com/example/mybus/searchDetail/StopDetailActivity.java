@@ -75,8 +75,6 @@ public class StopDetailActivity extends AppCompatActivity {
         setText();
     }
 
-
-
     public void initView(){
         emptyview = binding.stopDetailNoResult;
         favImage = binding.stopDetailAddFav;
@@ -196,6 +194,7 @@ public class StopDetailActivity extends AppCompatActivity {
                     favImage.setImageResource(R.drawable.ic_baseline_star_border_24);
                     // 삭제
                     searchDetailViewModel.deleteFbFabInStopDetail(lfid, "001234");
+
                 }else if (lfid != null && !isFavSaved){
                     isFavSaved = !isFavSaved;
                     LocalFav localFav = new LocalFav(lfid
@@ -358,7 +357,6 @@ public class StopDetailActivity extends AppCompatActivity {
                     }
                     searchDetailAdapter.notifyItemChanged(position);
                     searchDetailAdapter.isClicked = true;
-
                     searchDetailAdapter.updateLists(stopUidSchList,localFavStopBusList );
 
                 }else if (gbusBusLocationList != null){

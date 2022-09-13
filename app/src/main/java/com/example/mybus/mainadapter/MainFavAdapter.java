@@ -1,9 +1,11 @@
 package com.example.mybus.mainadapter;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mybus.apisearch.itemList.BusArrivalList;
 import com.example.mybus.apisearch.itemList.StopUidSchList;
 import com.example.mybus.databinding.MainFavItemBinding;
+import com.example.mybus.menu.HomeEditActivity;
 import com.example.mybus.searchDetail.BusRouteDetailAdapter;
 import com.example.mybus.vo.DataWithFavStopBus;
 
@@ -21,6 +24,7 @@ public class MainFavAdapter extends RecyclerView.Adapter<MainFavAdapter.MainFavV
     private List<StopUidSchList> stopUidSchList;
     private List<BusArrivalList> busArrivalList;
     private OnItemClickListener mListener;
+    public MainFavChildAdapter mainFavChildAdapter;
     @NonNull
     @Override
     public MainFavViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -30,6 +34,7 @@ public class MainFavAdapter extends RecyclerView.Adapter<MainFavAdapter.MainFavV
 
     @Override
     public void onBindViewHolder(@NonNull MainFavViewHolder holder, int position) {
+        holder.setIsRecyclable(false);
         setTitleContents(holder, position);
         setChildAdapter(holder, position);
     }
@@ -45,10 +50,13 @@ public class MainFavAdapter extends RecyclerView.Adapter<MainFavAdapter.MainFavV
 
     public void setTitleContents(MainFavViewHolder holder, int position){
         holder.mainFavItemBinding.favStopBusName.setText(dataWithFavStopBusList.get(position).localFav.getLf_name());
+        if (dataWithFavStopBusList.get(position).localFav.getLf_isBus() == 0){
+            holder.mainFavItemBinding.stopBusListBtn.setVisibility(View.GONE);
+        }
     }
 
     public void setChildAdapter(MainFavViewHolder holder, int position){
-        MainFavChildAdapter mainFavChildAdapter =  new MainFavChildAdapter(dataWithFavStopBusList.get(position).localFavStopBusList, stopUidSchList, busArrivalList);
+        mainFavChildAdapter =  new MainFavChildAdapter(dataWithFavStopBusList.get(position).localFavStopBusList, stopUidSchList, busArrivalList);
         holder.mainFavItemBinding.nestedRv.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
         holder.mainFavItemBinding.nestedRv.setAdapter(mainFavChildAdapter);
     }
@@ -60,10 +68,14 @@ public class MainFavAdapter extends RecyclerView.Adapter<MainFavAdapter.MainFavV
         notifyDataSetChanged();
     }
 
-    public void updateDataWithFavStopBusList(List<DataWithFavStopBus> dataWithFavStopBusLists, List<StopUidSchList> stopUidSchLists,List<BusArrivalList> busArrivalLists){
+    public void updateDataWithGBusFavStopBusList(List<DataWithFavStopBus> dataWithFavStopBusLists, List<BusArrivalList> busArrivalLists){
         this.dataWithFavStopBusList = dataWithFavStopBusLists;
-        this.stopUidSchList = stopUidSchLists;
         this.busArrivalList = busArrivalLists;
+        notifyDataSetChanged();
+    }
+
+    public void updateDataWithFavStopBus(List<DataWithFavStopBus> dataWithFavStopBusLists){
+        this.dataWithFavStopBusList = dataWithFavStopBusLists;
         notifyDataSetChanged();
     }
 

@@ -72,6 +72,10 @@ public interface BusDao {
     @Query("delete from LOCAL_FAV_STOP_BUS where lfb_id =:lfbId and lfb_busId =:lbBisOd")
     Completable deleteFavStopBus(String lfbId, String lbBisOd);
 
+    // 정류장 버스 즐겨찾기 전체 삭제
+    @Query("delete from LOCAL_FAV_STOP_BUS where lfb_id =:lfbId")
+    Completable deleteFavStopBusAll(String lfbId);
+
     // 즐겨찾기 목록 조회(전체)
     @Query("SELECT * FROM LOCAL_FAV order by lf_order desc")
     Single<List<LocalFav>> getLocalFavList();

@@ -18,18 +18,21 @@ import com.example.mybus.vo.LocalFavStopBus;
 import java.util.List;
 
 public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapter.MainFavChildViewHolder> {
-    private List<LocalFavStopBus> localFavStopBusList;
-    private List<StopUidSchList> stopUidSchList;
-    private List<BusArrivalList> busArrivalList;
+    public List<LocalFavStopBus> localFavStopBusList;
+    public List<StopUidSchList> stopUidSchList;
+    public List<BusArrivalList> busArrivalList;
     private CountDownTimer countDownTimer;
-    private ChileOnItemClickListener mListener;
+    public ChildOnItemClickListener mListener;
 
     public MainFavChildAdapter(List<LocalFavStopBus> localFavStopBusList, List<StopUidSchList> stopUidSchLists, List<BusArrivalList> busArrivalLists) {
+
         this.localFavStopBusList = localFavStopBusList;
         this.stopUidSchList = stopUidSchLists;
         this.busArrivalList = busArrivalLists;
         Log.d("MainFavChildAdapter", "size of list : " + localFavStopBusList.size());
     }
+
+
 
     @NonNull
     @Override
@@ -40,8 +43,9 @@ public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapte
 
     @Override
     public void onBindViewHolder(@NonNull MainFavChildViewHolder holder, int position) {
+        holder.setIsRecyclable(false);
         // 서울시 정류장인 경우
-        if (localFavStopBusList.get(position).getLfb_id().length()<=6){
+        if (localFavStopBusList.get(position).getLfb_id().length()<=5){
             setTexts(holder, position);
         }else{
             // 경기도 정류장인 경우
@@ -61,23 +65,28 @@ public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapte
 
     public void setTexts(MainFavChildViewHolder holder, int position){
         holder.favBuslistItemBinding.busName.setText(localFavStopBusList.get(position).lfb_busName);
-        for (StopUidSchList lists : stopUidSchList){
-            if (lists.getArsId().equals(localFavStopBusList.get(position).getLfb_id())){
-                if (lists.getBusRouteId().equals(localFavStopBusList.get(position).getLfb_busId())){
-                    setRemainTime(holder, lists.getArrmsg1(), 1);
-                    setRemainTime(holder, lists.getArrmsgSec2(), 2);
+        if (stopUidSchList != null){
+            for (StopUidSchList lists : stopUidSchList){
+                if (lists.getArsId().equals(localFavStopBusList.get(position).getLfb_id())){
+                    if (lists.getBusRouteId().equals(localFavStopBusList.get(position).getLfb_busId())){
+                        setRemainTime(holder, lists.getArrmsg1(), 1);
+                        setRemainTime(holder, lists.getArrmsgSec2(), 2);
+                    }
                 }
             }
         }
+
     }
 
     public void gBusSetTexts(MainFavChildViewHolder holder, int position){
         holder.favBuslistItemBinding.busName.setText(localFavStopBusList.get(position).lfb_busName);
-        for (BusArrivalList lists : busArrivalList){
-            if (lists.getStationId().equals(localFavStopBusList.get(position).getLfb_id())){
-                if (lists.getRouteId().equals(localFavStopBusList.get(position).getLfb_busId())){
-                    gBusSetRemainTime(holder, lists.getPredictTime1(), 1);
-                    gBusSetRemainTime(holder, lists.getPredictTime2(), 2);
+        if (busArrivalList != null){
+            for (BusArrivalList lists : busArrivalList){
+                if (lists.getStationId().equals(localFavStopBusList.get(position).getLfb_id())){
+                    if (lists.getRouteId().equals(localFavStopBusList.get(position).getLfb_busId())){
+                        gBusSetRemainTime(holder, lists.getPredictTime1(), 1);
+                        gBusSetRemainTime(holder, lists.getPredictTime2(), 2);
+                    }
                 }
             }
         }
@@ -171,11 +180,11 @@ public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapte
         }
     }
 
-    public interface ChileOnItemClickListener{
-        void onBtnClick(View v , int position);
+    public interface ChildOnItemClickListener{
+        void onItemClick(View v , int position);
     }
 
-    public void setOnItemClickListener(ChileOnItemClickListener onItemClickListener){
+    public void setOnItemClickListener(ChildOnItemClickListener onItemClickListener){
         this.mListener = onItemClickListener;
     }
 
@@ -185,6 +194,13 @@ public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapte
         public MainFavChildViewHolder(MainFavBuslistItemBinding binding) {
             super(binding.getRoot());
             favBuslistItemBinding = binding;
+
+            favBuslistItemBinding.mainFavBuslistWrap.setOnClickListener(view -> {
+                int pos = getAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION && mListener != null){
+                    mListener.onItemClick(view, pos);
+                }
+            });
         }
     }
 }

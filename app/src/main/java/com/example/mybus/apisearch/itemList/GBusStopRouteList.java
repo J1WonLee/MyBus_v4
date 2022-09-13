@@ -18,6 +18,10 @@ public class GBusStopRouteList {
     @PropertyElement(name = "staOrder")
     private String staOrder;
 
+    private boolean flag = false;
+
+
+
     public GBusStopRouteList() {
     }
 
@@ -28,6 +32,14 @@ public class GBusStopRouteList {
         this.routeName = routeName;
         this.routeTypeName = routeTypeName;
         this.staOrder = staOrder;
+    }
+
+    public boolean isFlag() {
+        return flag;
+    }
+
+    public void setFlag(boolean flag) {
+        this.flag = flag;
     }
 
     public String getDistrictCd() {

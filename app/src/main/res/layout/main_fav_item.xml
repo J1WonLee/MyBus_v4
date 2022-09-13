@@ -6,9 +6,8 @@
     android:padding="10dp"
     android:id="@+id/main_fav_item_wrap"
     android:orientation="vertical"
-
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:padding="10dp"
@@ -21,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="정류장 이름 "
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:gravity="center_vertical" />
         <View
             android:layout_height="0dp"

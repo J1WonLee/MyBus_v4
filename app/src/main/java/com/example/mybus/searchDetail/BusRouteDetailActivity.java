@@ -75,7 +75,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
 
         initView();
         initRecycler();
-//        getLoginId();
+        getLoginId();
         setFabListener();
         getDataFromIntent();
         getIsFaved();
@@ -144,7 +144,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                 busRouteSearchDetailViewModel.deleteLocalFav(busSchList.getBusRouteId());
                 isFavSaved = false;
                 favImage.setImageResource(R.drawable.ic_baseline_star_border_24);
-                busRouteSearchDetailViewModel.deleteFbFab(busSchList.getBusRouteId(), "001234");
+                busRouteSearchDetailViewModel.deleteFbFab(busSchList.getBusRouteId(), loginId);
             }else{
                 Long now = System.currentTimeMillis();
                 Date date = new Date(now);
@@ -153,7 +153,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                 busRouteSearchDetailViewModel.regitFav(localFav);
                 isFavSaved = true;
                 favImage.setImageResource(R.drawable.ic_baseline_star_24);
-                busRouteSearchDetailViewModel.insertFbFav(localFav, "001234");
+                busRouteSearchDetailViewModel.insertFbFav(localFav, loginId);
             }
         });
 
@@ -192,7 +192,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                     busRouteSearchDetailViewModel.deleteLocalFav(busSchList.getBusRouteId());
                     item.setIcon(R.drawable.ic_baseline_star_border_24);
                     favImage.setImageResource(R.drawable.ic_baseline_star_border_24);
-                    busRouteSearchDetailViewModel.deleteFbFab(busSchList.getBusRouteId(), "001234");
+                    busRouteSearchDetailViewModel.deleteFbFab(busSchList.getBusRouteId(), loginId);
                 }else if (!isFavSaved){
                     isFavSaved = !isFavSaved;
                     Long now = System.currentTimeMillis();
@@ -201,7 +201,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                     busRouteSearchDetailViewModel.regitFav(localFav);
                     item.setIcon(R.drawable.ic_baseline_star_24);
                     favImage.setImageResource(R.drawable.ic_baseline_star_24);
-                    insertFbFav(localFav, "001234");
+                    insertFbFav(localFav, loginId);
                 }
                 break;
 
