@@ -93,4 +93,7 @@ dependencies {
 
     implementation 'com.github.hannesa2:AndroidSlidingUpPanel:4.2.1'
 
+    // 로딩 화면
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
+
 }

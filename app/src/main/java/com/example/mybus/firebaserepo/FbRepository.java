@@ -2,17 +2,22 @@ package com.example.mybus.firebaserepo;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.mybus.vo.LocalFav;
 import com.example.mybus.vo.LocalFavStopBus;
 import com.example.mybus.vo.User;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableEmitter;
@@ -24,6 +29,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class FbRepository implements FbService{
     private DatabaseReference databaseReference;
+    private List<LocalFav> localFavList = new ArrayList<>();
 
     public FbRepository(DatabaseReference databaseReference) {
         this.databaseReference = databaseReference;
@@ -112,8 +118,24 @@ public class FbRepository implements FbService{
     }
 
     @Override
-    public void getFbFavLists(String loginId) {
+    public List<LocalFav> getFbFavLists(String loginId) {
+        databaseReference.child("FavList").child(loginId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+               for (DataSnapshot localFavSnapShot : dataSnapshot.getChildren()){
+                   LocalFav localFav = localFavSnapShot.getValue(LocalFav.class);
+                   Log.d("FbRepository", localFav.getLf_id() + "::::" + localFav.getLf_name() +"::::");
+                   localFavList.add(localFav);
+               }
+//                Log.d("FbRepository", localFav.getLf_id() + "::::" + localFav.getLf_name() +"::::");
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("FbRepository", "ERROR ON getFbFavLists  home edit " + databaseError.getMessage());
+            }
+        });
+        return localFavList;
     }
 
 

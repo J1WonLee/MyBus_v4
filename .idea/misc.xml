@@ -7,6 +7,7 @@
         <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/activity_add_alarm.xml" value="0.21875" />
         <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/activity_alarm_arrive.xml" value="0.35280797101449274" />
         <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/activity_bus_route_detail.xml" value="0.21197916666666666" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/activity_fire_base_sync.xml" value="0.35280797101449274" />
         <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/activity_home_edit.xml" value="0.21875" />
         <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/activity_main.xml" value="0.136" />
         <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/activity_my_alarm.xml" value="0.36614583333333334" />
@@ -23,6 +24,7 @@
         <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/route_detail_dialog.xml" value="0.21875" />
         <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/search_list_item.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/stop_detail_item.xml" value="0.536" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/sync_progress.xml" value="0.35280797101449274" />
         <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/menu/menu_add_alarm.xml" value="0.3651041666666667" />
         <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/menu/menu_add_arrive_alarm.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/menu/menu_alarm_list.xml" value="0.36614583333333334" />

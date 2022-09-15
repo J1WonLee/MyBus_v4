@@ -281,4 +281,25 @@ public class BusRoomRepository {
                 );
     }
 
+    public Completable insertFavAll(List<LocalFav> localFavList){
+        return busDao.insertFavAll(localFavList);
+    }
+
+//    public Completable insertFabFabAll(LocalFavStopBus localFavStopBus){
+//        return busDao.insertFabFabAll(localFavStopBus);
+//
+//    }
+
+    public Completable insertFabFabAll(List<LocalFavStopBus> localFavStopBusLists){
+        return busDao.insertFabFabAll(localFavStopBusLists);
+    }
+
+    public Completable deleteLocalFavAll(){
+        return busDao.deleteLocalFavAll();
+    }
+
+    public Completable deleteLocalFavBusAll(){
+        return busDao.deleteLocalBusAll();
+    }
+
 }

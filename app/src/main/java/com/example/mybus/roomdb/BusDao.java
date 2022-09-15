@@ -110,4 +110,19 @@ public interface BusDao {
 
     @Delete
     Completable deleteFavList(List<LocalFav> localFavList);
+
+    // 즐겨찾기에 저장
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    Completable insertFavAll(List<LocalFav> localFavs);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    Completable insertFabFabAll(LocalFavStopBus localFavStopBus);
+    Completable insertFabFabAll(List<LocalFavStopBus> localFavStopBusLists);
+
+    @Query("DELETE FROM LOCAL_FAV")
+    Completable deleteLocalFavAll();
+
+    @Query("DELETE FROM LOCAL_FAV_STOP_BUS")
+    Completable deleteLocalBusAll();
+
 }

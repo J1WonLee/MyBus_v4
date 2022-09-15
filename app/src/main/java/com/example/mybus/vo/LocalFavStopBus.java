@@ -22,6 +22,8 @@ public class LocalFavStopBus implements Serializable {
     @Ignore
     public String stId;
 
+    public LocalFavStopBus() {
+    }
 
     public LocalFavStopBus(String lfb_id, Date lfb_order, String lfb_busId, String lfb_busName) {
         this.lfb_id = lfb_id;

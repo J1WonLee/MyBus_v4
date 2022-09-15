@@ -35,6 +35,7 @@ import com.example.mybus.kakaoLogin.KakaoLogin;
 import com.example.mybus.mainadapter.MainFavAdapter;
 import com.example.mybus.mainadapter.MainFavChildAdapter;
 import com.example.mybus.mainadapter.MainStopBusListAdapter;
+import com.example.mybus.menu.FireBaseSyncActivity;
 import com.example.mybus.menu.HomeEditActivity;
 import com.example.mybus.menu.LoginActivity;
 import com.example.mybus.menu.MyAlarmActivity;
@@ -160,6 +161,12 @@ public class MainActivity extends AppCompatActivity {
                     // 오픈소스 정보로 이동
                     Intent goOpenSource = new Intent(this, OpenSourceActivity.class);
                     startActivity(goOpenSource);
+                    break;
+                case R.id.move_fb_sync:
+                    // 파이어베이스 데이터 받아오기로 이동
+                    Intent goFbSync = new Intent(this, FireBaseSyncActivity.class);
+                    startActivity(goFbSync);
+                    finish();
                     break;
             }
             return false;
