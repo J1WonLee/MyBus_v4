@@ -20,8 +20,11 @@ import javax.inject.Inject;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.CompletableObserver;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.observers.DisposableSingleObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -135,6 +138,27 @@ public class BusRoomRepository {
                 );
     }
 
+    public void deleteRecentBusSch(){
+        Completable completable = busDao.deleteRecentBusSch();
+        completable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        () -> Log.d("BusRoomRepository", "delete deleteRecentBusSch"),
+                        error -> Log.d("BusRoomRepository", error.getMessage() +" error on update deleteRecentBusSch")
+                );
+    }
+
+    public void deleteRecentStopSch(){
+        Completable completable = busDao.deleteRecentStopSch();
+        completable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        () -> Log.d("BusRoomRepository", "delete deleteRecentStopSch"),
+                        error -> Log.d("BusRoomRepository", error.getMessage() +" error on update deleteRecentStopSch")
+                );
+    }
+
+
     // 즐겨찾기 추가 정류장
     public void regitFav(LocalFav localFav){
         Completable completable = busDao.regitFav(localFav);
@@ -215,6 +239,46 @@ public class BusRoomRepository {
 
     public Single<List<LocalFav>> getLocalFavList(){
         return busDao.getLocalFavList();
+    }
+
+    public void updateFavAll(List<LocalFav> localFavList){
+        Completable completable = busDao.updateAll(localFavList);
+        completable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        () -> Log.d("BusRoomRepository", "updateFavAll success"),
+                        error -> Log.d("BusRoomRepository", " updateFavAll failed!"+error.getMessage())
+                );
+//        Observable.fromIterable(dataWithFavStopBusLists)
+//                .flatMapCompletable(item -> busDao.update(item.localFav))
+//                .subscribeOn(Schedulers.newThread())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribeWith(new CompletableObserver() {
+//                    @Override
+//                    public void onSubscribe(@NonNull Disposable d) {
+//                        Log.d("BusRoomRepository", "on subscribe!");
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//                        Log.d("BusRoomRepository", "onComplete");
+//                    }
+//
+//                    @Override
+//                    public void onError(@NonNull Throwable e) {
+//                        Log.d("BusRoomRepository", "onError" + e.getMessage());
+//                    }
+//                });
+    }
+
+    public void deleteFavList(List<LocalFav> localFavList){
+        Completable completable = busDao.deleteFavList(localFavList);
+        completable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        () -> Log.d("BusRoomRepository", "deleteFavList success"),
+                        error -> Log.d("BusRoomRepository", " deleteFavList failed!"+error.getMessage())
+                );
     }
 
 }

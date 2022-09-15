@@ -24,8 +24,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.mybus.apisearch.itemList.BusArrivalList;
+import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.apisearch.itemList.GBusStopRouteList;
 import com.example.mybus.apisearch.itemList.StopRouteList;
+import com.example.mybus.apisearch.itemList.StopSchList;
 import com.example.mybus.apisearch.itemList.StopUidSchList;
 import com.example.mybus.databinding.ActivityMainBinding;
 import com.example.mybus.databinding.NaviHeaderBinding;
@@ -38,7 +40,9 @@ import com.example.mybus.menu.LoginActivity;
 import com.example.mybus.menu.MyAlarmActivity;
 import com.example.mybus.menu.OpenSourceActivity;
 import com.example.mybus.search.SearchActivity;
+import com.example.mybus.searchDetail.BusRouteDetailActivity;
 import com.example.mybus.searchDetail.BusRouteDetailAdapter;
+import com.example.mybus.searchDetail.StopDetailActivity;
 import com.example.mybus.viewmodel.MainViewModel;
 import com.example.mybus.vo.DataWithFavStopBus;
 import com.example.mybus.vo.LocalFav;
@@ -47,6 +51,8 @@ import com.example.mybus.vo.User;
 import com.google.android.material.navigation.NavigationView;
 import com.kakao.sdk.user.UserApiClient;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -67,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
     private MainFavAdapter adapter;
     private MainStopBusListAdapter mainStopBusListAdapter;
     private List<DataWithFavStopBus> dataWithFavStopBus;
+    private ArrayList<DataWithFavStopBus> dataWithFavStopBusArrayList;
     private List<BusArrivalList> busArrivalList;
     private List<StopUidSchList> stopUidSchList;
     private List<StopRouteList> stopRouteList;
@@ -197,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.toolbar_home_edit:
                 // 홈 화면 편집으로 이동한다.
                 Intent intent2 = new Intent(this, HomeEditActivity.class);
+                intent2.putExtra("favlists",  dataWithFavStopBusArrayList);
                 startActivity(intent2);
                 break;
         }
@@ -234,23 +242,14 @@ public class MainActivity extends AppCompatActivity {
         panelRecyclerView.setAdapter(mainStopBusListAdapter);
     }
 
-    public void getFavList(){
-        mainViewModel.getFavList();
-        mainViewModel.localFavLists.observe(this, new Observer<List<LocalFav>>() {
-            @Override
-            public void onChanged(List<LocalFav> localFavs) {
-                Log.d("MainActivity", localFavs.size() +" ");
-            }
-        });
-    }
-
     public void getFavBusList(){
         mainViewModel.getFavStopBus();
         mainViewModel.localFavStopBusLists.observe(this, new Observer<List<DataWithFavStopBus>>() {
             @Override
             public void onChanged(List<DataWithFavStopBus> dataWithFavStopBuses) {
-                Log.d("MainActivity", "size is : " + dataWithFavStopBuses.size() +" ");
+                Log.d("MainActivity", ":::::::::::::::::: getFavBusList onchanged!!");
                 dataWithFavStopBus = dataWithFavStopBuses;
+                dataWithFavStopBusArrayList = (ArrayList<DataWithFavStopBus>) dataWithFavStopBuses;
                 getFavArrTime();
                 getGbusFavArrTime();
 //                adapter.updateDataWithFavStopBusList(dataWithFavStopBuses);
@@ -308,6 +307,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void setRecyclerListener(){
         adapter.setOnItemClickListener(new MainFavAdapter.OnItemClickListener() {
+            // 해당 정류소 버스 노출 여부
             @Override
             public void onBtnClick(View v, int position) {
                 if (isUp){
@@ -317,6 +317,37 @@ public class MainActivity extends AppCompatActivity {
                     slideUp(dataWithFavStopBus.get(position));
                 }
                 isUp = !isUp;
+            }
+
+            // 정류장 혹은 버스 이름 클릭시 해당 상세보기로 이동
+            @Override
+            public void onTitleClick(View v, int position) {
+                if (dataWithFavStopBus != null){
+                    Intent intent;
+                    Bundle args = new Bundle();
+                    if (dataWithFavStopBus.get(position).localFav.getLf_isBus() == 0){
+                        // 버스 일 경우 , 노선 이름 번호 담아간다.
+                        BusSchList busSchList = new BusSchList();
+                        busSchList.setBusRouteId(dataWithFavStopBus.get(position).localFav.getLf_id());
+                        busSchList.setBusRouteNm(dataWithFavStopBus.get(position).localFav.getLf_name());
+                        busSchList.setCorpNm(dataWithFavStopBus.get(position).localFav.getLf_desc());
+                        intent = new Intent(v.getContext(), BusRouteDetailActivity.class);
+                        args.putParcelable("busList", busSchList);
+                        intent.putExtras(args);
+                        startActivity(intent);
+                    }else if (dataWithFavStopBus.get(position).localFav.getLf_isBus() == 1){
+                        // 정류장 일 경우 ,
+                        StopSchList stopSchList = new StopSchList();
+                        stopSchList.setStId(dataWithFavStopBus.get(position).localFav.getSt_id());
+                        stopSchList.setArsId(dataWithFavStopBus.get(position).localFav.getLf_id());
+                        stopSchList.setNextDir(dataWithFavStopBus.get(position).localFav.getLf_desc());
+                        stopSchList.setStNm(dataWithFavStopBus.get(position).localFav.getLf_name());
+                        intent = new Intent(v.getContext(), StopDetailActivity.class);
+                        args.putParcelable("stopList", stopSchList);
+                        intent.putExtras(args);
+                        startActivity(intent);
+                    }
+                }
             }
         });
     }

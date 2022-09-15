@@ -1,6 +1,7 @@
 package com.example.mybus.mainadapter;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +82,7 @@ public class MainFavAdapter extends RecyclerView.Adapter<MainFavAdapter.MainFavV
 
     public interface OnItemClickListener{
         void onBtnClick(View v , int position);
+        void onTitleClick(View v, int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener){
@@ -101,6 +103,16 @@ public class MainFavAdapter extends RecyclerView.Adapter<MainFavAdapter.MainFavV
                     int pos = getAdapterPosition();
                     if (pos != RecyclerView.NO_POSITION && mListener != null){
                         mListener.onBtnClick(view, pos);
+                    }
+                }
+            });
+
+            mainFavItemBinding.favStopBusName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION && mListener != null){
+                        mListener.onTitleClick(view, pos);
                     }
                 }
             });

@@ -24,7 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
     private boolean isLogin = false;        // 로그인 성공 여부
-    private SharedPreferences logInId;
+    private SharedPreferences sharedPreferences;
     public final static String sharedId = "SHAREDPREFID";
     @Inject
     public BusRoomRepository repository;
@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d("LoginActivity", "login error msg : " +  error.getMessage());
                 }else{
                     // 로그인 성공
-                    logInId = getApplicationContext().getSharedPreferences(sharedId, Context.MODE_PRIVATE);
+                    sharedPreferences = getApplicationContext().getSharedPreferences(sharedId, Context.MODE_PRIVATE);
                     getInfo();
 
                 }
@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                //  Log.d("kkang" , "id : " + user.getId() +" name : " + user.getKakaoAccount().getProfile().getNickname() +  " thunbnail : " + user.getKakaoAccount().getProfile().getThumbnailImageUrl());
                 repository.register(new User(user.getId().toString(), user.getKakaoAccount().getProfile().getNickname(), user.getKakaoAccount().getProfile().getThumbnailImageUrl()));
                 fbRepository.insert(new User(user.getId().toString(), user.getKakaoAccount().getProfile().getNickname(), user.getKakaoAccount().getProfile().getThumbnailImageUrl()));
-                SharedPreferences.Editor editor = logInId.edit();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("loginId", user.getId().toString());
                 editor.commit();
                 Intent intent = new Intent(this, MainActivity.class);

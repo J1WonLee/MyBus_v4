@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
@@ -19,6 +20,7 @@ import com.example.mybus.vo.User;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 
 @Dao
@@ -55,12 +57,20 @@ public interface BusDao {
     @Query("select distinct * from STOP_SEARCH_LIST ORDER BY search_order desc limit 0, 5")
     Single<List<StopSchList>> getRecentStopSchList();
 
-    // 최금 검색 중복검색 시 업데이트 쿼리
+    // 최근 검색 중복검색 시 업데이트 쿼리
     @Query("update BUS_SEARCH_LIST set search_order = (select MAX(search_order) from BUS_SEARCH_LIST) +1 WHERE busRouteId =:busId")
     Completable updateRecentBusSch(String busId);
 
     @Query("update STOP_SEARCH_LIST set search_order = (select MAX(search_order) from STOP_SEARCH_LIST) +1 WHERE stId =:stId")
     Completable updateRecentStopSch(String stId);
+
+    // 최근 버스 검색 삭제
+    @Query("delete from BUS_SEARCH_LIST")
+    Completable deleteRecentBusSch();
+
+    // 최근 정류장 검색 삭제
+    @Query("delete from STOP_SEARCH_LIST")
+    Completable deleteRecentStopSch();
 
     @Insert
     Completable regitFav(LocalFav localFav);
@@ -95,5 +105,9 @@ public interface BusDao {
     @Query("SELECT * FROM LOCAL_FAV_STOP_BUS where lfb_id =:lsbId  order by lfb_busId")
     Single<List<LocalFavStopBus>> getLocalFavStopBusLists(String lsbId);
 
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    Completable updateAll(List<LocalFav> LocalFav);
 
+    @Delete
+    Completable deleteFavList(List<LocalFav> localFavList);
 }

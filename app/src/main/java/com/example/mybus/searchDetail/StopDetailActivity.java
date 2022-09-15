@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -25,6 +26,7 @@ import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.apisearch.itemList.StopSchList;
 import com.example.mybus.apisearch.itemList.StopUidSchList;
 import com.example.mybus.databinding.ActivityStopDetailBinding;
+import com.example.mybus.menu.LoginActivity;
 import com.example.mybus.search.SearchActivity;
 import com.example.mybus.viewmodel.SearchDetailViewModel;
 import com.example.mybus.vo.LocalFav;
@@ -58,6 +60,8 @@ public class StopDetailActivity extends AppCompatActivity {
     private ImageView favImage;
     private boolean isFavSaved = false;
     private TextView emptyview;
+    private SharedPreferences sharedPreferences;
+    private String loginId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +69,7 @@ public class StopDetailActivity extends AppCompatActivity {
         binding = ActivityStopDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         searchDetailViewModel = new ViewModelProvider(this).get(SearchDetailViewModel.class);
-
+        getLoginId();
         initRecycler();
         getDataFromIntent();
         getFavStopBusList();
@@ -102,11 +106,11 @@ public class StopDetailActivity extends AppCompatActivity {
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbarLayout.setTitle("정류장 이름");
+                    collapsingToolbarLayout.setTitle(stopSchList.getStNm());
                     showOption(R.id.action_add_fav);
                     isShow = true;
                 } else if (isShow) {
-                    collapsingToolbarLayout.setTitle(" ");
+                    collapsingToolbarLayout.setTitle("");
                     hideOption(R.id.action_add_fav);
                     isShow = false;
                 }
@@ -135,7 +139,7 @@ public class StopDetailActivity extends AppCompatActivity {
                 searchDetailViewModel.deleteLocalFav(stopSchList.getArsId());
                 isFavSaved = false;
                 favImage.setImageResource(R.drawable.ic_baseline_star_border_24);
-                searchDetailViewModel.deleteFbFabInStopDetail(lfid, "001234");
+                searchDetailViewModel.deleteFbFabInStopDetail(lfid, loginId);
             }else{
                 Long now = System.currentTimeMillis();
                 Date date = new Date(now);
@@ -145,7 +149,7 @@ public class StopDetailActivity extends AppCompatActivity {
                 searchDetailViewModel.regitFav(localFav);
                 isFavSaved = true;
                 favImage.setImageResource(R.drawable.ic_baseline_star_24);
-                searchDetailViewModel.insertFbFav(localFav, "001234");
+                searchDetailViewModel.insertFbFav(localFav, loginId);
             }
         });
 
@@ -193,7 +197,7 @@ public class StopDetailActivity extends AppCompatActivity {
                     item.setIcon(R.drawable.ic_baseline_star_border_24);
                     favImage.setImageResource(R.drawable.ic_baseline_star_border_24);
                     // 삭제
-                    searchDetailViewModel.deleteFbFabInStopDetail(lfid, "001234");
+                    searchDetailViewModel.deleteFbFabInStopDetail(lfid, loginId);
 
                 }else if (lfid != null && !isFavSaved){
                     isFavSaved = !isFavSaved;
@@ -205,7 +209,7 @@ public class StopDetailActivity extends AppCompatActivity {
                     item.setIcon(R.drawable.ic_baseline_star_24);
                     favImage.setImageResource(R.drawable.ic_baseline_star_24);
                     // 추가
-                    searchDetailViewModel.insertFbFav(localFav, "001234");
+                    searchDetailViewModel.insertFbFav(localFav, loginId);
                 }
                 break;
 
@@ -349,11 +353,11 @@ public class StopDetailActivity extends AppCompatActivity {
                     if (stopUidSchList.get(position).getFlag()) {
                         stopUidSchList.get(position).setFlag(false);
                         // 삭제
-                        searchDetailViewModel.deleteFbStopFav(localFav.getLf_id(), localFavStopBus.getLfb_busId(), "001234");
+                        searchDetailViewModel.deleteFbStopFav(localFav.getLf_id(), localFavStopBus.getLfb_busId(), loginId);
                     } else {
                         stopUidSchList.get(position).setFlag(true);
                         // 추가
-                        searchDetailViewModel.insertFbStopFav(localFav, localFavStopBus,"001234");
+                        searchDetailViewModel.insertFbStopFav(localFav, localFavStopBus,loginId);
                     }
                     searchDetailAdapter.notifyItemChanged(position);
                     searchDetailAdapter.isClicked = true;
@@ -374,11 +378,11 @@ public class StopDetailActivity extends AppCompatActivity {
                     if (gbusBusLocationList.get(position).isChkFlag()) {
                         gbusBusLocationList.get(position).setChkFlag(false);
                         // 삭제
-                        searchDetailViewModel.deleteFbStopFav(localFav.getLf_id(), localFavStopBus.getLfb_busId(), "001234");
+                        searchDetailViewModel.deleteFbStopFav(localFav.getLf_id(), localFavStopBus.getLfb_busId(), loginId);
                     } else {
                         gbusBusLocationList.get(position).setChkFlag(true);
                         // 추가
-                        searchDetailViewModel.insertFbStopFav(localFav, localFavStopBus,"001234");
+                        searchDetailViewModel.insertFbStopFav(localFav, localFavStopBus,loginId);
                     }
                     searchDetailAdapter.notifyItemChanged(position);
                     searchDetailAdapter.isClicked = true;
@@ -407,6 +411,11 @@ public class StopDetailActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void getLoginId(){
+        sharedPreferences = getSharedPreferences(LoginActivity.sharedId, MODE_PRIVATE);
+        loginId = sharedPreferences.getString("loginId", null);
     }
 
     public void setText(){

@@ -12,27 +12,43 @@
         android:layout_height="match_parent"
         tools:context=".menu.HomeEditActivity">
 
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:titleCentered="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.01"
+            app:menu="@menu/menu_alarm_list" />
+
         <TextView
             android:id="@+id/recentSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="최근 검색어 기능"
-            app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.335"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.472" />
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintVertical_bias="0.107" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
-            android:layout_width="200dp"
+            android:layout_width="400dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="372dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.491"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/delete_recenet_img"
+            app:layout_constraintVertical_bias="0.0" />
 
         <Switch
             android:id="@+id/switch1"
@@ -45,25 +61,25 @@
             app:layout_constraintStart_toEndOf="@+id/recentSearch"
             app:layout_constraintTop_toTopOf="@+id/recentSearch" />
 
-        <Button
-            android:id="@+id/confirm"
+        <TextView
+            android:id="@+id/remove_recent_sch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="244dp"
-            android:text="Button"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/cancel"
+            android:layout_marginTop="48dp"
+            android:text="최근 검색어 삭제 "
+            app:layout_constraintEnd_toEndOf="@+id/recentSearch"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/recentSearch"
-            app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+            app:layout_constraintTop_toBottomOf="@+id/recentSearch" />
 
-        <Button
-            android:id="@+id/cancel"
+        <ImageView
+            android:id="@+id/delete_recenet_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Button"
-            app:layout_constraintEnd_toEndOf="@+id/recyclerView"
-            app:layout_constraintTop_toTopOf="@+id/confirm" />
+            app:layout_constraintEnd_toEndOf="@+id/switch1"
+            app:layout_constraintStart_toStartOf="@+id/switch1"
+            app:layout_constraintTop_toTopOf="@+id/remove_recent_sch"
+            app:srcCompat="@drawable/ic_baseline_delete_24" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

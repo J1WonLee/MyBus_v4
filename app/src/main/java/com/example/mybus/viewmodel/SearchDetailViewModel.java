@@ -144,7 +144,7 @@ public class SearchDetailViewModel extends ViewModel {
                             @Override
                             public void onNext(@NonNull GBusRouteSearchResponse gBusRouteSearchResponse) {
                                 Log.d("kkang", "onNext on serchdetaivm getGBusRouteName" );
-                                if (gBusRouteSearchResponse != null){
+                                if (gBusRouteSearchResponse.getgBusStopSearchUidWrap() != null){
                                     busRouteMatchMap.put(gBusRouteSearchResponse.getgBusStopSearchUidWrap().getgBusRouteList().get(0).getRouteId(), gBusRouteSearchResponse.getgBusStopSearchUidWrap().getgBusRouteList().get(0).getRouteName());
                                 }
                             }

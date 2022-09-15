@@ -2,12 +2,14 @@ package com.example.mybus.vo;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity(primaryKeys = {"lfb_id", "lfb_busId"} , tableName="Local_Fav_Stop_Bus")
-public class LocalFavStopBus {
+public class LocalFavStopBus implements Serializable {
     @NonNull
     public String lfb_id;
 
@@ -16,6 +18,9 @@ public class LocalFavStopBus {
     public String lfb_busId;
 
     public String lfb_busName;
+
+    @Ignore
+    public String stId;
 
 
     public LocalFavStopBus(String lfb_id, Date lfb_order, String lfb_busId, String lfb_busName) {
@@ -55,5 +60,13 @@ public class LocalFavStopBus {
 
     public void setLfb_busName(String lfb_busName) {
         this.lfb_busName = lfb_busName;
+    }
+
+    public String getStId() {
+        return stId;
+    }
+
+    public void setStId(String stId) {
+        this.stId = stId;
     }
 }

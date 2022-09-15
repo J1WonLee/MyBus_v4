@@ -7,6 +7,9 @@ import com.example.mybus.vo.LocalFavStopBus;
 import com.example.mybus.vo.User;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
@@ -89,4 +92,29 @@ public class FbRepository implements FbService{
             Log.d("FbRepository", "ERROR ON insertFbStopFavFromMain " + e.getMessage());
         }
     }
+
+    @Override
+    public void updateFbFab(LocalFav localFav, String loginId) {
+        try{
+            databaseReference.child("FavList").child(loginId).child(localFav.getLf_id()).child("lf_order").setValue(localFav.getLf_order());
+        }catch(Exception e){
+            Log.d("FbRepository", "ERROR ON insertFbStopFav home edit " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteFbFab(LocalFav localFav, String loginId) {
+        try{
+            databaseReference.child("FavList").child(loginId).child(localFav.getLf_id()).removeValue();
+        }catch(Exception e){
+            Log.d("FbRepository", "ERROR ON deleteFbFab  home edit " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void getFbFavLists(String loginId) {
+
+    }
+
+
 }
