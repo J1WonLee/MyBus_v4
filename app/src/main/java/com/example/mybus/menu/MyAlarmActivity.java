@@ -5,12 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.databinding.ActivityMyAlarmBinding;
 
@@ -43,6 +45,16 @@ public class MyAlarmActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent intent = new Intent(this, MainActivity.class);
+        switch (item.getItemId()){
+            case R.id.action_home:
+                startActivity(intent);
+                finish();
+                break;
+            case android.R.id.home:
+                finish();
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 }

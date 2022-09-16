@@ -4,8 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="10dp"
+    android:layout_marginBottom="10dp"
     android:id="@+id/main_fav_item_wrap"
     android:orientation="vertical"
+    android:background="@drawable/item_list_customborder_bottom"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -13,6 +15,7 @@
         android:padding="10dp"
         android:orientation="horizontal"
         android:id="@+id/fav_title"
+        android:background="@drawable/dialog_custom_border"
         android:layout_width="match_parent"
         android:layout_height="60dp">
         <TextView
@@ -30,7 +33,9 @@
             android:id="@+id/stop_bus_list_btn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="버스"
+            android:text="버스 추가"
+            android:textSize="10sp"
+            android:background="@drawable/button_deco"
             android:layout_gravity="left" />
 
     </LinearLayout>

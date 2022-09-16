@@ -19,10 +19,21 @@ public class LocalFavStopBus implements Serializable {
 
     public String lfb_busName;
 
+    // 구간 순번으로 버스 도착 알림 시 필요함
+    public String lfb_sectOrd = "-1";
+
     @Ignore
     public String stId;
 
     public LocalFavStopBus() {
+    }
+
+    public LocalFavStopBus(@NonNull String lfb_id, Date lfb_order, @NonNull String lfb_busId, String lfb_busName, String lfb_sectOrd) {
+        this.lfb_id = lfb_id;
+        this.lfb_order = lfb_order;
+        this.lfb_busId = lfb_busId;
+        this.lfb_busName = lfb_busName;
+        this.lfb_sectOrd = lfb_sectOrd;
     }
 
     public LocalFavStopBus(String lfb_id, Date lfb_order, String lfb_busId, String lfb_busName) {
@@ -70,5 +81,13 @@ public class LocalFavStopBus implements Serializable {
 
     public void setStId(String stId) {
         this.stId = stId;
+    }
+
+    public String getLfb_sectOrd() {
+        return lfb_sectOrd;
+    }
+
+    public void setLfb_sectOrd(String lfb_sectOrd) {
+        this.lfb_sectOrd = lfb_sectOrd;
     }
 }

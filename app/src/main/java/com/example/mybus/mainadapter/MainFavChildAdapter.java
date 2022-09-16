@@ -83,7 +83,12 @@ public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapte
         holder.favBuslistItemBinding.busAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                busLists.setStId(localFavStopBusList.get(position).getStId());
+                busLists.setBusRouteId(localFavStopBusList.get(position).getLfb_busId());
+                busLists.setBusRouteNm(localFavStopBusList.get(position).getLfb_busName());
                 Intent alarmIntent = new Intent(holder.itemView.getContext(), AlarmArriveActivity.class);
+                args.putParcelable("busList", busLists);
+                alarmIntent.putExtras(args);
                 holder.itemView.getContext().startActivity(alarmIntent);
             }
         });
@@ -104,6 +109,7 @@ public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapte
             for (StopUidSchList lists : stopUidSchList){
                 if (lists.getArsId().equals(localFavStopBusList.get(position).getLfb_id())){
                     localFavStopBusList.get(position).setStId(lists.getStId());
+                    localFavStopBusList.get(position).setLfb_sectOrd(lists.getStaOrd());
                     if (lists.getBusRouteId().equals(localFavStopBusList.get(position).getLfb_busId())){
                         setRemainTime(holder, lists.getArrmsg1(), 1);
                         setRemainTime(holder, lists.getArrmsgSec2(), 2);

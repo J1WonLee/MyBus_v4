@@ -424,6 +424,7 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
     public interface OnItemClickListener{
         void onItemClick(View v , int position);
         void onFabBtnClick(View v, int position);
+        void onAlarmClick(View v, int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener){
@@ -448,6 +449,14 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                 int pos = getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION && mListener != null){
                     mListener.onFabBtnClick(view, pos);
+                }
+            });
+
+            // 알람 추가 클릭 시
+            binding.addAlarm.setOnClickListener(view -> {
+                int pos = getAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION && mListener != null){
+                    mListener.onAlarmClick(view, pos);
                 }
             });
         }

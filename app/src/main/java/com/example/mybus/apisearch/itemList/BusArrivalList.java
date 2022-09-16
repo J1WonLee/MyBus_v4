@@ -29,7 +29,7 @@ public class BusArrivalList implements Comparable<BusArrivalList> {
     private String remainSeatCnt2;
     @PropertyElement(name ="routeId")
     private String routeId;
-    @PropertyElement(name ="staOrder")
+    @PropertyElement(name ="staOrder")      // 즐겨찾기에 추가 해야 함
     private String staOrder;
     @PropertyElement(name ="stationId")
     private String stationId;

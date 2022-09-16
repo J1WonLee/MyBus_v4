@@ -155,7 +155,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.move_home_edit:
                     // 홈 화면 편집으로 이동
                     Intent goHomeEdit = new Intent(this, HomeEditActivity.class);
+                    goHomeEdit.putExtra("favlists",  dataWithFavStopBusArrayList);
                     startActivity(goHomeEdit);
+                    finish();
                     break;
                 case R.id.move_open_source:
                     // 오픈소스 정보로 이동
