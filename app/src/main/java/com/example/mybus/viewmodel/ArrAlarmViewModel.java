@@ -8,7 +8,10 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.mybus.apisearch.GbusWrapper.GBusRouteArriveInfoResponse;
+import com.example.mybus.apisearch.GbusWrapper.GBusRouteArriveInfoWrap;
 import com.example.mybus.apisearch.itemList.ArrInfoByRouteList;
+import com.example.mybus.apisearch.itemList.GBusRouteArriveInfoList;
 import com.example.mybus.apisearch.wrapper.ArrInfoByRouteWrap;
 import com.example.mybus.retrofitrepo.RetrofitGbusRepository;
 import com.example.mybus.retrofitrepo.RetrofitRepository;
@@ -35,6 +38,7 @@ public class ArrAlarmViewModel extends ViewModel {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public MutableLiveData<ArrInfoByRouteList> arrInfoData = new MutableLiveData<>();
+    public MutableLiveData<GBusRouteArriveInfoList> arrGbusInfoData = new MutableLiveData<>();
 
     private static String serviceKey = "";
     static {
@@ -75,6 +79,29 @@ public class ArrAlarmViewModel extends ViewModel {
                         })
         );
     }
+
+    public void getGBusArrInfoByRoute(String stid, String routeId, String ord){
+        compositeDisposable.add(
+                retrofitGbusRepository.getGBusArrInfoByRouteInit(serviceKey, stid, routeId, ord)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<GBusRouteArriveInfoResponse>() {
+                            @Override
+                            public void onSuccess(@NonNull GBusRouteArriveInfoResponse gBusRouteArriveInfoResponse) {
+                               if (gBusRouteArriveInfoResponse.getgBusLocationWrap() != null){
+                                   arrGbusInfoData.setValue(gBusRouteArriveInfoResponse.getgBusLocationWrap().getBusArriveInfoLists().get(0));
+                               }
+                            }
+
+                            @Override
+                            public void onError(@NonNull Throwable e) {
+                                Log.d("ArrAlarmViewModel", "getGBusArrInfoByRoute error!!" + e.getMessage());
+                            }
+                        })
+        );
+    }
+
+
 
 //    public void getArrInfoByRoute( String stId, String routeId, String ord){
 //        compositeDisposable.add(

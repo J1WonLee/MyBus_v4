@@ -19,6 +19,7 @@ import com.example.mybus.R;
 import com.example.mybus.alarmservice.ArrAlarmService;
 import com.example.mybus.apisearch.itemList.ArrInfoByRouteList;
 import com.example.mybus.apisearch.itemList.BusSchList;
+import com.example.mybus.apisearch.itemList.GBusRouteArriveInfoList;
 import com.example.mybus.databinding.ActivityAlarmArriveBinding;
 import com.example.mybus.searchDetail.SearchDetailAdapter;
 import com.example.mybus.viewmodel.ArrAlarmViewModel;
@@ -36,6 +37,7 @@ public class AlarmArriveActivity extends AppCompatActivity {
     private CountDownTimer countDownTimer;
     private Bundle args;
     private ArrInfoByRouteList arrInfoByRoute;
+    private GBusRouteArriveInfoList gBusRouteArriveInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +51,16 @@ public class AlarmArriveActivity extends AppCompatActivity {
         binding.addAlarm.setOnClickListener(view -> {
             if (arrInfoByRoute != null){
                 startService(1);
+            }else if (gBusRouteArriveInfo != null){
+                startGBusService(1);
             }
         });
 
         binding.addAlarm2.setOnClickListener(view -> {
             if (arrInfoByRoute != null){
                 startService(2);
+            }else if (gBusRouteArriveInfo != null){
+                startGBusService(2);
             }
         });
     }
@@ -95,10 +101,12 @@ public class AlarmArriveActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         busSchList = bundle.getParcelable("busList");
         if (busSchList != null){
-            if (busSchList.getCorpNm().equals("-1")){
-                // 메인화면에서 온 경우
+            if (busSchList.getStId().startsWith("2")){
+                // 경기도 버스인 경우
+                arrAlarmViewModel.getGBusArrInfoByRoute(busSchList.getStId(), busSchList.getBusRouteId(), busSchList.getCorpNm());
+                observeGbusArrInfoData();
             }else{
-                // 정류장 상세보기에서 온 경우
+                // 서울인 경우
                 arrAlarmViewModel.getArrInfoByRoute(busSchList.getStId(), busSchList.getBusRouteId(), busSchList.getCorpNm());
                 observeArrInfoData();
             }
@@ -114,6 +122,20 @@ public class AlarmArriveActivity extends AppCompatActivity {
                     binding.busRouteName.setText(arrInfoByRouteList.getRtNm());
                     setTimeTexts(arrInfoByRouteList.getArrmsg1(), 1);
                     setTimeTexts(arrInfoByRouteList.getArrmsg2(), 2);
+                }
+            }
+        });
+    }
+
+    public void observeGbusArrInfoData(){
+        arrAlarmViewModel.arrGbusInfoData.observe(this, new Observer<GBusRouteArriveInfoList>() {
+            @Override
+            public void onChanged(GBusRouteArriveInfoList gBusRouteArriveInfoList) {
+                if (gBusRouteArriveInfoList != null){
+                    gBusRouteArriveInfo = gBusRouteArriveInfoList;
+                    binding.busRouteName.setText(busSchList.getBusRouteNm());
+                    gBusSetRemainTime(gBusRouteArriveInfo.getPredictTime1(), 1);
+                    gBusSetRemainTime(gBusRouteArriveInfo.getPredictTime2(), 2);
                 }
             }
         });
@@ -158,7 +180,7 @@ public class AlarmArriveActivity extends AppCompatActivity {
             }.start();
 
         }catch(Exception e){
-            Log.d("kkang", "Exception in searchdetailadapter setremaintime method msg : " + e.getMessage());
+            Log.d("kkang", "Exception in AlarmArriveActivity setremaintime method msg : " + e.getMessage());
             if (flag == 1){
                 binding.firstRemainTime.setText(time);
             }else {
@@ -169,11 +191,70 @@ public class AlarmArriveActivity extends AppCompatActivity {
         }
     }
 
+    public void gBusSetRemainTime( String time, int flag){
+        try{
+            long conversionTime = 0;
+            String getMinute = time;
+            int getSeconds = 0;
+
+            conversionTime = Long.valueOf(getMinute) * 60 * 1000 + (getSeconds * 1000);
+
+            countDownTimer = new CountDownTimer(conversionTime, 3000) {
+                @Override
+                public void onTick(long milliUntilFinished) {
+                    long getMin = milliUntilFinished - (milliUntilFinished / (60 * 60 * 1000));
+                    String min = String.valueOf(getMin / (60 * 1000));      // 몫
+                    String second = String.valueOf((getMin % (60 * 1000)) / 1000);
+
+                    if (flag == 1){
+                        binding.firstRemainTime.setText(min +" 분 " + second +" 초 ");
+                    }else{
+                        binding.secondRemainTime.setText(min +" 분 " + second +" 초 ");
+                    }
+                }
+
+                @Override
+                public void onFinish() {
+                    if (flag == 1){
+                        binding.firstRemainTime.setText("시간 초과");
+                    }else{
+                        binding.firstRemainTime.setText("시간 초과");
+                    }
+                }
+            }.start();
+        }catch(Exception e){
+            Log.d("kkang", "Exception in AlarmArriveActivity gbussetRemainTime method msg : " + e.getMessage());
+            if (flag == 1){
+                binding.firstRemainTime.setText("도착 정보가 없습니다");
+            }else {
+                binding.secondRemainTime.setText("도착 정보가 없습니다");
+            }
+        }
+    }
+
     public void startService(int flag){
         if (flag == 1){
             busSchList.setFirstBusTm(arrInfoByRoute.getArrmsg1());
+            busSchList.setFirstLowTm("1");
         }else{
             busSchList.setFirstBusTm(arrInfoByRoute.getArrmsg2());
+            busSchList.setFirstLowTm("2");
+        }
+        serviceIntent = new Intent(this, ArrAlarmService.class);
+        args = new Bundle();
+        args.putParcelable("busSchList", busSchList);
+        serviceIntent.putExtras(args);
+        serviceIntent.putExtra("serviceKey", arrAlarmViewModel.getServiceKey());
+        startService(serviceIntent);
+    }
+
+    public void startGBusService(int flag){
+        if (flag == 1){
+            busSchList.setFirstBusTm(gBusRouteArriveInfo.getPredictTime1() + "분 [" + gBusRouteArriveInfo.getLocationNo1()+"전]");
+            busSchList.setFirstLowTm("1");
+        }else{
+            busSchList.setFirstBusTm(gBusRouteArriveInfo.getPredictTime2() + "분 [" + gBusRouteArriveInfo.getLocationNo2()+"전]");
+            busSchList.setFirstLowTm("2");
         }
         serviceIntent = new Intent(this, ArrAlarmService.class);
         args = new Bundle();

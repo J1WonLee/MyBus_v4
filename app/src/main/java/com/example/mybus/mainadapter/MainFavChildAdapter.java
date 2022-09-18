@@ -86,6 +86,7 @@ public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapte
                 busLists.setStId(localFavStopBusList.get(position).getStId());
                 busLists.setBusRouteId(localFavStopBusList.get(position).getLfb_busId());
                 busLists.setBusRouteNm(localFavStopBusList.get(position).getLfb_busName());
+                busLists.setCorpNm(localFavStopBusList.get(position).getLfb_sectOrd());
                 Intent alarmIntent = new Intent(holder.itemView.getContext(), AlarmArriveActivity.class);
                 args.putParcelable("busList", busLists);
                 alarmIntent.putExtras(args);
@@ -109,8 +110,8 @@ public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapte
             for (StopUidSchList lists : stopUidSchList){
                 if (lists.getArsId().equals(localFavStopBusList.get(position).getLfb_id())){
                     localFavStopBusList.get(position).setStId(lists.getStId());
-                    localFavStopBusList.get(position).setLfb_sectOrd(lists.getStaOrd());
                     if (lists.getBusRouteId().equals(localFavStopBusList.get(position).getLfb_busId())){
+                        localFavStopBusList.get(position).setLfb_sectOrd(lists.getStaOrd());
                         setRemainTime(holder, lists.getArrmsg1(), 1);
                         setRemainTime(holder, lists.getArrmsgSec2(), 2);
                     }
@@ -127,6 +128,7 @@ public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapte
                 if (lists.getStationId().equals(localFavStopBusList.get(position).getLfb_id())){
                     localFavStopBusList.get(position).setStId(lists.getStationId());
                     if (lists.getRouteId().equals(localFavStopBusList.get(position).getLfb_busId())){
+                        localFavStopBusList.get(position).setLfb_sectOrd(lists.getStaOrder());
                         gBusSetRemainTime(holder, lists.getPredictTime1(), 1);
                         gBusSetRemainTime(holder, lists.getPredictTime2(), 2);
                     }

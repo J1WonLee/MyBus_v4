@@ -14,9 +14,11 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 
 import com.example.mybus.R;
+import com.example.mybus.apisearch.GbusWrapper.GBusRouteArriveInfoResponse;
 import com.example.mybus.apisearch.GbusWrapper.GBusRouteArriveInfoWrap;
 import com.example.mybus.apisearch.itemList.ArrInfoByRouteList;
 import com.example.mybus.apisearch.itemList.BusSchList;
+import com.example.mybus.apisearch.itemList.GBusRouteArriveInfoList;
 import com.example.mybus.apisearch.msgBody.ArrInfoByRoute;
 import com.example.mybus.apisearch.wrapper.ArrInfoByRouteWrap;
 import com.example.mybus.menu.alarm.AlarmArriveActivity;
@@ -72,7 +74,12 @@ public class ArrAlarmService extends Service {
             busSchList = bundle.getParcelable("busSchList");
             serviceKey = intent.getStringExtra("serviceKey");
             generateNotification();
-            getArrDataInterval();
+            if (busSchList.getStId().startsWith("1")){
+                getArrDataInterval();
+            }else if (busSchList.getStId().startsWith("2")){
+                getGBusArrDataInterval();
+            }
+
         }
         return START_NOT_STICKY;
     }
@@ -100,7 +107,6 @@ public class ArrAlarmService extends Service {
         builder.setContentTitle(busSchList.getBusRouteNm());
         builder.setContentText(busSchList.getFirstBusTm());
         builder.addAction(R.drawable.ic_baseline_directions_bus_24, "삭제", deletePendingIntent);
-
         Intent notificationIntent = new Intent(this, AlarmArriveActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,notificationIntent, PendingIntent.FLAG_MUTABLE);
         builder.setContentIntent(pendingIntent);
@@ -111,7 +117,22 @@ public class ArrAlarmService extends Service {
 
     public void updateNotification(ArrInfoByRouteList arrInfoByRouteList){
         Log.d("ArrAlarmService", "updatenotification called!");
-        builder.setContentText(arrInfoByRouteList.getArrmsg1());
+        if (busSchList.getFirstLowTm().equals("1")){
+            builder.setContentText(arrInfoByRouteList.getArrmsg1());
+        }else{
+            builder.setContentText(arrInfoByRouteList.getArrmsg2());
+        }
+
+        manager.notify(123, builder.build());
+    }
+
+    public void updateNotificationGbus(GBusRouteArriveInfoList gBusRouteArriveInfo){
+        builder.setContentText(gBusRouteArriveInfo.getPredictTime1());
+        if (busSchList.getFirstLowTm().equals("1")){
+            builder.setContentText(gBusRouteArriveInfo.getPredictTime1() + "분 [" + gBusRouteArriveInfo.getLocationNo1()+"전]");
+        }else{
+            builder.setContentText(gBusRouteArriveInfo.getPredictTime2() + "분 [" + gBusRouteArriveInfo.getLocationNo2()+"전]");
+        }
         manager.notify(123, builder.build());
     }
 
@@ -134,6 +155,25 @@ public class ArrAlarmService extends Service {
                             }, error -> Log.d("ArrAlarmViewModel", "getArrInfoByRoute error!!" + error.getMessage()))
             );
         }
+    }
+
+    public void getGBusArrDataInterval(){
+        compositeDisposable.add(
+                Observable.interval(30, TimeUnit.SECONDS)
+                        .flatMap(list -> retrofitGbusRepository.getGBusArrInfoByRoute(serviceKey, busSchList.getStId(), busSchList.getBusRouteId(), busSchList.getCorpNm()))
+                        .repeat()
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<GBusRouteArriveInfoResponse>() {
+                            @Override
+                            public void accept(GBusRouteArriveInfoResponse gBusRouteArriveInfoResponse) throws Throwable {
+                                if (gBusRouteArriveInfoResponse.getgBusLocationWrap() != null){
+                                    Log.d("ArrAlarmViewModel", "getGBusArrDataInterval sisze ::::::::" + gBusRouteArriveInfoResponse.getgBusLocationWrap().getBusArriveInfoLists().size());
+                                    updateNotificationGbus(gBusRouteArriveInfoResponse.getgBusLocationWrap().getBusArriveInfoLists().get(0));
+                                }
+                            }
+                        }, error -> Log.d("ArrAlarmViewModel", "getArrInfoByRoute error!!" + error.getMessage()))
+        );
     }
 
     public void stopForegroundService(){

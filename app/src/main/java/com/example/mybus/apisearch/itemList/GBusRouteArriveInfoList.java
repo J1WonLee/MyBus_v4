@@ -15,13 +15,19 @@ public class GBusRouteArriveInfoList {
     private String plateNo1;
     @PropertyElement(name = "plateNo2")
     private String plateNo2;
+    @PropertyElement(name="locationNo1")
+    private String locationNo1;
+    @PropertyElement(name="locationNo2")
+    private String locationNo2;
 
-    public GBusRouteArriveInfoList(String flag, String predictTime1, String predictTime2, String plateNo1, String plateNo2) {
+    public GBusRouteArriveInfoList(String flag, String predictTime1, String predictTime2, String plateNo1, String plateNo2, String locationNo1, String locationNo2) {
         this.flag = flag;
         this.predictTime1 = predictTime1;
         this.predictTime2 = predictTime2;
         this.plateNo1 = plateNo1;
         this.plateNo2 = plateNo2;
+        this.locationNo1 = locationNo1;
+        this.locationNo2 = locationNo2;
     }
 
     public GBusRouteArriveInfoList() {
@@ -65,5 +71,21 @@ public class GBusRouteArriveInfoList {
 
     public void setPlateNo2(String plateNo2) {
         this.plateNo2 = plateNo2;
+    }
+
+    public String getLocationNo1() {
+        return locationNo1;
+    }
+
+    public void setLocationNo1(String locationNo1) {
+        this.locationNo1 = locationNo1;
+    }
+
+    public String getLocationNo2() {
+        return locationNo2;
+    }
+
+    public void setLocationNo2(String locationNo2) {
+        this.locationNo2 = locationNo2;
     }
 }
