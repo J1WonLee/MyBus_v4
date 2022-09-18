@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mybus.apisearch.itemList.BusArrivalList;
+import com.example.mybus.apisearch.itemList.StopRouteList;
 import com.example.mybus.apisearch.itemList.StopUidSchList;
 import com.example.mybus.databinding.MainFavItemBinding;
 import com.example.mybus.menu.HomeEditActivity;
@@ -89,6 +90,15 @@ public class MainFavAdapter extends RecyclerView.Adapter<MainFavAdapter.MainFavV
         this.mListener = onItemClickListener;
     }
 
+    public String getStopBusOrd(StopRouteList stopRouteList){
+        for(StopUidSchList lists : stopUidSchList){
+            if (lists.getBusRouteId().equals(stopRouteList.getBusRouteId())){
+                Log.d("MainFavAdapter", "storder ::::::::" + lists.getStaOrd());
+                return lists.getStaOrd();
+            }
+        }
+        return "-1";
+    }
 
     class MainFavViewHolder extends RecyclerView.ViewHolder{
         MainFavItemBinding mainFavItemBinding;

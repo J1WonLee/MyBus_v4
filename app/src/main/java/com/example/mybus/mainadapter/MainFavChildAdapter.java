@@ -137,7 +137,6 @@ public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapte
         }
     }
 
-
     public void setRemainTime(MainFavChildViewHolder holder, String time, int flag){
         try{
             long conversionTime = 0;

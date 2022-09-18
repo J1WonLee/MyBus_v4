@@ -428,7 +428,6 @@ public class MainActivity extends AppCompatActivity {
         binding.mainStationNm.setText(dataWithFavStopBus.localFav.getLf_name());
     }
 
-
     // 즐겨찾기 추가 제거 리스너
     public void setMainStopBusListClickListener(){
         mainStopBusListAdapter.setOnItemClickListener(new MainStopBusListAdapter.OnItemClickListener() {
@@ -440,7 +439,9 @@ public class MainActivity extends AppCompatActivity {
                     LocalFavStopBus localFavStopBus = new LocalFavStopBus(lfId
                             , date
                             , stopRouteList.get(position).getBusRouteId()
-                            , stopRouteList.get(position).getBusRouteNm());
+                            , stopRouteList.get(position).getBusRouteNm()
+//                          , stopRouteList.get(position).getBusRouteNm());
+                            , adapter.getStopBusOrd(stopRouteList.get(position)));
                     // 즐겨찾기 목록에 추가 혹은 제거
                     if (stopRouteList.get(position).isFlag()) {
                         stopRouteList.get(position).setFlag(false);
@@ -460,7 +461,8 @@ public class MainActivity extends AppCompatActivity {
                     LocalFavStopBus localFavStopBus = new LocalFavStopBus(lfId
                             , date
                             , gBusStopRouteList.get(position).getRouteId()
-                            , gBusStopRouteList.get(position).getRouteName());
+                            , gBusStopRouteList.get(position).getRouteName()
+                            , gBusStopRouteList.get(position).getStaOrder());
                     if (gBusStopRouteList.get(position).isFlag()) {
                         gBusStopRouteList.get(position).setFlag(false);
                         // 삭제
