@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 
 import com.example.mybus.MainActivity;
 import com.example.mybus.R;
@@ -50,6 +52,7 @@ public class AlarmArriveActivity extends AppCompatActivity {
     private Gson gson;
     private ArrAlarmPref arrAlarm;
     private MutableLiveData<ArrAlarmPref> arrAlarmPrefMutableLiveData = new MutableLiveData<>();
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +79,7 @@ public class AlarmArriveActivity extends AppCompatActivity {
         binding.addAlarm.setOnClickListener(view -> {
             if (arrAlarm != null){
                 // 다이얼 로그
-
+                initDialog();
             }else{
                 if (arrInfoByRoute != null && !isEndF1){
                     startService(1);
@@ -89,13 +92,19 @@ public class AlarmArriveActivity extends AppCompatActivity {
         });
 
         binding.addAlarm2.setOnClickListener(view -> {
-            if (arrInfoByRoute != null && !isEndF2){
-                startService(2);
-                insertArrAlarm(arrInfoByRoute.getStId(), arrInfoByRoute.getBusRouteId(), 2);
-            }else if (gBusRouteArriveInfo != null && !isEndF2){
-                startGBusService(2);
-                insertArrAlarm(busSchList.getStId(), busSchList.getBusRouteId(), 2);
+            if (arrAlarm != null){
+                // 다이얼 로그
+                initDialog();
+            }else{
+                if (arrInfoByRoute != null && !isEndF2){
+                    startService(2);
+                    insertArrAlarm(arrInfoByRoute.getStId(), arrInfoByRoute.getBusRouteId(), 2);
+                }else if (gBusRouteArriveInfo != null && !isEndF2){
+                    startGBusService(2);
+                    insertArrAlarm(busSchList.getStId(), busSchList.getBusRouteId(), 2);
+                }
             }
+
         });
     }
 
@@ -373,5 +382,13 @@ public class AlarmArriveActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void initDialog() {
+        Log.d("BusRouteDetailActivity", "initDialog!");
+        dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.arr_alarm_dialog);
+        dialog.show();
     }
 }
