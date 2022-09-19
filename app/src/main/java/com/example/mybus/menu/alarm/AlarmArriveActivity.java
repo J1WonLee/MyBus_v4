@@ -52,7 +52,6 @@ public class AlarmArriveActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private Gson gson;
     private ArrAlarmPref arrAlarm;
-    private MutableLiveData<ArrAlarmPref> arrAlarmPrefMutableLiveData = new MutableLiveData<>();
     private Dialog dialog;
 
     @Override
@@ -73,39 +72,17 @@ public class AlarmArriveActivity extends AppCompatActivity {
                     Log.d("AlarmArriveActivity", "detected changed!" + integer);
                     binding.addAlarm.setImageResource(R.drawable.ic_baseline_add_alarm_24);
                     binding.addAlarm2.setImageResource(R.drawable.ic_baseline_add_alarm_24);
+                    arrAlarm = null;
                 }
             }
         });
 
         binding.addAlarm.setOnClickListener(view -> {
-            if (arrAlarm != null){
-                // 다이얼 로그
-                initDialog();
-            }else{
-                if (arrInfoByRoute != null && !isEndF1){
-                    startService(1);
-                    insertArrAlarm(arrInfoByRoute.getStId(), arrInfoByRoute.getBusRouteId(), 1);
-                }else if (gBusRouteArriveInfo != null && !isEndF1){
-                    startGBusService(1);
-                    insertArrAlarm(busSchList.getStId(), busSchList.getBusRouteId(), 1);
-                }
-            }
+            clickEvent();
         });
 
         binding.addAlarm2.setOnClickListener(view -> {
-            if (arrAlarm != null){
-                // 다이얼 로그
-                initDialog();
-            }else{
-                if (arrInfoByRoute != null && !isEndF2){
-                    startService(2);
-                    insertArrAlarm(arrInfoByRoute.getStId(), arrInfoByRoute.getBusRouteId(), 2);
-                }else if (gBusRouteArriveInfo != null && !isEndF2){
-                    startGBusService(2);
-                    insertArrAlarm(busSchList.getStId(), busSchList.getBusRouteId(), 2);
-                }
-            }
-
+            clickEventBtn2();
         });
     }
 
@@ -378,11 +355,42 @@ public class AlarmArriveActivity extends AppCompatActivity {
                         }
                     }
                 }else{
+                    arrAlarm = null;
                     binding.addAlarm.setImageResource(R.drawable.ic_baseline_add_alarm_24);
                     binding.addAlarm2.setImageResource(R.drawable.ic_baseline_add_alarm_24);
                 }
             }
         });
+    }
+
+    public void clickEvent(){
+        if (arrAlarm != null){
+            // 다이얼 로그
+            initDialog();
+        }else{
+            if (arrInfoByRoute != null && !isEndF1){
+                startService(1);
+                insertArrAlarm(arrInfoByRoute.getStId(), arrInfoByRoute.getBusRouteId(), 1);
+            }else if (gBusRouteArriveInfo != null && !isEndF1){
+                startGBusService(1);
+                insertArrAlarm(busSchList.getStId(), busSchList.getBusRouteId(), 1);
+            }
+        }
+    }
+
+    public void clickEventBtn2(){
+        if (arrAlarm != null){
+            // 다이얼 로그
+            initDialog();
+        }else{
+            if (arrInfoByRoute != null && !isEndF2){
+                startService(2);
+                insertArrAlarm(arrInfoByRoute.getStId(), arrInfoByRoute.getBusRouteId(), 2);
+            }else if (gBusRouteArriveInfo != null && !isEndF2){
+                startGBusService(2);
+                insertArrAlarm(busSchList.getStId(), busSchList.getBusRouteId(), 2);
+            }
+        }
     }
 
     public void initDialog() {
@@ -395,19 +403,7 @@ public class AlarmArriveActivity extends AppCompatActivity {
         dialog.findViewById(R.id.arr_alarm_dialog_yes_btn).setOnClickListener(view -> {
             arrAlarmViewModel.deleteArrAlarm();
             Log.d("AlarmArriveActivity", "click yes btn!");
-            if (arrInfoByRoute != null && !isEndF1){
-                startService(1);
-                insertArrAlarm(arrInfoByRoute.getStId(), arrInfoByRoute.getBusRouteId(), 1);
-            }else if (gBusRouteArriveInfo != null && !isEndF1){
-                startGBusService(1);
-                insertArrAlarm(busSchList.getStId(), busSchList.getBusRouteId(), 1);
-            }else if (arrInfoByRoute != null && !isEndF2){
-                startService(2);
-                insertArrAlarm(arrInfoByRoute.getStId(), arrInfoByRoute.getBusRouteId(), 2);
-            }else if (gBusRouteArriveInfo != null && !isEndF2) {
-                startGBusService(2);
-                insertArrAlarm(busSchList.getStId(), busSchList.getBusRouteId(), 2);
-            }
+            stopArrAlarmService();
             dialog.cancel();
         });
 
@@ -416,5 +412,9 @@ public class AlarmArriveActivity extends AppCompatActivity {
         });
     }
 
-
+    public void stopArrAlarmService(){
+        Intent stopService = new Intent(AlarmArriveActivity.this, ArrAlarmService.class);
+        stopService.putExtra("stopService", "-1");
+        stopService(stopService);
+    }
 }
