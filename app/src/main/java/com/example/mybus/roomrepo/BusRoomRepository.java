@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.apisearch.itemList.StopSchList;
 import com.example.mybus.roomdb.BusDao;
+import com.example.mybus.vo.ArrAlarmPref;
 import com.example.mybus.vo.DataWithFavStopBus;
 import com.example.mybus.vo.LocalFav;
 import com.example.mybus.vo.LocalFavStopBus;
@@ -300,6 +301,32 @@ public class BusRoomRepository {
 
     public Completable deleteLocalFavBusAll(){
         return busDao.deleteLocalBusAll();
+    }
+
+    public void insertArrAlarm(ArrAlarmPref arrAlarmPref) {
+        Completable completable = busDao.insertArrAlarm(arrAlarmPref);
+        completable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        () -> Log.d("BusRoomRepository", "insertArrAlarm success"),
+                        error -> Log.d("BusRoomRepository", " insertArrAlarm failed!"+error.getMessage())
+                );
+    }
+
+    public Single<ArrAlarmPref> getArrAlarm() { return busDao.getArrAlarm(); }
+
+//    public Completable deleteArrAlarm(){
+//        return busDao.deleteArrAlarm();
+//    }
+
+    public void deleteArrAlarm(){
+        Completable completable = busDao.deleteArrAlarm();
+        completable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        () -> Log.d("BusRoomRepository", "deleteArrAlarm success"),
+                        error -> Log.d("ArrAlarmViewModel", " deleteArrAlarm failed!"+error.getMessage())
+                );
     }
 
 }

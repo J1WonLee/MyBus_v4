@@ -6,12 +6,14 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.mybus.R;
 import com.example.mybus.apisearch.GbusWrapper.GBusRouteArriveInfoResponse;
@@ -21,9 +23,11 @@ import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.apisearch.itemList.GBusRouteArriveInfoList;
 import com.example.mybus.apisearch.msgBody.ArrInfoByRoute;
 import com.example.mybus.apisearch.wrapper.ArrInfoByRouteWrap;
+import com.example.mybus.menu.LoginActivity;
 import com.example.mybus.menu.alarm.AlarmArriveActivity;
 import com.example.mybus.retrofitrepo.RetrofitGbusRepository;
 import com.example.mybus.retrofitrepo.RetrofitRepository;
+import com.example.mybus.roomrepo.BusRoomRepository;
 
 import java.util.concurrent.TimeUnit;
 
@@ -42,6 +46,8 @@ public class ArrAlarmService extends Service {
     RetrofitRepository retrofitRepository;
     @Inject
     RetrofitGbusRepository retrofitGbusRepository;
+    @Inject
+    BusRoomRepository busRoomRepository;
 
     private BusSchList busSchList = new BusSchList();
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -49,9 +55,9 @@ public class ArrAlarmService extends Service {
     private NotificationManager manager;
     private NotificationCompat.Builder builder;
     private String ARR_ACTION = "com.example.mybus.alarmservice.ArrAlarmService.REMOVE";
+    public static MutableLiveData<Integer> deleteFlag = new MutableLiveData<>(0);
 
-    public ArrAlarmService() {
-    }
+    public ArrAlarmService() {}
 
     @Override
     public void onCreate() {
@@ -139,7 +145,7 @@ public class ArrAlarmService extends Service {
     public void getArrDataInterval(){
         if (busSchList != null){
             compositeDisposable.add(
-                    Observable.interval(30, TimeUnit.SECONDS)
+                    Observable.interval(20, TimeUnit.SECONDS)
                             .flatMap(list -> retrofitRepository.getArrInfoByRoute(serviceKey, busSchList.getStId(), busSchList.getBusRouteId(), busSchList.getCorpNm(), "json"))
                             .repeat()
                             .subscribeOn(Schedulers.newThread())
@@ -179,7 +185,12 @@ public class ArrAlarmService extends Service {
     public void stopForegroundService(){
         stopForeground(true);
         stopSelf();
+        busRoomRepository.deleteArrAlarm();
+//        sharedPreferences = getSharedPreferences(LoginActivity.sharedId, MODE_PRIVATE);
         compositeDisposable.dispose();
+        deleteFlag.setValue(1);
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        editor.remove("ArrAlarm");      editor.apply();
         Log.d("ArrAlarmService", "stop service");
     }
 }

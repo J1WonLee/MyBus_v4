@@ -15,6 +15,8 @@ import com.example.mybus.apisearch.itemList.GBusRouteArriveInfoList;
 import com.example.mybus.apisearch.wrapper.ArrInfoByRouteWrap;
 import com.example.mybus.retrofitrepo.RetrofitGbusRepository;
 import com.example.mybus.retrofitrepo.RetrofitRepository;
+import com.example.mybus.roomrepo.BusRoomRepository;
+import com.example.mybus.vo.ArrAlarmPref;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -25,6 +27,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.functions.Consumer;
@@ -35,10 +38,13 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class ArrAlarmViewModel extends ViewModel {
     private RetrofitRepository retrofitRepository;
     private RetrofitGbusRepository retrofitGbusRepository;
+    private BusRoomRepository busRoomRepository;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private ArrAlarmPref arrAlarm;
 
     public MutableLiveData<ArrInfoByRouteList> arrInfoData = new MutableLiveData<>();
     public MutableLiveData<GBusRouteArriveInfoList> arrGbusInfoData = new MutableLiveData<>();
+    public MutableLiveData<ArrAlarmPref> arrAlarmPrefMutableLiveData = new MutableLiveData<>();
 
     private static String serviceKey = "";
     static {
@@ -50,9 +56,10 @@ public class ArrAlarmViewModel extends ViewModel {
     }
 
     @Inject
-    public ArrAlarmViewModel(RetrofitRepository retrofitRepository, RetrofitGbusRepository retrofitGbusRepository) {
+    public ArrAlarmViewModel(RetrofitRepository retrofitRepository, RetrofitGbusRepository retrofitGbusRepository, BusRoomRepository busRoomRepository) {
         this.retrofitRepository = retrofitRepository;
         this.retrofitGbusRepository = retrofitGbusRepository;
+        this.busRoomRepository = busRoomRepository;
     }
 
     public String getServiceKey(){
@@ -101,8 +108,45 @@ public class ArrAlarmViewModel extends ViewModel {
         );
     }
 
+    public void insertArrAlarm(ArrAlarmPref arrAlarmPref){
+        busRoomRepository.insertArrAlarm(arrAlarmPref);
+        arrAlarmPrefMutableLiveData.setValue(arrAlarmPref);
+    }
 
+//    public void deleteArrAlarm(){
+//        Completable completable = busRoomRepository.deleteArrAlarm();
+//        completable.subscribeOn(Schedulers.newThread())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(
+//                        () -> arrAlarmPrefMutableLiveData.setValue(null),
+//                        error -> Log.d("ArrAlarmViewModel", " deleteArrAlarm failed!"+error.getMessage())
+//                );
+//    }
 
+    public void getArrAlarm(){
+        compositeDisposable.add(
+                busRoomRepository.getArrAlarm()
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<ArrAlarmPref>() {
+                            @Override
+                            public void onSuccess(@NonNull ArrAlarmPref arrAlarmPref) {
+                                if (arrAlarmPref != null){
+                                    arrAlarm = arrAlarmPref;
+                                    arrAlarmPrefMutableLiveData.setValue(arrAlarm);
+                                }else{
+                                    arrAlarm = null;
+                                    arrAlarmPrefMutableLiveData.setValue(arrAlarm);
+                                }
+                            }
+
+                            @Override
+                            public void onError(@NonNull Throwable e) {
+                                Log.d("ArrAlarmViewModel", "getArrAlarm error!!" + e.getMessage());
+                            }
+                        })
+        );
+    }
 //    public void getArrInfoByRoute( String stId, String routeId, String ord){
 //        compositeDisposable.add(
 //                Observable.interval(2, TimeUnit.SECONDS)

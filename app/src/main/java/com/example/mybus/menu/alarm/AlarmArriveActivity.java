@@ -3,16 +3,19 @@ package com.example.mybus.menu.alarm;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.mybus.MainActivity;
 import com.example.mybus.R;
@@ -21,8 +24,11 @@ import com.example.mybus.apisearch.itemList.ArrInfoByRouteList;
 import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.apisearch.itemList.GBusRouteArriveInfoList;
 import com.example.mybus.databinding.ActivityAlarmArriveBinding;
+import com.example.mybus.menu.LoginActivity;
 import com.example.mybus.searchDetail.SearchDetailAdapter;
 import com.example.mybus.viewmodel.ArrAlarmViewModel;
+import com.example.mybus.vo.ArrAlarmPref;
+import com.google.gson.Gson;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -37,7 +43,13 @@ public class AlarmArriveActivity extends AppCompatActivity {
     private CountDownTimer countDownTimer;
     private Bundle args;
     private ArrInfoByRouteList arrInfoByRoute;
+    private boolean isEndF1;
+    private boolean isEndF2;
     private GBusRouteArriveInfoList gBusRouteArriveInfo;
+    private SharedPreferences sharedPreferences;
+    private Gson gson;
+    private ArrAlarmPref arrAlarm;
+    private MutableLiveData<ArrAlarmPref> arrAlarmPrefMutableLiveData = new MutableLiveData<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,21 +58,43 @@ public class AlarmArriveActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         arrAlarmViewModel = new ViewModelProvider(this).get(ArrAlarmViewModel.class);
         initView();
+        setAlarmImage();
         getDataFromIntent();
 
+        // 알람 삭제시 반영.
+        ArrAlarmService.deleteFlag.observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                if (integer == 1){
+                    Log.d("AlarmArriveActivity", "detected changed!" + integer);
+                    binding.addAlarm.setImageResource(R.drawable.ic_baseline_add_alarm_24);
+                    binding.addAlarm2.setImageResource(R.drawable.ic_baseline_add_alarm_24);
+                }
+            }
+        });
+
         binding.addAlarm.setOnClickListener(view -> {
-            if (arrInfoByRoute != null){
-                startService(1);
-            }else if (gBusRouteArriveInfo != null){
-                startGBusService(1);
+            if (arrAlarm != null){
+                // 다이얼 로그
+
+            }else{
+                if (arrInfoByRoute != null && !isEndF1){
+                    startService(1);
+                    insertArrAlarm(arrInfoByRoute.getStId(), arrInfoByRoute.getBusRouteId(), 1);
+                }else if (gBusRouteArriveInfo != null && !isEndF1){
+                    startGBusService(1);
+                    insertArrAlarm(busSchList.getStId(), busSchList.getBusRouteId(), 1);
+                }
             }
         });
 
         binding.addAlarm2.setOnClickListener(view -> {
-            if (arrInfoByRoute != null){
+            if (arrInfoByRoute != null && !isEndF2){
                 startService(2);
-            }else if (gBusRouteArriveInfo != null){
+                insertArrAlarm(arrInfoByRoute.getStId(), arrInfoByRoute.getBusRouteId(), 2);
+            }else if (gBusRouteArriveInfo != null && !isEndF2){
                 startGBusService(2);
+                insertArrAlarm(busSchList.getStId(), busSchList.getBusRouteId(), 2);
             }
         });
     }
@@ -68,10 +102,10 @@ public class AlarmArriveActivity extends AppCompatActivity {
     public void initView(){
         toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setTitle(" 도착 알람 ");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24);
+        getArrAlarm();
     }
 
     @Override
@@ -134,8 +168,8 @@ public class AlarmArriveActivity extends AppCompatActivity {
                 if (gBusRouteArriveInfoList != null){
                     gBusRouteArriveInfo = gBusRouteArriveInfoList;
                     binding.busRouteName.setText(busSchList.getBusRouteNm());
-                    gBusSetRemainTime(gBusRouteArriveInfo.getPredictTime1(), 1);
-                    gBusSetRemainTime(gBusRouteArriveInfo.getPredictTime2(), 2);
+                    gBusSetRemainTime(gBusRouteArriveInfo.getPredictTime1(), 1, gBusRouteArriveInfo.getLocationNo1());
+                    gBusSetRemainTime(gBusRouteArriveInfo.getPredictTime2(), 2, gBusRouteArriveInfo.getLocationNo2());
                 }
             }
         });
@@ -180,18 +214,22 @@ public class AlarmArriveActivity extends AppCompatActivity {
             }.start();
 
         }catch(Exception e){
-            Log.d("kkang", "Exception in AlarmArriveActivity setremaintime method msg : " + e.getMessage());
+            Log.d("AlarmArriveActivity", "Exception in AlarmArriveActivity setremaintime method msg : " + e.getMessage());
             if (flag == 1){
                 binding.firstRemainTime.setText(time);
+                binding.firstRemainSeat.setVisibility(View.INVISIBLE);
+                isEndF1 = true;
             }else {
                 binding.secondRemainTime.setText(time);
+                binding.secondRemainSeat.setVisibility(View.INVISIBLE);
+                isEndF2 = true;
             }
 
 
         }
     }
 
-    public void gBusSetRemainTime( String time, int flag){
+    public void gBusSetRemainTime( String time, int flag, String remainStops){
         try{
             long conversionTime = 0;
             String getMinute = time;
@@ -208,8 +246,10 @@ public class AlarmArriveActivity extends AppCompatActivity {
 
                     if (flag == 1){
                         binding.firstRemainTime.setText(min +" 분 " + second +" 초 ");
+                        binding.firstRemainSeat.setText(remainStops + "전");
                     }else{
                         binding.secondRemainTime.setText(min +" 분 " + second +" 초 ");
+                        binding.secondRemainSeat.setText(remainStops + "전");
                     }
                 }
 
@@ -217,17 +257,23 @@ public class AlarmArriveActivity extends AppCompatActivity {
                 public void onFinish() {
                     if (flag == 1){
                         binding.firstRemainTime.setText("시간 초과");
+                        binding.firstRemainSeat.setText("");
                     }else{
                         binding.firstRemainTime.setText("시간 초과");
+                        binding.firstRemainSeat.setText("");
                     }
                 }
             }.start();
         }catch(Exception e){
-            Log.d("kkang", "Exception in AlarmArriveActivity gbussetRemainTime method msg : " + e.getMessage());
+            Log.d("AlarmArriveActivity", "Exception in AlarmArriveActivity gbussetRemainTime method msg : " + e.getMessage());
             if (flag == 1){
-                binding.firstRemainTime.setText("도착 정보가 없습니다");
+                binding.firstRemainTime.setText("운행 중인 버스가 없습니다");
+                binding.firstRemainSeat.setVisibility(View.INVISIBLE);
+                isEndF1 = true;
             }else {
-                binding.secondRemainTime.setText("도착 정보가 없습니다");
+                binding.secondRemainTime.setText("운행 중인 버스가 없습니다");
+                binding.secondRemainSeat.setVisibility(View.INVISIBLE);
+                isEndF2 = true;
             }
         }
     }
@@ -262,5 +308,70 @@ public class AlarmArriveActivity extends AppCompatActivity {
         serviceIntent.putExtras(args);
         serviceIntent.putExtra("serviceKey", arrAlarmViewModel.getServiceKey());
         startService(serviceIntent);
+    }
+
+    // 알람 저장 여부를 확인한다
+//    public void getArrAlarm(){
+//        sharedPreferences = getSharedPreferences(LoginActivity.sharedId, MODE_PRIVATE);
+//        gson = new Gson();
+//        arrAlarmPref = gson.fromJson(sharedPreferences.getString("ArrAlarm", ""), ArrAlarmPref.class);
+//        if (arrAlarmPref != null){
+//            arrAlarmPrefMutableLiveData.setValue(arrAlarmPref);
+//        }
+//    }
+
+//    public void setArrAlarm(String stid, String routeId, int flag){
+//        arrAlarmPref = new ArrAlarmPref(stid, routeId, flag);
+//        gson = new Gson();
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        editor.putString("ArrAlarm", gson.toJson(arrAlarmPref));
+//        editor.apply();
+//    }
+
+//    public void setAddAlarmImage(){
+//        if (arrAlarmPref!= null){
+//            if (arrAlarmPref.getStId().equals(busSchList.getStId()) && arrAlarmPref.getRouteId().equals(busSchList.getBusRouteId())){
+//                if (arrAlarmPref.getFlag() == 1){
+//                    binding.addAlarm.setImageResource(R.drawable.ic_baseline_alarm_on_24);
+//                }else{
+//                    binding.addAlarm2.setImageResource(R.drawable.ic_baseline_alarm_on_24);
+//                }
+//            }
+//        }
+//    }
+
+    public void getArrAlarm(){
+        arrAlarmViewModel.getArrAlarm();
+    }
+
+    public void insertArrAlarm(String stid, String routeId, int flag){
+        arrAlarmViewModel.insertArrAlarm(new ArrAlarmPref(stid, routeId, flag));
+        if (flag == 1){
+//            binding.addAlarm.setImageResource(R.drawable.ic_baseline_alarm_on_24);
+        }else{
+//            binding.addAlarm2.setImageResource(R.drawable.ic_baseline_alarm_on_24);
+        }
+    }
+
+    public void setAlarmImage(){
+        arrAlarmViewModel.arrAlarmPrefMutableLiveData.observe(this, new Observer<ArrAlarmPref>() {
+            @Override
+            public void onChanged(ArrAlarmPref arrAlarmPref) {
+                Log.d("AlarmArriveActivity", "changed detected!!");
+                if (arrAlarmPref!= null){
+                    arrAlarm = arrAlarmPref;
+                    if (arrAlarmPref.getStId().equals(busSchList.getStId()) && arrAlarmPref.getRouteId().equals(busSchList.getBusRouteId())){
+                        if (arrAlarmPref.getFlag() == 1){
+                            binding.addAlarm.setImageResource(R.drawable.ic_baseline_alarm_on_24);
+                        }else{
+                            binding.addAlarm2.setImageResource(R.drawable.ic_baseline_alarm_on_24);
+                        }
+                    }
+                }else{
+                    binding.addAlarm.setImageResource(R.drawable.ic_baseline_add_alarm_24);
+                    binding.addAlarm2.setImageResource(R.drawable.ic_baseline_add_alarm_24);
+                }
+            }
+        });
     }
 }

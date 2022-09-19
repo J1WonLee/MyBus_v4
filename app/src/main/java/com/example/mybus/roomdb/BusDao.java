@@ -12,6 +12,7 @@ import androidx.room.Update;
 
 import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.apisearch.itemList.StopSchList;
+import com.example.mybus.vo.ArrAlarmPref;
 import com.example.mybus.vo.DataWithFavStopBus;
 import com.example.mybus.vo.LocalFav;
 import com.example.mybus.vo.LocalFavStopBus;
@@ -125,4 +126,12 @@ public interface BusDao {
     @Query("DELETE FROM LOCAL_FAV_STOP_BUS")
     Completable deleteLocalBusAll();
 
+    @Insert
+    Completable insertArrAlarm(ArrAlarmPref arrAlarmPref);
+
+    @Query("SELECT * FROM LOCAL_ARR_ALARM")
+    Single<ArrAlarmPref> getArrAlarm();
+
+    @Query("DELETE FROM LOCAL_ARR_ALARM")
+    Completable deleteArrAlarm();
 }
