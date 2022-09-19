@@ -401,7 +401,6 @@ public class AlarmArriveActivity extends AppCompatActivity {
         dialog.show();
 
         dialog.findViewById(R.id.arr_alarm_dialog_yes_btn).setOnClickListener(view -> {
-            arrAlarmViewModel.deleteArrAlarm();
             Log.d("AlarmArriveActivity", "click yes btn!");
             stopArrAlarmService();
             dialog.cancel();
@@ -415,6 +414,6 @@ public class AlarmArriveActivity extends AppCompatActivity {
     public void stopArrAlarmService(){
         Intent stopService = new Intent(AlarmArriveActivity.this, ArrAlarmService.class);
         stopService.putExtra("stopService", "-1");
-        stopService(stopService);
+        startService(stopService);
     }
 }
