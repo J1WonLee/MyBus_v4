@@ -147,6 +147,10 @@ public class ArrAlarmViewModel extends ViewModel {
                         })
         );
     }
+
+    public void deleteArrAlarm(){
+        busRoomRepository.deleteArrAlarm();
+    }
 //    public void getArrInfoByRoute( String stId, String routeId, String ord){
 //        compositeDisposable.add(
 //                Observable.interval(2, TimeUnit.SECONDS)

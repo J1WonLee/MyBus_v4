@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.Toast;
 
 import com.example.mybus.MainActivity;
 import com.example.mybus.R;
@@ -390,5 +391,30 @@ public class AlarmArriveActivity extends AppCompatActivity {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.arr_alarm_dialog);
         dialog.show();
+
+        dialog.findViewById(R.id.arr_alarm_dialog_yes_btn).setOnClickListener(view -> {
+            arrAlarmViewModel.deleteArrAlarm();
+            Log.d("AlarmArriveActivity", "click yes btn!");
+            if (arrInfoByRoute != null && !isEndF1){
+                startService(1);
+                insertArrAlarm(arrInfoByRoute.getStId(), arrInfoByRoute.getBusRouteId(), 1);
+            }else if (gBusRouteArriveInfo != null && !isEndF1){
+                startGBusService(1);
+                insertArrAlarm(busSchList.getStId(), busSchList.getBusRouteId(), 1);
+            }else if (arrInfoByRoute != null && !isEndF2){
+                startService(2);
+                insertArrAlarm(arrInfoByRoute.getStId(), arrInfoByRoute.getBusRouteId(), 2);
+            }else if (gBusRouteArriveInfo != null && !isEndF2) {
+                startGBusService(2);
+                insertArrAlarm(busSchList.getStId(), busSchList.getBusRouteId(), 2);
+            }
+            dialog.cancel();
+        });
+
+        dialog.findViewById(R.id.arr_alarm_dialog_no_btn).setOnClickListener(view -> {
+            dialog.cancel();
+        });
     }
+
+
 }
