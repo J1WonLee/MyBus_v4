@@ -333,11 +333,6 @@ public class AlarmArriveActivity extends AppCompatActivity {
 
     public void insertArrAlarm(String stid, String routeId, int flag){
         arrAlarmViewModel.insertArrAlarm(new ArrAlarmPref(stid, routeId, flag));
-        if (flag == 1){
-//            binding.addAlarm.setImageResource(R.drawable.ic_baseline_alarm_on_24);
-        }else{
-//            binding.addAlarm2.setImageResource(R.drawable.ic_baseline_alarm_on_24);
-        }
     }
 
     public void setAlarmImage(){
@@ -366,7 +361,7 @@ public class AlarmArriveActivity extends AppCompatActivity {
     public void clickEvent(){
         if (arrAlarm != null){
             // 다이얼 로그
-            initDialog();
+            initDialog(1);
         }else{
             if (arrInfoByRoute != null && !isEndF1){
                 startService(1);
@@ -381,7 +376,7 @@ public class AlarmArriveActivity extends AppCompatActivity {
     public void clickEventBtn2(){
         if (arrAlarm != null){
             // 다이얼 로그
-            initDialog();
+            initDialog(2);
         }else{
             if (arrInfoByRoute != null && !isEndF2){
                 startService(2);
@@ -393,7 +388,7 @@ public class AlarmArriveActivity extends AppCompatActivity {
         }
     }
 
-    public void initDialog() {
+    public void initDialog(int flag) {
         Log.d("BusRouteDetailActivity", "initDialog!");
         dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -401,8 +396,25 @@ public class AlarmArriveActivity extends AppCompatActivity {
         dialog.show();
 
         dialog.findViewById(R.id.arr_alarm_dialog_yes_btn).setOnClickListener(view -> {
-            Log.d("AlarmArriveActivity", "click yes btn!");
+            arrAlarmViewModel.deleteArrAlarm();
             stopArrAlarmService();
+            if (flag == 1){
+                if (arrInfoByRoute != null && !isEndF1){
+                    startService(1);
+                    insertArrAlarm(arrInfoByRoute.getStId(), arrInfoByRoute.getBusRouteId(), 1);
+                }else if (gBusRouteArriveInfo != null && !isEndF1){
+                    startGBusService(1);
+                    insertArrAlarm(busSchList.getStId(), busSchList.getBusRouteId(), 1);
+                }
+            }else if (flag == 2){
+                if (arrInfoByRoute != null && !isEndF2){
+                    startService(2);
+                    insertArrAlarm(arrInfoByRoute.getStId(), arrInfoByRoute.getBusRouteId(), 2);
+                }else if (gBusRouteArriveInfo != null && !isEndF2){
+                    startGBusService(2);
+                    insertArrAlarm(busSchList.getStId(), busSchList.getBusRouteId(), 2);
+                }
+            }
             dialog.cancel();
         });
 
@@ -412,8 +424,9 @@ public class AlarmArriveActivity extends AppCompatActivity {
     }
 
     public void stopArrAlarmService(){
+        isEndF2 = false;    isEndF1 = false;
         Intent stopService = new Intent(AlarmArriveActivity.this, ArrAlarmService.class);
-        stopService.putExtra("stopService", "-1");
+        stopService.putExtra("stopApiCall", "-1");
         startService(stopService);
     }
 }

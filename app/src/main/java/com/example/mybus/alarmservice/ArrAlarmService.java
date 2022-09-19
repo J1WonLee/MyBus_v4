@@ -72,10 +72,14 @@ public class ArrAlarmService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d("ArrAlarmService", "onstartcommand called ::::::");
         if (intent.getStringExtra("stopService") != null){
             Log.d("ArrAlarmService", "onStartCommand if state");
             stopForegroundService();
-        }else{
+        }else if(intent.getStringExtra("stopApiCall") != null){
+            stopApiCalls();
+        }
+        else{
             Bundle bundle = intent.getExtras();
             busSchList = bundle.getParcelable("busSchList");
             serviceKey = intent.getStringExtra("serviceKey");
@@ -85,7 +89,6 @@ public class ArrAlarmService extends Service {
             }else if (busSchList.getStId().startsWith("2")){
                 getGBusArrDataInterval();
             }
-
         }
         return START_NOT_STICKY;
     }
@@ -144,6 +147,9 @@ public class ArrAlarmService extends Service {
 
     public void getArrDataInterval(){
         if (busSchList != null){
+            if (compositeDisposable.isDisposed()){
+                compositeDisposable = new CompositeDisposable();
+            }
             compositeDisposable.add(
                     Observable.interval(20, TimeUnit.SECONDS)
                             .flatMap(list -> retrofitRepository.getArrInfoByRoute(serviceKey, busSchList.getStId(), busSchList.getBusRouteId(), busSchList.getCorpNm(), "json"))
@@ -164,6 +170,9 @@ public class ArrAlarmService extends Service {
     }
 
     public void getGBusArrDataInterval(){
+        if (compositeDisposable.isDisposed()){
+            compositeDisposable = new CompositeDisposable();
+        }
         compositeDisposable.add(
                 Observable.interval(30, TimeUnit.SECONDS)
                         .flatMap(list -> retrofitGbusRepository.getGBusArrInfoByRoute(serviceKey, busSchList.getStId(), busSchList.getBusRouteId(), busSchList.getCorpNm()))
@@ -186,11 +195,13 @@ public class ArrAlarmService extends Service {
         stopForeground(true);
         stopSelf();
         busRoomRepository.deleteArrAlarm();
-//        sharedPreferences = getSharedPreferences(LoginActivity.sharedId, MODE_PRIVATE);
         compositeDisposable.dispose();
         deleteFlag.setValue(1);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.remove("ArrAlarm");      editor.apply();
         Log.d("ArrAlarmService", "stop service");
+    }
+
+    public void stopApiCalls(){
+        busRoomRepository.deleteArrAlarm();
+        compositeDisposable.dispose();
     }
 }
