@@ -348,7 +348,8 @@ public class StopDetailActivity extends AppCompatActivity {
                             , date
                             , stopUidSchList.get(position).getBusRouteId()
                             , stopUidSchList.get(position).getRtNm()
-                            , stopUidSchList.get(position).getStaOrd());
+                            , stopUidSchList.get(position).getStaOrd()
+                            , stopSchList.getStId());
 
                     searchDetailViewModel.regitFavList(localFav, localFavStopBus);
                     searchDetailViewModel.getFavStopBusList(stopSchList.getArsId());
@@ -374,7 +375,8 @@ public class StopDetailActivity extends AppCompatActivity {
                             , date
                             , gbusBusLocationList.get(position).getRouteId()
                             , gbusBusLocationList.get(position).getRouteNm()
-                            , gbusBusLocationList.get(position).getStaOrder());
+                            , gbusBusLocationList.get(position).getStaOrder()
+                            , stopSchList.getStId());
 
                     searchDetailViewModel.regitFavList(localFav, localFavStopBus);
                     searchDetailViewModel.getFavStopBusList(stopSchList.getStId());

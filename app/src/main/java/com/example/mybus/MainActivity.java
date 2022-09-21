@@ -441,7 +441,8 @@ public class MainActivity extends AppCompatActivity {
                             , stopRouteList.get(position).getBusRouteId()
                             , stopRouteList.get(position).getBusRouteNm()
 //                          , stopRouteList.get(position).getBusRouteNm());
-                            , adapter.getStopBusOrd(stopRouteList.get(position)));
+                            , adapter.getStopBusOrd(stopRouteList.get(position))
+                            , adapter.getStopId(stopRouteList.get(position)));
                     // 즐겨찾기 목록에 추가 혹은 제거
                     if (stopRouteList.get(position).isFlag()) {
                         stopRouteList.get(position).setFlag(false);
@@ -462,7 +463,8 @@ public class MainActivity extends AppCompatActivity {
                             , date
                             , gBusStopRouteList.get(position).getRouteId()
                             , gBusStopRouteList.get(position).getRouteName()
-                            , gBusStopRouteList.get(position).getStaOrder());
+                            , gBusStopRouteList.get(position).getStaOrder()
+                            , lfId);
                     if (gBusStopRouteList.get(position).isFlag()) {
                         gBusStopRouteList.get(position).setFlag(false);
                         // 삭제

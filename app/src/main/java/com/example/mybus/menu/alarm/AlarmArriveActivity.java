@@ -120,8 +120,10 @@ public class AlarmArriveActivity extends AppCompatActivity {
 
     public void getDataFromIntent(){
         Bundle bundle = getIntent().getExtras();
-        busSchList = bundle.getParcelable("busList");
-        if (busSchList != null){
+        if (bundle != null){
+            busSchList = bundle.getParcelable("busList");
+        }
+        if (bundle != null && busSchList != null){
             if (busSchList.getStId().startsWith("2")){
                 // 경기도 버스인 경우
                 arrAlarmViewModel.getGBusArrInfoByRoute(busSchList.getStId(), busSchList.getBusRouteId(), busSchList.getCorpNm());

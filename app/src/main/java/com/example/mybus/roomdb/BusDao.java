@@ -16,6 +16,7 @@ import com.example.mybus.vo.ArrAlarmPref;
 import com.example.mybus.vo.DataWithFavStopBus;
 import com.example.mybus.vo.LocalFav;
 import com.example.mybus.vo.LocalFavStopBus;
+import com.example.mybus.vo.SchAlarmInfo;
 import com.example.mybus.vo.User;
 
 import java.util.List;
@@ -134,4 +135,17 @@ public interface BusDao {
 
     @Query("DELETE FROM LOCAL_ARR_ALARM")
     Completable deleteArrAlarm();
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    Completable insertSchAlarm(SchAlarmInfo schAlarmInfo);
+
+    @Query("SELECT * FROM SCH_ALARM")
+    Single<List<SchAlarmInfo>> getSchAlarmList();
+
+    @Delete
+    Completable deleteSchAlarm(SchAlarmInfo schAlarmInfo);
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    Completable updateSchAlarm(List<SchAlarmInfo> schAlarmInfos);
+
 }

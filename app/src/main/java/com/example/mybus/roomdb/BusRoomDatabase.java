@@ -10,9 +10,10 @@ import com.example.mybus.vo.ArrAlarmPref;
 import com.example.mybus.vo.Converters;
 import com.example.mybus.vo.LocalFav;
 import com.example.mybus.vo.LocalFavStopBus;
+import com.example.mybus.vo.SchAlarmInfo;
 import com.example.mybus.vo.User;
 
-@Database(entities = {User.class, BusSchList.class, StopSchList.class, LocalFav.class, LocalFavStopBus.class, ArrAlarmPref.class}, version = 18, exportSchema = false)
+@Database(entities = {User.class, BusSchList.class, StopSchList.class, LocalFav.class, LocalFavStopBus.class, ArrAlarmPref.class, SchAlarmInfo.class}, version = 24, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class BusRoomDatabase extends RoomDatabase {
     public abstract BusDao getDao();

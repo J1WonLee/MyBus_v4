@@ -34,7 +34,7 @@ public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapte
         this.localFavStopBusList = localFavStopBusList;
         this.stopUidSchList = stopUidSchLists;
         this.busArrivalList = busArrivalLists;
-        Log.d("MainFavChildAdapter", "size of list : " + localFavStopBusList.size());
+//        Log.d("MainFavChildAdapter", "size of list : " + localFavStopBusList.size());
     }
 
 

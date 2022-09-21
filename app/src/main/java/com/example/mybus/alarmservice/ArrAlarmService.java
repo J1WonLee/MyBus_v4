@@ -116,8 +116,13 @@ public class ArrAlarmService extends Service {
         builder.setContentTitle(busSchList.getBusRouteNm());
         builder.setContentText(busSchList.getFirstBusTm());
         builder.addAction(R.drawable.ic_baseline_directions_bus_24, "삭제", deletePendingIntent);
+        
         Intent notificationIntent = new Intent(this, AlarmArriveActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,notificationIntent, PendingIntent.FLAG_MUTABLE);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Bundle args = new Bundle();
+        args.putParcelable("busList", busSchList);
+        notificationIntent.putExtras(args);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,notificationIntent,PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         builder.setContentIntent(pendingIntent);
 
         Notification notification = builder.build();
@@ -131,7 +136,6 @@ public class ArrAlarmService extends Service {
         }else{
             builder.setContentText(arrInfoByRouteList.getArrmsg2());
         }
-
         manager.notify(123, builder.build());
     }
 

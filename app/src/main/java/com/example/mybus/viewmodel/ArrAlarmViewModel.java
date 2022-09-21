@@ -46,7 +46,7 @@ public class ArrAlarmViewModel extends ViewModel {
     public MutableLiveData<GBusRouteArriveInfoList> arrGbusInfoData = new MutableLiveData<>();
     public MutableLiveData<ArrAlarmPref> arrAlarmPrefMutableLiveData = new MutableLiveData<>();
 
-    private static String serviceKey = "";
+    public static String serviceKey = "";
     static {
         try {
             serviceKey = URLDecoder.decode("7xKgSgAhOl%2FF9gxIzB20lcht%2BtM6G4MKRuw3arXF57DoSZftgzWzLrvcJNQIKn8mvv4UnoGSI5EzgAoxPI02yg%3D%3D", "UTF-8");
@@ -54,6 +54,7 @@ public class ArrAlarmViewModel extends ViewModel {
             e.printStackTrace();
         }
     }
+
 
     @Inject
     public ArrAlarmViewModel(RetrofitRepository retrofitRepository, RetrofitGbusRepository retrofitGbusRepository, BusRoomRepository busRoomRepository) {

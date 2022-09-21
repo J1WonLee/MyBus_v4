@@ -12,6 +12,7 @@ import com.example.mybus.vo.ArrAlarmPref;
 import com.example.mybus.vo.DataWithFavStopBus;
 import com.example.mybus.vo.LocalFav;
 import com.example.mybus.vo.LocalFavStopBus;
+import com.example.mybus.vo.SchAlarmInfo;
 import com.example.mybus.vo.User;
 
 import java.util.List;
@@ -326,6 +327,38 @@ public class BusRoomRepository {
                 .subscribe(
                         () -> Log.d("BusRoomRepository", "deleteArrAlarm success"),
                         error -> Log.d("ArrAlarmViewModel", " deleteArrAlarm failed!"+error.getMessage())
+                );
+    }
+
+    // 스케줄 알람 추가
+    public void insertSchAlarm(SchAlarmInfo schAlarmInfo){
+        Completable completable = busDao.insertSchAlarm(schAlarmInfo);
+        completable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        () -> Log.d("BusRoomRepository", "insertSchAlarm success"),
+                        error -> Log.d("ArrAlarmViewModel", " insertSchAlarm failed!"+error.getMessage())
+                );
+    }
+
+    // 스케줄 알람 조회
+    public Single<List<SchAlarmInfo>> getSchAlarmList(){
+        return busDao.getSchAlarmList();
+    }
+
+    // 스케줄 알람 삭제
+    public Completable deleteSchAlarm(SchAlarmInfo schAlarmInfo){
+        return busDao.deleteSchAlarm(schAlarmInfo);
+    }
+
+    // 스케줄 알람 전체 수정
+    public void updateSchAlarm(List<SchAlarmInfo> schAlarmInfos){
+        Completable completable = busDao.updateSchAlarm(schAlarmInfos);
+        completable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        () -> Log.d("BusRoomRepository", "updateSchAlarm success"),
+                        error -> Log.d("ArrAlarmViewModel", " updateSchAlarm failed!"+error.getMessage())
                 );
     }
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,7 +7,7 @@
     android:layout_marginBottom="10dp"
     android:id="@+id/main_fav_item_wrap"
     android:orientation="vertical"
-    android:background="@color/white"
+    android:background="@drawable/item_list_customborder_bottom"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -30,17 +29,9 @@
             android:layout_height="0dp"
             android:layout_width="0dp"
             android:layout_weight="1" />
-        <Button
-            android:id="@+id/stop_bus_list_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="버스 추가"
-            android:textSize="10sp"
-            android:background="@drawable/button_deco"
-            android:layout_gravity="left" />
 
     </LinearLayout>
-    
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/nested_rv"
         android:layout_width="match_parent"

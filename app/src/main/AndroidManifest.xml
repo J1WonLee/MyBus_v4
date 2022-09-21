@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".hiltapp.MyBusApplication"
@@ -19,13 +21,35 @@
         android:theme="@style/Theme.MyBus"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <service
+            android:name=".alarmservice.AlarmService"
+            android:enabled="true"
+            android:exported="true" />
         <receiver
-            android:name=".alarmservice.ArrAlarmNotiReceiver" android:enabled="true" android:exported="true">
+            android:name=".alarmservice.AlarmReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="stop_alarm" />
+                <action android:name="start_alarm" />
+                <action android:name="com.example.mybus.alarmservice.SchAlarm_Start" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".menu.alarm.AddAlarmFavListActivity"
+            android:exported="false" />
+
+        <receiver
+            android:name=".alarmservice.ArrAlarmNotiReceiver"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.example.mybus.alarmservice.ArrAlarmService.REMOVE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
         </receiver>
 
         <service
@@ -47,6 +71,7 @@
             android:exported="false" />
         <activity
             android:name=".menu.alarm.AddAlarmActivity"
+            android:parentActivityName=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".search.SearchActivity"
