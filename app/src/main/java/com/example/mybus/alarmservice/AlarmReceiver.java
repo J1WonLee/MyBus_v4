@@ -8,10 +8,7 @@ import android.os.PowerManager;
 import android.util.Log;
 import android.view.WindowManager;
 
-import androidx.legacy.content.WakefulBroadcastReceiver;
-
 import com.example.mybus.apisearch.itemList.BusSchList;
-import com.example.mybus.vo.AddAlarmBusSchCopy;
 
 import java.util.Calendar;
 
@@ -31,9 +28,9 @@ public class AlarmReceiver extends BroadcastReceiver {
             context.startService(stopService);
         } else{
 //            setWakeLock(context);
-            week = intent.getBooleanArrayExtra("weekDays");
             if (week.length == 0){
-                Log.d("AlarmReceiver", "AlarmReceiver received! week is null"); return;
+                Log.d("AlarmReceiver", "AlarmReceiver received! week is null");
+                return;
             }
             args = intent.getExtras();
             busSchList = args.getParcelable("busList");
@@ -41,9 +38,12 @@ public class AlarmReceiver extends BroadcastReceiver {
                 Log.d("AlarmReceiver", "AlarmReceiver received! busschlist is null");
                 return;
             }
-            Log.d("AlarmReceiver", "AlarmReceiver received!" + week.toString());
+            Log.d("AlarmReceiver", "AlarmReceiver received!");
             Calendar cal = Calendar.getInstance();
-            if (!week[cal.get(Calendar.DAY_OF_WEEK)])       return; // 선택한 요일이 아니면 넘긴다.
+            if (!week[cal.get(Calendar.DAY_OF_WEEK)])   {
+                Log.d("AlarmReceiver", "not today!");
+                return; // 선택한 요일이 아니면 넘긴다.
+            }
 
             Intent mServiceIntent = new Intent(context, AlarmService.class);
             args = new Bundle();
@@ -57,7 +57,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         wl = pm.newWakeLock( WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON , AlarmService.WAKELOCK_TAG);
         // FULL_WAKE_LOCK PARTIAL_WAKE_LOCK
-        wl.acquire();
+        wl.acquire(10000);
         Log.d("AlarmReceiver", "setWakeLock service");
     }
 }

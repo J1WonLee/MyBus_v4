@@ -142,6 +142,16 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.Alar
                     }
                 }
             });
+
+            binding.editButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION && mListener != null){
+                        mListener.onEditBtnClick(view, pos);
+                    }
+                }
+            });
         }
     }
 }

@@ -13,12 +13,14 @@ import com.example.mybus.databinding.AddalarmFavItemBinding;
 import com.example.mybus.mainadapter.MainFavAdapter;
 import com.example.mybus.mainadapter.MainFavChildAdapter;
 import com.example.mybus.vo.DataWithFavStopBus;
+import com.example.mybus.vo.SchAlarmInfo;
 
 import java.util.List;
 
 public class AddAlarmFavListAdapter extends RecyclerView.Adapter<AddAlarmFavListAdapter.AddAlarmFavListViewHolder> {
     private List<DataWithFavStopBus> dataWithFavStopBusList;
     private AddAlarmFavListChildAdapter childAdapter;
+    private SchAlarmInfo schAlarmInfo;
 
     @NonNull
     @Override
@@ -43,7 +45,11 @@ public class AddAlarmFavListAdapter extends RecyclerView.Adapter<AddAlarmFavList
     }
 
     public void setChildAdapter(AddAlarmFavListViewHolder holder , int position){
-        childAdapter =  new AddAlarmFavListChildAdapter(dataWithFavStopBusList.get(position).localFavStopBusList, dataWithFavStopBusList.get(position).localFav.getLf_name());
+        if (schAlarmInfo !=null){
+            childAdapter = new AddAlarmFavListChildAdapter(dataWithFavStopBusList.get(position).localFavStopBusList, schAlarmInfo, dataWithFavStopBusList.get(position).localFav.getLf_name());
+        }else{
+            childAdapter =  new AddAlarmFavListChildAdapter(dataWithFavStopBusList.get(position).localFavStopBusList, dataWithFavStopBusList.get(position).localFav.getLf_name());
+        }
         holder.addalarmFavItemBinding.nestedRv.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
         holder.addalarmFavItemBinding.nestedRv.setAdapter(childAdapter);
     }
@@ -56,6 +62,12 @@ public class AddAlarmFavListAdapter extends RecyclerView.Adapter<AddAlarmFavList
 
     public void updateDataWithFavStopBusList(List<DataWithFavStopBus> dataWithFavStopBusLists){
         this.dataWithFavStopBusList = dataWithFavStopBusLists;
+        notifyDataSetChanged();
+    }
+
+    public void updateDataWithFavStopBusList(List<DataWithFavStopBus> dataWithFavStopBusLists, SchAlarmInfo schAlarmInfo){
+        this.dataWithFavStopBusList = dataWithFavStopBusLists;
+        this.schAlarmInfo = schAlarmInfo;
         notifyDataSetChanged();
     }
 

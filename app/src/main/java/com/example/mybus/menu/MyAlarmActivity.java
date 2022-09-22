@@ -29,6 +29,7 @@ import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.databinding.ActivityMyAlarmBinding;
 import com.example.mybus.menu.alarm.AddAlarmActivity;
 import com.example.mybus.menu.alarm.AlarmListAdapter;
+import com.example.mybus.menu.alarm.UpdateAlarmActivity;
 import com.example.mybus.viewmodel.AddAlarmListViewModel;
 import com.example.mybus.viewmodel.MyAlarmViewModel;
 import com.example.mybus.vo.SchAlarmInfo;
@@ -47,10 +48,10 @@ public class MyAlarmActivity extends AppCompatActivity {
     private AlarmListAdapter adapter;
     private boolean isScolled = false;
     private AlarmManager alarmManager;
-    List<SchAlarmInfo> schAlarmInfo;
+    private List<SchAlarmInfo> schAlarmInfo;
     private boolean[] weeks = {false, false, false, false, false, false, false, false};
     private boolean[] cancelWeeks = {};
-
+    private Bundle bundle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +83,7 @@ public class MyAlarmActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_add_arrive_alarm, menu);
+        menuInflater.inflate(R.menu.menu_alarm_list, menu);
         return true;
     }
 
@@ -90,7 +91,7 @@ public class MyAlarmActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent intent = new Intent(this, MainActivity.class);
         switch (item.getItemId()){
-            case R.id.action_home:
+            case R.id.action_add:
                 intent = new Intent(this, AddAlarmActivity.class);
                 startActivity(intent);
                 finish();
@@ -155,7 +156,13 @@ public class MyAlarmActivity extends AppCompatActivity {
 
             @Override
             public void onEditBtnClick(View v, int position) {
-
+                // 알람 수정 페이지로 이동
+                bundle = new Bundle();
+                bundle.putParcelable("updateAlarm", schAlarmInfo.get(position));
+                Intent updateAlarmIntent = new Intent(v.getContext(), UpdateAlarmActivity.class);
+                updateAlarmIntent.putExtras(bundle);
+                startActivity(updateAlarmIntent);
+                finish();
             }
         });
     }

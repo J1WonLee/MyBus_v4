@@ -53,6 +53,7 @@ public class MainFavAdapter extends RecyclerView.Adapter<MainFavAdapter.MainFavV
 
     public void setTitleContents(MainFavViewHolder holder, int position){
         holder.mainFavItemBinding.favStopBusName.setText(dataWithFavStopBusList.get(position).localFav.getLf_name());
+        holder.mainFavItemBinding.favStopBusDir.setText(dataWithFavStopBusList.get(position).localFav.getLf_desc()+" 방면");
         if (dataWithFavStopBusList.get(position).localFav.getLf_isBus() == 0){
             holder.mainFavItemBinding.stopBusListBtn.setVisibility(View.GONE);
         }

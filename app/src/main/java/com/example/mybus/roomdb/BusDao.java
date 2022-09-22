@@ -145,7 +145,12 @@ public interface BusDao {
     @Delete
     Completable deleteSchAlarm(SchAlarmInfo schAlarmInfo);
 
+    // 알람 목록에서 ON/OFF 한 알람들을 일괄적으로 수정한다.
     @Update(onConflict = OnConflictStrategy.REPLACE)
     Completable updateSchAlarm(List<SchAlarmInfo> schAlarmInfos);
+
+    // 알람 수정에서 하나의 알람 정보를 수정한다.
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    Completable updateSchAlarm(SchAlarmInfo schAlarmInfo);
 
 }

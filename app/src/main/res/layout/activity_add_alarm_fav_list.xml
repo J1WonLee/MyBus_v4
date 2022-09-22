@@ -6,23 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".menu.alarm.AddAlarmFavListActivity">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:titleCentered="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.01"
-        tools:layout_editor_absoluteX="-16dp" />
+        app:menu="@menu/menu_add_arrive_alarm" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/add_alarm_recycler"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_margin="40dp"
-        android:background="@drawable/dialog_custom_border"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

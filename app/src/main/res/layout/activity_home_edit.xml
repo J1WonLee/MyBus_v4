@@ -8,6 +8,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@color/lightgray"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".menu.HomeEditActivity">
@@ -23,7 +24,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.01"
-            app:menu="@menu/menu_alarm_list" />
+            app:menu="@menu/menu_add_arrive_alarm" />
 
         <TextView
             android:id="@+id/recentSearch"

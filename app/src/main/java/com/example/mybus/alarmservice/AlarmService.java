@@ -7,10 +7,12 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.WindowManager;
 
@@ -38,8 +40,6 @@ import io.reactivex.rxjava3.observers.DisposableSingleObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class AlarmService extends Service {
-
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private NotificationManager manager;
     private NotificationCompat.Builder builder;
     private Bundle bundle;
@@ -52,7 +52,7 @@ public class AlarmService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        setWakeLock();
+//         setWakeLock();
     }
 
     @Override
@@ -88,9 +88,11 @@ public class AlarmService extends Service {
             String channelId = "ArrAlarm";
             String channelName = "ArrAlarmCh";
             String channelDescription = "ArrAlarmChDesc";
-            NotificationChannel notificationChannel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel notificationChannel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH);
             notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
             notificationChannel.enableVibration(true);
+            notificationChannel.setVibrationPattern(new long[] {100,200,300});
             manager.createNotificationChannel(notificationChannel);
             builder = new NotificationCompat.Builder(this, channelId);
         }else{
@@ -112,41 +114,22 @@ public class AlarmService extends Service {
         startForeground(123, notification);
     }
 
-//    public void getArrInfoByRoute( String stId, String routeId, String ord){
-//        compositeDisposable.add(
-//                retrofitRepository.getArrInfoByRouteInit(serviceKey , stId, routeId, ord, "json")
-//                        .subscribeOn(Schedulers.newThread())
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .subscribeWith(new DisposableSingleObserver<ArrInfoByRouteWrap>() {
-//                            @Override
-//                            public void onSuccess(@NonNull ArrInfoByRouteWrap arrInfoByRouteWrap) {
-//                                if (arrInfoByRouteWrap != null){
-//                                    generateNotification(arrInfoByRouteWrap.getArrInfoByRoute().getArrInfoByRouteLists().get(0));
-//                                    Log.d("AlarmService", "getArrinfobyroute!!");
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onError(@NonNull Throwable e) {
-//                                Log.d("AlarmService", "getArrInfoByRoute error!!" + e.getMessage());
-//                            }
-//                        })
-//        );
-//    }
-
     public void setWakeLock(){
-        pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
-        wl = pm.newWakeLock( WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON , WAKELOCK_TAG);
-        // PARTIAL_WAKE_LOCK
-        wl.acquire(30000);
+        try{
+            pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
+            wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP , WAKELOCK_TAG);
+            wl.acquire(10000);
+        }catch(Exception e){
+            Log.d("AlarmService", "error on setWakeLock service" + e.getMessage());
+        }
+
         Log.d("AlarmService", "setWakeLock service");
     }
 
     public void stopForegroundService(){
         stopForeground(true);
         stopSelf();
-        wl.release();
-        compositeDisposable.dispose();
+//        wl.release();
         Log.d("AlarmService", "stop service");
     }
 

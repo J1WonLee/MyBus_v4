@@ -362,4 +362,9 @@ public class BusRoomRepository {
                 );
     }
 
+    // 하나의 스케줄 알람 수정
+    public Completable updateSchAlarm(SchAlarmInfo schAlarmInfo){
+        return busDao.updateSchAlarm(schAlarmInfo);
+    }
+
 }
