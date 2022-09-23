@@ -5,6 +5,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".hiltapp.MyBusApplication"
@@ -18,6 +22,54 @@
         android:theme="@style/Theme.MyBus"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
+        <activity
+            android:name=".menu.alarm.UpdateAlarmActivity"
+            android:exported="false" />
+
+        <service
+            android:name=".alarmservice.AlarmService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver
+            android:name=".alarmservice.AlarmReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="stop_alarm" />
+                <action android:name="start_alarm" />
+                <action android:name="com.example.mybus.alarmservice.SchAlarm_Start" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".menu.alarm.AddAlarmFavListActivity"
+            android:exported="false" />
+
+        <receiver
+            android:name=".alarmservice.ArrAlarmNotiReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.mybus.alarmservice.ArrAlarmService.REMOVE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".alarmservice.ArrAlarmService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".menu.FireBaseSyncActivity"
+            android:exported="false" />
+        <activity
+            android:name=".menu.alarm.AlarmArriveActivity"
+            android:exported="false" />
         <activity
             android:name=".searchDetail.BusRouteDetailActivity"
             android:exported="false" />
@@ -26,7 +78,8 @@
             android:exported="false" />
         <activity
             android:name=".menu.alarm.AddAlarmActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".search.SearchActivity"
             android:exported="false" />
@@ -65,7 +118,6 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

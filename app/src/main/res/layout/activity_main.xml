@@ -14,6 +14,7 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:background="@color/lightgray"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".MainActivity">
@@ -30,44 +31,32 @@
                 app:menu="@menu/menu_toolbar"
                 tools:layout_editor_absoluteX="-16dp" />
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="내 주변 정류장"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+            <!-- main에서 보여줄 영역 -->
 
             <androidx.recyclerview.widget.RecyclerView
+
                 android:id="@+id/main_recycler"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_margin="40dp"
-                android:layout_marginTop="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView2"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar"
                 app:layout_constraintVertical_bias="0.0" />
 
-            <!-- main에서 보여줄 영역 -->
-
-            <!-- 슬라이딩 -->
             <LinearLayout
-                android:background="@color/gray"
+                android:background="@drawable/list_item_deco"
                 android:id="@+id/sliding_panel"
                 android:layout_width="350dp"
-                android:layout_height="500dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/main_recycler"
-                app:layout_constraintVertical_bias="1.0">
+                app:layout_constraintVertical_bias="1.0"
+                app:layout_constraintTop_toTopOf="@+id/main_recycler">
 
                 <LinearLayout
                     android:layout_width="350dp"
@@ -87,21 +76,22 @@
                         android:layout_height="0dp"
                         android:layout_weight="1" />
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:background="@drawable/button_deco"
                         android:id="@+id/main_panel_shut_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
-                        android:text="버스" />
+                        android:text="닫기" />
 
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/panel_recycler"
                     android:layout_width="400dp"
-                    android:layout_height="0dp"
-                    android:background="@color/black" />
+                    android:layout_height="400dp" />
             </LinearLayout>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

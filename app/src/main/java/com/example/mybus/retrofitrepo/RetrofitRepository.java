@@ -3,6 +3,7 @@ package com.example.mybus.retrofitrepo;
 import android.util.Log;
 
 import com.example.mybus.apisearch.itemList.StopSchList;
+import com.example.mybus.apisearch.wrapper.ArrInfoByRouteWrap;
 import com.example.mybus.apisearch.wrapper.BusPositionSearchWrap;
 import com.example.mybus.apisearch.wrapper.RouteInfoWrap;
 import com.example.mybus.apisearch.wrapper.RouteSearchWrap;
@@ -75,6 +76,16 @@ public class RetrofitRepository implements RetrofitService {
     @Override
     public Single<StopRouteListWrap> getStopRouteList(String serviceKey, String ardId, String json) {
         return retrofitService.getStopRouteList(serviceKey,ardId,"json");
+    }
+
+    @Override
+    public Observable<ArrInfoByRouteWrap> getArrInfoByRoute(String serviceKey, String stid, String busRouteId, String ord, String json) {
+        return retrofitService.getArrInfoByRoute(serviceKey, stid, busRouteId, ord, "json");
+    }
+
+    @Override
+    public Single<ArrInfoByRouteWrap> getArrInfoByRouteInit(String serviceKey, String stid, String busRouteId, String ord, String json) {
+        return retrofitService.getArrInfoByRouteInit(serviceKey, stid, busRouteId, ord, "json");
     }
 
 

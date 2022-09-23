@@ -91,8 +91,11 @@ public class SearchDetailViewModel extends ViewModel {
                           .subscribeWith(new DisposableSingleObserver<StopSearchUidWrap>() {
                               @Override
                               public void onSuccess(@NonNull StopSearchUidWrap stopSearchUidWrap) {
-                                  Collections.sort(stopSearchUidWrap.getStopSearchUid().getItemLists());
-                                  stopUidSchList.setValue(stopSearchUidWrap.getStopSearchUid().getItemLists());
+                                  if (stopSearchUidWrap.getStopSearchUid().getItemLists() != null){
+                                      Collections.sort(stopSearchUidWrap.getStopSearchUid().getItemLists());
+                                      stopUidSchList.setValue(stopSearchUidWrap.getStopSearchUid().getItemLists());
+                                  }
+
                               }
                               @Override
                               public void onError(@NonNull Throwable e) {
@@ -141,7 +144,7 @@ public class SearchDetailViewModel extends ViewModel {
                             @Override
                             public void onNext(@NonNull GBusRouteSearchResponse gBusRouteSearchResponse) {
                                 Log.d("kkang", "onNext on serchdetaivm getGBusRouteName" );
-                                if (gBusRouteSearchResponse != null){
+                                if (gBusRouteSearchResponse.getgBusStopSearchUidWrap() != null){
                                     busRouteMatchMap.put(gBusRouteSearchResponse.getgBusStopSearchUidWrap().getgBusRouteList().get(0).getRouteId(), gBusRouteSearchResponse.getgBusStopSearchUidWrap().getgBusRouteList().get(0).getRouteName());
                                 }
                             }

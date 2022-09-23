@@ -9,6 +9,8 @@ import com.example.mybus.retrofitrepo.RetrofitService;
 import com.tickaroo.tikxml.TikXml;
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -41,7 +43,11 @@ public class RetrofitModule {
         if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            return new OkHttpClient.Builder().addInterceptor(loggingInterceptor).build();
+            return new OkHttpClient.Builder()
+                    .addInterceptor(loggingInterceptor)
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .build();
         } else {
             return new OkHttpClient.Builder().build();
         }

@@ -1,13 +1,20 @@
 package com.example.mybus.vo;
 
+import static androidx.room.ForeignKey.CASCADE;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.RoomDatabase;
 
+import java.io.Serializable;
 import java.util.Date;
 
-@Entity(primaryKeys = {"lfb_id", "lfb_busId"} , tableName="Local_Fav_Stop_Bus")
-public class LocalFavStopBus {
+@Entity(primaryKeys = {"lfb_id", "lfb_busId"} , tableName="Local_Fav_Stop_Bus"
+        , foreignKeys = { @ForeignKey(entity = LocalFav.class, parentColumns = "lf_id", childColumns = "lfb_id", onDelete = CASCADE)})
+public class LocalFavStopBus implements Serializable {
     @NonNull
     public String lfb_id;
 
@@ -17,12 +24,31 @@ public class LocalFavStopBus {
 
     public String lfb_busName;
 
+    // 구간 순번으로 버스 도착 알림 시 필요함
+    public String lfb_sectOrd = "-1";
 
-    public LocalFavStopBus(String lfb_id, Date lfb_order, String lfb_busId, String lfb_busName) {
+    public String stId;
+
+    @Ignore
+    public LocalFavStopBus() {
+    }
+
+    @Ignore
+    public LocalFavStopBus(@NonNull String lfb_id, Date lfb_order, @NonNull String lfb_busId, String lfb_busName, String lfb_sectOrd) {
         this.lfb_id = lfb_id;
         this.lfb_order = lfb_order;
         this.lfb_busId = lfb_busId;
         this.lfb_busName = lfb_busName;
+        this.lfb_sectOrd = lfb_sectOrd;
+    }
+
+    public LocalFavStopBus(@NonNull String lfb_id, Date lfb_order, @NonNull String lfb_busId, String lfb_busName, String lfb_sectOrd, String stId) {
+        this.lfb_id = lfb_id;
+        this.lfb_order = lfb_order;
+        this.lfb_busId = lfb_busId;
+        this.lfb_busName = lfb_busName;
+        this.lfb_sectOrd = lfb_sectOrd;
+        this.stId = stId;
     }
 
     public String getLfb_id() {
@@ -55,5 +81,21 @@ public class LocalFavStopBus {
 
     public void setLfb_busName(String lfb_busName) {
         this.lfb_busName = lfb_busName;
+    }
+
+    public String getStId() {
+        return stId;
+    }
+
+    public void setStId(String stId) {
+        this.stId = stId;
+    }
+
+    public String getLfb_sectOrd() {
+        return lfb_sectOrd;
+    }
+
+    public void setLfb_sectOrd(String lfb_sectOrd) {
+        this.lfb_sectOrd = lfb_sectOrd;
     }
 }

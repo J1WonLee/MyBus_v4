@@ -1,6 +1,8 @@
 package com.example.mybus.search;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
@@ -25,6 +27,7 @@ import com.example.mybus.R;
 import com.example.mybus.apisearch.itemList.StopSchList;
 import com.example.mybus.apisearch.wrapper.StopSearchUidWrap;
 import com.example.mybus.databinding.FragmentStopListsBinding;
+import com.example.mybus.menu.LoginActivity;
 import com.example.mybus.searchDetail.StopDetailActivity;
 import com.example.mybus.viewmodel.SearchViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -43,6 +46,9 @@ public class StopListsFragment extends Fragment {
     private TextView emptyText;
     private List<StopSchList> stopLists;
     private FloatingActionButton floatingActionButton;
+    private SharedPreferences sharedPreferences;
+    private boolean isRecentChk = true;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +58,7 @@ public class StopListsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_stop_lists, container, false);
         setFabClick();
+        getRecentChk();
         searchViewModel = new ViewModelProvider(getActivity()).get(SearchViewModel.class);
         searchViewModel.getSharedData().observe(requireActivity(), new Observer<String>() {
             @Override
@@ -90,7 +97,7 @@ public class StopListsFragment extends Fragment {
                 }
             }
         });
-        setInitContents();
+        if (isRecentChk)    setInitContents();
         setAutoResult();
         return binding.getRoot();
     }
@@ -160,7 +167,7 @@ public class StopListsFragment extends Fragment {
                                         if (binding.searchStopInput.getText().toString().length() > 0){
                                             searchViewModel.stopListsKeyword(binding.searchStopInput.getText().toString());
                                         }else{
-                                            searchViewModel.getRecentStopSchList();
+                                            if (isRecentChk)        searchViewModel.getRecentStopSchList();
                                         }
                                     }
                                 },DELAY
@@ -171,12 +178,17 @@ public class StopListsFragment extends Fragment {
 
     }
 
+    public void getRecentChk(){
+        sharedPreferences = getContext().getSharedPreferences(LoginActivity.sharedId, Context.MODE_PRIVATE);
+        isRecentChk  = sharedPreferences.getBoolean("recentSch", true);
+    }
+
     public void setFabClick(){
         floatingActionButton = binding.floatingActionButton;
         floatingActionButton.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(), MainActivity.class);
-
             startActivity(intent);
+            getActivity().finish();
         });
     }
 }

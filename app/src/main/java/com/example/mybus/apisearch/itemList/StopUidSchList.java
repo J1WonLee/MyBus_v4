@@ -55,7 +55,7 @@ public class StopUidSchList implements Comparable<StopUidSchList> {
     @SerializedName("nextBus")
     @Expose
     public String nextBus;
-    @SerializedName("staOrd")
+    @SerializedName("staOrd")       // 즐겨찾기에 추가해야 함
     @Expose
     public String staOrd;
     @SerializedName("vehId1")

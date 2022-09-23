@@ -4,13 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
 import java.util.Date;
 
 // 즐겨찾기 테이블(정류장 버스 웹퍼)
 @Entity(tableName = "LOCAL_FAV")
-public class LocalFav {
+public class LocalFav implements Serializable {
     @NonNull
     @PrimaryKey
     private String lf_id;   // 즐겨찾기 id로 버스, 정류장 id를 의미함. 정류장에 저장되는 버스들은 별도에 테이블에서 관리

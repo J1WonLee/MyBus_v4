@@ -35,9 +35,6 @@ public class IntroActivity extends AppCompatActivity {
             Toast.makeText(this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
             finish();
         }
-
-
-
     }
 
     public boolean isNetwrokAvailable(){

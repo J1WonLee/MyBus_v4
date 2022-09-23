@@ -1,6 +1,8 @@
 package com.example.mybus.search;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,6 +25,7 @@ import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.databinding.FragmentBusListsBinding;
+import com.example.mybus.menu.LoginActivity;
 import com.example.mybus.searchDetail.BusRouteDetailActivity;
 import com.example.mybus.searchDetail.StopDetailActivity;
 import com.example.mybus.viewmodel.SearchViewModel;
@@ -41,6 +44,8 @@ public class BusListsFragment extends Fragment {
     private TextView emptyText;
     private List<BusSchList> busLists;
     private FloatingActionButton floatingActionButton;
+    private SharedPreferences sharedPreferences;
+    private boolean isRecentChk = true;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +55,7 @@ public class BusListsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bus_lists, container, false);
+        getRecentChk();
         initRecycler();
         setFabClick();
         searchViewModel = new ViewModelProvider(requireActivity()).get(SearchViewModel.class);
@@ -79,7 +85,7 @@ public class BusListsFragment extends Fragment {
                 searchViewModel.getBusLists(s);
             }
         });
-        setInitContents();
+        if (isRecentChk)                setInitContents();
         setAutoResult();
         return binding.getRoot();
     }
@@ -98,7 +104,7 @@ public class BusListsFragment extends Fragment {
         busSearchListAdapter.setOnItemClickListener(new BusSearchListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                searchViewModel.insertRecentBusSch(busLists.get(position));
+                if (isRecentChk)            searchViewModel.insertRecentBusSch(busLists.get(position));
                 Intent intent = new Intent(getActivity(), BusRouteDetailActivity.class);
                 Bundle args = new Bundle();
                 args.putParcelable("busList", busLists.get(position));
@@ -112,7 +118,6 @@ public class BusListsFragment extends Fragment {
     public void setInitContents(){
         if (binding.searchBusInput.getText().toString().length() <= 0){
             searchViewModel.getRecentBusSchList();
-
         }
     }
 
@@ -143,7 +148,10 @@ public class BusListsFragment extends Fragment {
                                         if (binding.searchBusInput.getText().toString().length() > 0){
                                             searchViewModel.getBusLists(binding.searchBusInput.getText().toString());
                                         }else{
-                                            searchViewModel.getRecentBusSchList();
+                                            if (isRecentChk){
+                                                searchViewModel.getRecentBusSchList();
+                                            }
+
                                         }
 
                                     }
@@ -165,6 +173,12 @@ public class BusListsFragment extends Fragment {
         floatingActionButton.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
+            getActivity().finish();
         });
+    }
+
+    public void getRecentChk(){
+        sharedPreferences = getContext().getSharedPreferences(LoginActivity.sharedId, Context.MODE_PRIVATE);
+        isRecentChk  = sharedPreferences.getBoolean("recentSch", true);
     }
 }

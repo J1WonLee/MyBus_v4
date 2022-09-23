@@ -1,107 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:background="@color/lightgray"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".menu.alarm.AddAlarmActivity">
 
-    <TextView
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/addAlarm"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.458"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:background="@color/white"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.01"
+        app:menu="@menu/menu_alarm_list"
+        tools:layout_editor_absoluteX="-16dp" />
 
     <TextView
+        android:gravity="center_vertical"
+        android:background="@color/white"
+        android:textAlignment="center"
         android:id="@+id/alarmTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="76dp"
-        android:layout_marginTop="84dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/timePicker"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addAlarm"
-        app:layout_constraintVertical_bias="0.227" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        android:src="@drawable/ic_baseline_edit_24"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:text="즐겨찾기에서 선택하기"
+        android:textSize="15sp"
         app:layout_constraintBottom_toTopOf="@+id/timePicker"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.773"
-        app:layout_constraintStart_toEndOf="@+id/alarmTitle"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addAlarm"
-        app:layout_constraintVertical_bias="0.172" />
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="RtlCompat" />
 
     <TimePicker
+        android:background="@color/white"
         android:id="@+id/timePicker"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="184dp"
+        android:layout_marginBottom="352dp"
         android:timePickerMode="spinner"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/alarmTitle"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/alarmTitle"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/alarmTitle" />
 
     <LinearLayout
+        android:background="@color/white"
+        android:gravity="center"
         android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-200dp"
+        android:layout_marginTop="-180dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/timePicker">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.AppCompatButton
+            android:background="@drawable/button_deco"
+            android:id="@+id/mon"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:text="월" />
+            android:text="월"
+            android:textSize="10sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.AppCompatButton
+            android:background="@drawable/button_deco"
+            android:id="@+id/tue"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:text="월" />
+            android:layout_marginLeft="10dp"
+            android:text="화"
+            android:textSize="10sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.AppCompatButton
+            android:background="@drawable/button_deco"
+            android:id="@+id/wen"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:text="월" />
+            android:layout_marginLeft="10dp"
+            android:text="수"
+            android:textSize="10sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.AppCompatButton
+            android:background="@drawable/button_deco"
+            android:id="@+id/thr"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:text="월" />
+            android:layout_marginLeft="10dp"
+            android:text="목"
+            android:textSize="10sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.AppCompatButton
+            android:background="@drawable/button_deco"
+            android:id="@+id/fri"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:text="월" />
+            android:layout_marginLeft="10dp"
+            android:text="금"
+            android:textSize="10sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.AppCompatButton
+            android:background="@drawable/button_deco"
+            android:id="@+id/sat"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:text="월" />
+            android:layout_marginLeft="10dp"
+            android:text="토"
+            android:textSize="10sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.AppCompatButton
+            android:background="@drawable/button_deco"
+            android:id="@+id/sun"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:text="월" />
+            android:layout_marginLeft="10dp"
+            android:text="일"
+            android:textSize="10sp" />
 
     </LinearLayout>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
+        android:background="@drawable/button_deco"
         android:id="@+id/confirmBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -110,6 +136,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

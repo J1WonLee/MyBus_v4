@@ -28,6 +28,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:background="@drawable/search_detail_list_border_up"
             android:id="@+id/search_bus_lists"
             android:layout_width="match_parent"
             android:layout_height="0dp"

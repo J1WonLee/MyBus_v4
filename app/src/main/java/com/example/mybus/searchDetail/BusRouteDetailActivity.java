@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -75,7 +76,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
 
         initView();
         initRecycler();
-//        getLoginId();
+        getLoginId();
         setFabListener();
         getDataFromIntent();
         getIsFaved();
@@ -85,7 +86,6 @@ public class BusRouteDetailActivity extends AppCompatActivity {
 
     public void setText(){
         binding.busName.setText(busSchList.getBusRouteNm());
-        binding.busCorp.setText(busSchList.getCorpNm());
         binding.busId.setText(busSchList.getBusRouteId());
     }
 
@@ -144,7 +144,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                 busRouteSearchDetailViewModel.deleteLocalFav(busSchList.getBusRouteId());
                 isFavSaved = false;
                 favImage.setImageResource(R.drawable.ic_baseline_star_border_24);
-                busRouteSearchDetailViewModel.deleteFbFab(busSchList.getBusRouteId(), "001234");
+                busRouteSearchDetailViewModel.deleteFbFab(busSchList.getBusRouteId(), loginId);
             }else{
                 Long now = System.currentTimeMillis();
                 Date date = new Date(now);
@@ -153,7 +153,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                 busRouteSearchDetailViewModel.regitFav(localFav);
                 isFavSaved = true;
                 favImage.setImageResource(R.drawable.ic_baseline_star_24);
-                busRouteSearchDetailViewModel.insertFbFav(localFav, "001234");
+                busRouteSearchDetailViewModel.insertFbFav(localFav, loginId);
             }
         });
 
@@ -192,7 +192,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                     busRouteSearchDetailViewModel.deleteLocalFav(busSchList.getBusRouteId());
                     item.setIcon(R.drawable.ic_baseline_star_border_24);
                     favImage.setImageResource(R.drawable.ic_baseline_star_border_24);
-                    busRouteSearchDetailViewModel.deleteFbFab(busSchList.getBusRouteId(), "001234");
+                    busRouteSearchDetailViewModel.deleteFbFab(busSchList.getBusRouteId(), loginId);
                 }else if (!isFavSaved){
                     isFavSaved = !isFavSaved;
                     Long now = System.currentTimeMillis();
@@ -201,7 +201,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                     busRouteSearchDetailViewModel.regitFav(localFav);
                     item.setIcon(R.drawable.ic_baseline_star_24);
                     favImage.setImageResource(R.drawable.ic_baseline_star_24);
-                    insertFbFav(localFav, "001234");
+                    insertFbFav(localFav, loginId);
                 }
                 break;
 
@@ -286,7 +286,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
         busRouteSearchDetailViewModel.gBusLocationList.observe(this, new Observer<List<GBusLocationList>>() {
             @Override
             public void onChanged(List<GBusLocationList> gBusLocationLists) {
-                Log.d("BusRouteDetailActivity", "BusRouteDetail setGbusRouteStation gBusLocationLists : " +gBusLocationLists.size() );
+//                Log.d("BusRouteDetailActivity", "BusRouteDetail setGbusRouteStation gBusLocationLists : " +gBusLocationLists.size() );
                 if (gBusLocationLists != null){
                     adapter.updateGbusLocationList(gBusLocationLists);
                 }
@@ -357,6 +357,11 @@ public class BusRouteDetailActivity extends AppCompatActivity {
         dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.route_detail_dialog);
+        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        params.windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setAttributes(params);
         TextView wdays = dialog.findViewById(R.id.route_detail_term_contents);
         TextView term = dialog.findViewById(R.id.route_detail_term_contents);
         TextView firstLastSt = dialog.findViewById(R.id.route_detail_first_last_station_contents);
@@ -388,7 +393,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                     if (gBusRouteLists != null){
                         try{
                             wdays.setText(gBusRouteLists.get(0).getUpFirstTime() + " / " + gBusRouteLists.get(0).getDownLastTime());
-                            String termText = gBusRouteLists.get(0).getPeekAlloc() == null ? " " : gBusRouteLists.get(0).getPeekAlloc() + " 분 /";
+                            String termText = gBusRouteLists.get(0).getPeekAlloc() == null ? " " : gBusRouteLists.get(0).getPeekAlloc() + " 분 ";
                             termText += gBusRouteLists.get(0).getNpeekAlloc() == null ? " " : gBusRouteLists.get(0).getNpeekAlloc();
 //                            term.setText(gBusRouteLists.get(0).getPeekAlloc() + "분 / " + gBusRouteLists.get(0).getNpeekAlloc()+"분");
                             firstLastSt.setText(gBusRouteLists.get(0).getStartStationName() +"\n" +"<-> \n" + gBusRouteLists.get(0).getEndStationName());

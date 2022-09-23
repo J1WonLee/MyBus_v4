@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModel;
 import com.example.mybus.apisearch.GbusWrapper.GBusStopRouteResponse;
 import com.example.mybus.apisearch.GbusWrapper.GBusStopSearchResponse;
 import com.example.mybus.apisearch.itemList.BusArrivalList;
+import com.example.mybus.apisearch.itemList.GBusStopRouteList;
+import com.example.mybus.apisearch.itemList.StopRouteList;
 import com.example.mybus.apisearch.itemList.StopUidSchList;
 import com.example.mybus.apisearch.wrapper.StopRouteListWrap;
 import com.example.mybus.apisearch.wrapper.StopSearchUidWrap;
@@ -52,6 +54,8 @@ public class MainViewModel extends ViewModel {
     private List<DataWithFavStopBus> dataWithFavStopBuseArrayList = new ArrayList<>();
     private List<StopUidSchList> stopUidSchLists = new ArrayList<>();
     private List<BusArrivalList> busArrivalLists = new ArrayList<>();
+    private List<StopRouteList> stopRouteLists = new ArrayList<>();
+    private List<GBusStopRouteList> gBusStopRouteLists = new ArrayList<>();
 
     public MutableLiveData<User> mUser = new MutableLiveData<>();
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -60,6 +64,8 @@ public class MainViewModel extends ViewModel {
     public MutableLiveData<List<LocalFav>> localFavLists = new MutableLiveData<>();
     public MutableLiveData<List<DataWithFavStopBus>> localFavStopBusLists = new MutableLiveData<>();
     public MutableLiveData<List<BusArrivalList>> busArrivalList = new MutableLiveData<>();
+    public MutableLiveData<List<StopRouteList>> stopRouteList = new MutableLiveData<>();
+    public MutableLiveData<List<GBusStopRouteList>> gbusStopRouteList = new MutableLiveData<>();
 
     private static String serviceKey = "";
     static {
@@ -220,6 +226,9 @@ public class MainViewModel extends ViewModel {
                         public void onSuccess(@NonNull StopRouteListWrap stopRouteListWrap) {
                             if (stopRouteListWrap.getStopRouteList() != null){
                                 Log.d("MainViewModel", "getStopRouteList success");
+//                                stopRouteLists.addAll(stopRouteListWrap.getStopRouteList().getStopRouteList());
+//                                stopRouteList.setValue(stopRouteLists);
+                                stopRouteList.setValue(stopRouteListWrap.getStopRouteList().getStopRouteList());
                             }
                         }
 
@@ -242,6 +251,9 @@ public class MainViewModel extends ViewModel {
                     public void onSuccess(@NonNull GBusStopRouteResponse gBusStopRouteResponse) {
                         if (gBusStopRouteResponse.getgBusRouteStationWrap() != null){
                             Log.d("MainViewModel", "getGBusStopRouteList success");
+//                            gBusStopRouteLists.addAll(gBusStopRouteResponse.getgBusRouteStationWrap().getgBusStopRouteList());
+//                            gbusStopRouteList.setValue(gBusStopRouteLists);
+                            gbusStopRouteList.setValue(gBusStopRouteResponse.getgBusRouteStationWrap().getgBusStopRouteList());
                         }
                     }
 
@@ -253,9 +265,22 @@ public class MainViewModel extends ViewModel {
         );
     }
 
+    public void insertFabFv(LocalFavStopBus localFavStopBus){
+        busRoomRepository.regitFavStopBus(localFavStopBus);
+    }
+
+    public void insertFbStopFavFromMain(LocalFavStopBus localFavStopBus, String loginId){
+        fbRepository.insertFbStopFavFromMain(localFavStopBus, loginId);
+    }
+
+    public void deleteFbStopFav(String lfbId, String lfb_busId, String loginId){
+        fbRepository.deleteFbStopFav(lfbId, lfb_busId, loginId);
+    }
+
     @Override
     protected void onCleared() {
         super.onCleared();
+        Log.d("MainViewModel", "ondisposed!");
         compositeDisposable.clear();
     }
 }

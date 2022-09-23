@@ -5,6 +5,8 @@ import com.example.mybus.vo.LocalFav;
 import com.example.mybus.vo.LocalFavStopBus;
 import com.example.mybus.vo.User;
 
+import java.util.List;
+
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 
@@ -21,6 +23,16 @@ public interface FbService {
     void deleteFbStopFav(String lfId, String lfbId, String loginId);
 
     void deleteFbFabInStopDetail(String lfId, String loginId);
+
+    void insertFbStopFavFromMain(LocalFavStopBus localFavStopBus, String loginId);
+
+    void updateFbFab(LocalFav localFav, String loginId);
+
+    void deleteFbFab(LocalFav localFav, String loginId);
+
+    List<LocalFav> getFbFavLists(String loginId);
+
+
 
 }
 

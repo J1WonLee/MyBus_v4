@@ -1,5 +1,6 @@
 package com.example.mybus.retrofitrepo;
 
+import com.example.mybus.apisearch.wrapper.ArrInfoByRouteWrap;
 import com.example.mybus.apisearch.wrapper.BusPositionSearchWrap;
 import com.example.mybus.apisearch.wrapper.RouteInfoWrap;
 import com.example.mybus.apisearch.wrapper.RouteSearchWrap;
@@ -102,6 +103,25 @@ public interface RetrofitService {
     Single<StopRouteListWrap> getStopRouteList(
             @Query("serviceKey") String serviceKey,
             @Query("arsId") String ardId,
+            @Query("resultType") String json
+    );
+
+    // 특정 정류소 버스의 도착 예정을 구한다
+    @GET("arrive/getArrInfoByRoute")
+    Observable<ArrInfoByRouteWrap> getArrInfoByRoute(
+            @Query("serviceKey") String serviceKey,
+            @Query("stId") String stid,
+            @Query("busRouteId") String busRouteId,
+            @Query("ord") String ord,
+            @Query("resultType") String json
+    );
+
+    @GET("arrive/getArrInfoByRoute")
+    Single<ArrInfoByRouteWrap> getArrInfoByRouteInit(
+            @Query("serviceKey") String serviceKey,
+            @Query("stId") String stid,
+            @Query("busRouteId") String busRouteId,
+            @Query("ord") String ord,
             @Query("resultType") String json
     );
 }

@@ -1,11 +1,14 @@
 package com.example.mybus.retrofitrepo;
 
 import com.example.mybus.apisearch.GbusWrapper.GBusLocationResponse;
+import com.example.mybus.apisearch.GbusWrapper.GBusRouteArriveInfoResponse;
+import com.example.mybus.apisearch.GbusWrapper.GBusRouteArriveInfoWrap;
 import com.example.mybus.apisearch.GbusWrapper.GBusRouteSearchResponse;
 import com.example.mybus.apisearch.GbusWrapper.GBusRouteStationResponse;
 import com.example.mybus.apisearch.GbusWrapper.GBusStopRouteResponse;
 import com.example.mybus.apisearch.msgBody.GBusBusLocation;
 import com.example.mybus.apisearch.GbusWrapper.GBusStopSearchResponse;
+import com.example.mybus.apisearch.wrapper.ArrInfoByRouteWrap;
 
 import javax.inject.Inject;
 
@@ -68,4 +71,16 @@ public class RetrofitGbusRepository implements RetrofitGbusService {
     public Single<GBusStopRouteResponse> getGStopRouteList(String serviceKey, String stationId) {
         return  retrofitGbusService.getGStopRouteList(serviceKey, stationId);
     }
+
+    @Override
+    public Observable<GBusRouteArriveInfoResponse> getGBusArrInfoByRoute(String serviceKey, String stid, String busRouteId, String ord) {
+        return retrofitGbusService.getGBusArrInfoByRoute(serviceKey, stid, busRouteId, ord);
+    }
+
+    @Override
+    public Single<GBusRouteArriveInfoResponse> getGBusArrInfoByRouteInit(String serviceKey, String stid, String busRouteId, String ord) {
+        return retrofitGbusService.getGBusArrInfoByRouteInit(serviceKey, stid, busRouteId, ord);
+    }
+
+
 }

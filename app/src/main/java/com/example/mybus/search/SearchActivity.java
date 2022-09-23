@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.databinding.ActivitySearchBinding;
 import com.example.mybus.viewmodel.SearchViewModel;
@@ -37,13 +39,12 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search);
         setContentView(binding.getRoot());
-        tabLayout = binding.searchTab;  viewPager2 = binding.searchResults; viewPagerAdapter = new ViewPagerAdapter(this);
+        tabLayout = binding.searchTab;  viewPager2 = binding.searchResults;
+        viewPagerAdapter = new ViewPagerAdapter(this);
         viewPager2.setAdapter(viewPagerAdapter);
         connectTab();
 
         searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
-
-
     }
 
 
@@ -55,5 +56,13 @@ public class SearchActivity extends AppCompatActivity {
                 tab.setText(lists.get(position));
             }
         }).attach();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(SearchActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

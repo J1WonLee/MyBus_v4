@@ -3,15 +3,57 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/drawable/button_click_deco.xml" value="0.2625" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/drawable/button_deco.xml" value="0.243" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/drawable/detail_list_item_deco.xml" value="0.2625" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/drawable/dialog_button_deco.xml" value="0.243" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/drawable/dialog_custom_border.xml" value="0.243" />
         <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.243" />
-        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/activity_my_alarm.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.197" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/drawable/item_list_customborder.xml" value="0.243" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/drawable/item_list_customborder_bottom.xml" value="0.243" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/drawable/layout_background_deco.xml" value="0.2625" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/drawable/list_item_deco.xml" value="0.2625" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/drawable/pick_date_button_deco.xml" value="0.2625" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/drawable/search_detail_list_border.xml" value="0.243" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/drawable/search_detail_list_border_up.xml" value="0.2625" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/activity_add_alarm.xml" value="0.4" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/activity_add_alarm_fav_list.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/activity_alarm_arrive.xml" value="0.35280797101449274" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/activity_bus_route_detail.xml" value="0.21197916666666666" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/activity_fire_base_sync.xml" value="0.35280797101449274" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/activity_home_edit.xml" value="0.21875" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/activity_my_alarm.xml" value="0.2" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/activity_open_source.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/activity_search.xml" value="0.1" />
         <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/activity_stop_detail.xml" value="0.2" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/addalarm_fav_buslist_item.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/addalarm_fav_item.xml" value="0.3651041666666667" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/alarm_arrive_list_item.xml" value="0.35280797101449274" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/alarmlist_item.xml" value="0.4" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/arr_alarm_dialog.xml" value="0.35280797101449274" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/bus_route_detail_item.xml" value="0.264" />
         <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/fragment_bus_lists.xml" value="0.35280797101449274" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/fragment_stop_lists.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/home_edit_item.xml" value="0.4" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/home_edit_item_list.xml" value="0.266051912568306" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/main_bus_item_list.xml" value="0.35280797101449274" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/main_fav_buslist_item.xml" value="0.264" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/main_fav_item.xml" value="0.264" />
         <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/navi_header.xml" value="0.35280797101449274" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/opensource_item.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/route_detail_dialog.xml" value="0.21875" />
         <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/search_list_item.xml" value="0.36614583333333334" />
-        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/stop_detail_item.xml" value="0.536" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/stop_detail_item.xml" value="0.4" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/layout/sync_progress.xml" value="0.35280797101449274" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/menu/menu_add_alarm.xml" value="0.3651041666666667" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/menu/menu_add_arrive_alarm.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/menu/menu_alarm_list.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/menu/menu_opensource.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/menu/menu_search_detail.xml" value="0.3651041666666667" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/menu/menu_toolbar.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/menu/navi_menu.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/ta9/MyBus_v4/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.243" />
         <entry key="..\:/Users/ta9/termprj/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.3405" />
         <entry key="..\:/Users/ta9/termprj/app/src/main/res/drawable/ic_launcher_background.xml" value="0.3405" />
@@ -45,16 +87,6 @@
         <entry key="..\:/gwl/MyBus3-master/app/src/main/res/layout/fragment_stop_lists.xml" value="0.1" />
         <entry key="..\:/gwl/MyBus3-master/app/src/main/res/layout/home_edit_item.xml" value="0.23505434782608695" />
         <entry key="..\:/gwl/MyBus3-master/app/src/main/res/layout/opensource_item.xml" value="0.12335359675785208" />
-        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/drawable/customborder.xml" value="0.1765" />
-        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/drawable/dialog_custom_border.xml" value="0.1765" />
-        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/drawable/item_list_customborder_bottom.xml" value="0.1765" />
-        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/layout/activity_bus_route_detail.xml" value="0.10989583333333333" />
-        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/layout/activity_stop_detail.xml" value="0.25" />
-        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/layout/bus_route_detail_item.xml" value="0.25" />
-        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/layout/fragment_bus_lists.xml" value="0.10989583333333333" />
-        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/layout/route_detail_dialog.xml" value="0.176" />
-        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/layout/stop_detail_item.xml" value="0.10989583333333333" />
-        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/menu/menu_search_detail.xml" value="0.1953125" />
       </map>
     </option>
   </component>

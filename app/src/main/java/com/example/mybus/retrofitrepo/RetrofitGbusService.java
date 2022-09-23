@@ -1,11 +1,14 @@
 package com.example.mybus.retrofitrepo;
 
 import com.example.mybus.apisearch.GbusWrapper.GBusLocationResponse;
+import com.example.mybus.apisearch.GbusWrapper.GBusRouteArriveInfoResponse;
+import com.example.mybus.apisearch.GbusWrapper.GBusRouteArriveInfoWrap;
 import com.example.mybus.apisearch.GbusWrapper.GBusRouteSearchResponse;
 import com.example.mybus.apisearch.GbusWrapper.GBusRouteStationResponse;
 import com.example.mybus.apisearch.GbusWrapper.GBusStopRouteResponse;
 import com.example.mybus.apisearch.msgBody.GBusBusLocation;
 import com.example.mybus.apisearch.GbusWrapper.GBusStopSearchResponse;
+import com.example.mybus.apisearch.wrapper.ArrInfoByRouteWrap;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
@@ -70,6 +73,23 @@ public interface RetrofitGbusService {
     Single<GBusStopRouteResponse> getGStopRouteList(
             @Query("serviceKey") String serviceKey,
             @Query("stationId") String stationId
+    );
+
+    @GET("busarrivalservice/getBusArrivalItem")
+    Observable<GBusRouteArriveInfoResponse> getGBusArrInfoByRoute(
+            @Query("serviceKey") String serviceKey,
+            @Query("stationId") String stid,
+            @Query("routeId") String busRouteId,
+            @Query("staOrder") String ord
+    );
+
+    // 특정 정류장 지나는 특정 버스
+    @GET("busarrivalservice/getBusArrivalItem")
+    Single<GBusRouteArriveInfoResponse> getGBusArrInfoByRouteInit(
+            @Query("serviceKey") String serviceKey,
+            @Query("stationId") String stid,
+            @Query("routeId") String busRouteId,
+            @Query("staOrder") String ord
     );
 
 
