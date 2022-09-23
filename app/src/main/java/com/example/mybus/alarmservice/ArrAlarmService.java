@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -103,9 +104,10 @@ public class ArrAlarmService extends Service {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             String channelId = "ArrAlarm";
             String channelName = "ArrAlarmCh";
-            String channelDescription = "ArrAlarmChDesc";
             NotificationChannel notificationChannel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT);
+            notificationChannel.enableVibration(true);
             notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
             manager.createNotificationChannel(notificationChannel);
             builder = new NotificationCompat.Builder(this, channelId);
         }else{
@@ -133,8 +135,10 @@ public class ArrAlarmService extends Service {
         Log.d("ArrAlarmService", "updatenotification called!");
         if (busSchList.getFirstLowTm().equals("1")){
             builder.setContentText(arrInfoByRouteList.getArrmsg1());
+            builder.setWhen(System.currentTimeMillis());
         }else{
             builder.setContentText(arrInfoByRouteList.getArrmsg2());
+            builder.setWhen(System.currentTimeMillis());
         }
         manager.notify(123, builder.build());
     }
@@ -155,7 +159,7 @@ public class ArrAlarmService extends Service {
                 compositeDisposable = new CompositeDisposable();
             }
             compositeDisposable.add(
-                    Observable.interval(20, TimeUnit.SECONDS)
+                    Observable.interval(30, TimeUnit.SECONDS)
                             .flatMap(list -> retrofitRepository.getArrInfoByRoute(serviceKey, busSchList.getStId(), busSchList.getBusRouteId(), busSchList.getCorpNm(), "json"))
                             .repeat()
                             .subscribeOn(Schedulers.newThread())

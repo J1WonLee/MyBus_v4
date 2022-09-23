@@ -155,4 +155,9 @@ public class FireBaseSyncViewModel extends ViewModel {
                         error -> Log.d("FireBaseSyncViewModel", " clearLocalFav failed!"+error.getMessage())
                 );
     }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+    }
 }

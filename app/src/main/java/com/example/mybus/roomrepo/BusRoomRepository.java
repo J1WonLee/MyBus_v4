@@ -239,6 +239,10 @@ public class BusRoomRepository {
         return busDao.getLocalFavStopBusLists(lsbId);
     }
 
+    public  Single<Integer> isLocalFavStopBusSaved(String routeId){
+        return busDao.isLocalFavStopBusSaved(routeId);
+    }
+
     public Single<List<LocalFav>> getLocalFavList(){
         return busDao.getLocalFavList();
     }

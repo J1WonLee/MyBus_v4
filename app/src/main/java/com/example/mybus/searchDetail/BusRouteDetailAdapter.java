@@ -176,18 +176,17 @@ public class BusRouteDetailAdapter extends RecyclerView.Adapter<BusRouteDetailAd
         }
     }
 
-    @SuppressLint("ResourceAsColor")
     public void setBackgroundColor(BusRouteDetailViewHolder holder , int position){
         if (stId != null && stationByRouteList.get(position).getStation().equals(this.stId)){
             Log.d("BusRouteDetailVH", "setBackgroundColor if state called");
-            holder.binding.busRouteStopsList.setBackgroundColor(R.color.yellow);
+            holder.binding.busRouteStopsList.setBackgroundResource(R.drawable.detail_list_item_deco);
         }
     }
 
     @SuppressLint("ResourceAsColor")
     public void setGBusBackgroundColor(BusRouteDetailViewHolder holder , int position){
         if (stId != null && gBusRouteStation.get(position).getStationId().equals(this.stId)){
-            holder.binding.busRouteStopsList.setBackgroundColor(R.color.yellow);
+            holder.binding.busRouteStopsList.setBackgroundResource(R.drawable.detail_list_item_deco);
         }
     }
 

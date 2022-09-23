@@ -49,6 +49,8 @@ import com.example.mybus.vo.DataWithFavStopBus;
 import com.example.mybus.vo.LocalFav;
 import com.example.mybus.vo.LocalFavStopBus;
 import com.example.mybus.vo.User;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.kakao.sdk.user.UserApiClient;
 
@@ -87,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
     private String lfId;
     private SharedPreferences sharedPreferences;
     private String loginId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

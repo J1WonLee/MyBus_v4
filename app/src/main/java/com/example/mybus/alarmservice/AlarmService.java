@@ -85,14 +85,12 @@ public class AlarmService extends Service {
 
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            String channelId = "ArrAlarm";
-            String channelName = "ArrAlarmCh";
-            String channelDescription = "ArrAlarmChDesc";
+            String channelId = "SchAlarm";
+            String channelName = "SchAlarmCh";
             NotificationChannel notificationChannel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH);
             notificationChannel.enableLights(true);
             notificationChannel.setLightColor(Color.RED);
             notificationChannel.enableVibration(true);
-            notificationChannel.setVibrationPattern(new long[] {100,200,300});
             manager.createNotificationChannel(notificationChannel);
             builder = new NotificationCompat.Builder(this, channelId);
         }else{
@@ -111,25 +109,12 @@ public class AlarmService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         builder.setContentIntent(pendingIntent);
         Notification notification = builder.build();
-        startForeground(123, notification);
-    }
-
-    public void setWakeLock(){
-        try{
-            pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
-            wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP , WAKELOCK_TAG);
-            wl.acquire(10000);
-        }catch(Exception e){
-            Log.d("AlarmService", "error on setWakeLock service" + e.getMessage());
-        }
-
-        Log.d("AlarmService", "setWakeLock service");
+        startForeground(234, notification);
     }
 
     public void stopForegroundService(){
         stopForeground(true);
         stopSelf();
-//        wl.release();
         Log.d("AlarmService", "stop service");
     }
 

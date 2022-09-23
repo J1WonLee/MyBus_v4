@@ -56,7 +56,9 @@ public class AddAlarmListViewModel extends ViewModel {
         );
     }
 
-
-
-
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        compositeDisposable.dispose();
+    }
 }

@@ -1,14 +1,19 @@
 package com.example.mybus.vo;
 
+import static androidx.room.ForeignKey.CASCADE;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.RoomDatabase;
 
 import java.io.Serializable;
 import java.util.Date;
 
-@Entity(primaryKeys = {"lfb_id", "lfb_busId"} , tableName="Local_Fav_Stop_Bus")
+@Entity(primaryKeys = {"lfb_id", "lfb_busId"} , tableName="Local_Fav_Stop_Bus"
+        , foreignKeys = { @ForeignKey(entity = LocalFav.class, parentColumns = "lf_id", childColumns = "lfb_id", onDelete = CASCADE)})
 public class LocalFavStopBus implements Serializable {
     @NonNull
     public String lfb_id;
@@ -24,8 +29,10 @@ public class LocalFavStopBus implements Serializable {
 
     public String stId;
 
+    @Ignore
     public LocalFavStopBus() {
     }
+
     @Ignore
     public LocalFavStopBus(@NonNull String lfb_id, Date lfb_order, @NonNull String lfb_busId, String lfb_busName, String lfb_sectOrd) {
         this.lfb_id = lfb_id;

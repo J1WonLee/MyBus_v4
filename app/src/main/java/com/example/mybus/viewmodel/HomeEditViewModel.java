@@ -59,4 +59,10 @@ public class HomeEditViewModel extends ViewModel {
         busRoomRepository.deleteRecentBusSch();
         busRoomRepository.deleteRecentStopSch();
     }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        compositeDisposable.dispose();
+    }
 }

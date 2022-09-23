@@ -169,4 +169,11 @@ public class ArrAlarmViewModel extends ViewModel {
 //                            }
 //                        }, error -> Log.d("ArrAlarmViewModel", "getArrInfoByRoute error!!" + error.getMessage()))
 //        );
+
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        compositeDisposable.dispose();
+    }
 }

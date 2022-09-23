@@ -37,7 +37,9 @@ public class AddAlarmViewModel extends ViewModel {
         busRoomRepository.insertSchAlarm(schAlarmInfo);
     }
 
-
-
-
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        compositeDisposable.dispose();
+    }
 }

@@ -24,6 +24,7 @@ import com.example.mybus.retrofitrepo.RetrofitGbusRepository;
 import com.example.mybus.retrofitrepo.RetrofitRepository;
 import com.example.mybus.roomrepo.BusRoomRepository;
 import com.example.mybus.vo.LocalFav;
+import com.example.mybus.vo.LocalFavStopBus;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -143,7 +144,7 @@ public class BusRouteSearchDetailViewModel extends ViewModel {
                         @Override
                         public void onSuccess(@NonNull GBusRouteStationResponse gBusRouteStationResponse) {
                             Log.d("kkang", "BusRouteSearchDetailViewModel getGbusStopList onSuccess ");
-                            if (gBusRouteStationResponse != null){
+                            if (gBusRouteStationResponse.getgBusRouteStationWrap() != null){
                                 gBusRouteStationWrap = gBusRouteStationResponse.getgBusRouteStationWrap();
 //                                Collections.sort(gBusRouteStationWrap.getBusRouteStationList());
                                 gBusStationList.setValue( gBusRouteStationWrap.getBusRouteStationList());
@@ -156,6 +157,7 @@ public class BusRouteSearchDetailViewModel extends ViewModel {
                         @Override
                         public void onError(@NonNull Throwable e) {
                             Log.d("kkang", "BusRouteSearchDetailViewModel getGbusStopList error : " + e.getMessage());
+                            gBusStationList.setValue(null);
                         }
                     })
         );
@@ -171,7 +173,7 @@ public class BusRouteSearchDetailViewModel extends ViewModel {
                         @Override
                         public void onSuccess(@NonNull GBusLocationResponse gBusLocationResponse) {
                             Log.d("kkang", "BusRouteSearchDetailViewModel getGbusLocationList onSuccess ");
-                            if (gBusLocationResponse != null){
+                            if (gBusLocationResponse.getgBusLocationWrap() != null){
                                 gBusLocationWrap = gBusLocationResponse.getgBusLocationWrap();
                                 Collections.sort(gBusLocationWrap.getBusLocationList());
                                 gBusLocationList.setValue(gBusLocationWrap.getBusLocationList());
@@ -183,6 +185,7 @@ public class BusRouteSearchDetailViewModel extends ViewModel {
                         @Override
                         public void onError(@NonNull Throwable e) {
                             Log.d("kkang", "BusRouteSearchDetailViewModel getGbusLocationList error : " + e.getMessage());
+                            gBusLocationList.setValue(null);
                         }
                     })
         );
@@ -202,10 +205,10 @@ public class BusRouteSearchDetailViewModel extends ViewModel {
                         .subscribeWith(new DisposableSingleObserver<List<LocalFav>>() {
                             @Override
                             public void onSuccess(@NonNull List<LocalFav> localFavs) {
-                                if (localFavs != null){
+                                if (localFavs != null && localFavs.size() > 0){
                                     isFavSaved.setValue(localFavs.size());
                                 }else{
-                                    isFavSaved.setValue(-1);
+                                    getLocalFavStopBus(lfId);
                                 }
                             }
 
@@ -215,6 +218,27 @@ public class BusRouteSearchDetailViewModel extends ViewModel {
                             }
                         })
 
+        );
+    }
+
+    // 즐겨찾기 저장 여부를 불러온다.
+    public void getLocalFavStopBus(String routeId){
+        compositeDisposable.add(
+                busRoomRepository.isLocalFavStopBusSaved(routeId)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<Integer>() {
+                            @Override
+                            public void onSuccess(@NonNull Integer integer) {
+                                isFavSaved.setValue(integer);
+                            }
+
+                            @Override
+                            public void onError(@NonNull Throwable e) {
+                                isFavSaved.setValue(-1);
+                                Log.d("BusRouteSearchViewModel", "getLocalFavStopBus error msg :" + e.getMessage());
+                            }
+                        })
         );
     }
 

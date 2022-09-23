@@ -107,6 +107,9 @@ public interface BusDao {
     @Query("SELECT * FROM LOCAL_FAV_STOP_BUS where lfb_id =:lsbId  order by lfb_busId")
     Single<List<LocalFavStopBus>> getLocalFavStopBusLists(String lsbId);
 
+    @Query("SELECT count(lfb_id) FROM LOCAL_FAV_STOP_BUS where lfb_busId =:routeId")
+    Single<Integer> isLocalFavStopBusSaved(String routeId);
+
     @Update(onConflict = OnConflictStrategy.REPLACE)
     Completable updateAll(List<LocalFav> LocalFav);
 

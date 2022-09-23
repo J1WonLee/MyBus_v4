@@ -299,36 +299,6 @@ public class AlarmArriveActivity extends AppCompatActivity {
         startService(serviceIntent);
     }
 
-    // 알람 저장 여부를 확인한다
-//    public void getArrAlarm(){
-//        sharedPreferences = getSharedPreferences(LoginActivity.sharedId, MODE_PRIVATE);
-//        gson = new Gson();
-//        arrAlarmPref = gson.fromJson(sharedPreferences.getString("ArrAlarm", ""), ArrAlarmPref.class);
-//        if (arrAlarmPref != null){
-//            arrAlarmPrefMutableLiveData.setValue(arrAlarmPref);
-//        }
-//    }
-
-//    public void setArrAlarm(String stid, String routeId, int flag){
-//        arrAlarmPref = new ArrAlarmPref(stid, routeId, flag);
-//        gson = new Gson();
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.putString("ArrAlarm", gson.toJson(arrAlarmPref));
-//        editor.apply();
-//    }
-
-//    public void setAddAlarmImage(){
-//        if (arrAlarmPref!= null){
-//            if (arrAlarmPref.getStId().equals(busSchList.getStId()) && arrAlarmPref.getRouteId().equals(busSchList.getBusRouteId())){
-//                if (arrAlarmPref.getFlag() == 1){
-//                    binding.addAlarm.setImageResource(R.drawable.ic_baseline_alarm_on_24);
-//                }else{
-//                    binding.addAlarm2.setImageResource(R.drawable.ic_baseline_alarm_on_24);
-//                }
-//            }
-//        }
-//    }
-
     public void getArrAlarm(){
         arrAlarmViewModel.getArrAlarm();
     }
@@ -430,5 +400,13 @@ public class AlarmArriveActivity extends AppCompatActivity {
         Intent stopService = new Intent(AlarmArriveActivity.this, ArrAlarmService.class);
         stopService.putExtra("stopApiCall", "-1");
         startService(stopService);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

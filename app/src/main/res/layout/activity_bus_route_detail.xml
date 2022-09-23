@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:contentScrim="@color/yellow"
+            app:scrimAnimationDuration="300"
             app:layout_scrollFlags="scroll|exitUntilCollapsed" >
 
             <LinearLayout
@@ -29,11 +30,6 @@
                 android:layout_marginBottom="20dp"
                 app:layout_collapseMode="parallax">
 
-                <TextView
-                    android:id="@+id/bus_corp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="정류장 아이디" />
                 <TextView
                     android:id="@+id/bus_name"
                     android:layout_width="wrap_content"

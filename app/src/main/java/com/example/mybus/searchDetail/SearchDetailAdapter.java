@@ -39,6 +39,8 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
     private String busId = null;
     // 클릭 리스너
     private OnItemClickListener mListener;
+    public boolean isFirstClicked = false;
+    public int firstClickPos = -1;
     @NonNull
     @Override
     public SearchDetailViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -55,7 +57,6 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                 switch (stopUidSch.getRouteType()){
                     case "1":
                         // 공항 버스
-                        setFavImage(holder, stopUidSch);
                         holder.binding.BusSort.setVisibility(View.VISIBLE);
                         holder.binding.BusSort.setText("공항 버스");
                         holder.binding.busRouteName.setText(stopUidSch.getRtNm());
@@ -64,6 +65,7 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                         setRemainTime(holder, stopUidSch.getArrmsgSec1(), 1);
                         setRemainTime(holder, stopUidSch.getArrmsgSec2(), 2);
                         setBackGroundColor(holder, position);
+                        setFavImage(holder, stopUidSch);
                         break;
                     case "2":
                         // 마을
@@ -174,13 +176,13 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
             }
         }else if (gBusStopList != null){
             BusArrivalList busArrival = gBusStopList.get(position);
-            setGbusFavImage(holder, busArrival);
             holder.binding.busRouteName.setText(busArrival.getRouteNm());
             gBusSetRemainTime(holder, busArrival.getPredictTime1(), 1);
             gBusSetRemainTime(holder, busArrival.getPredictTime2(), 2);
             gBusSetRemainSeat(holder, busArrival.getRemainSeatCnt1(), 1);
             gBusSetRemainSeat(holder, busArrival.getRemainSeatCnt2(), 2);
             setGbusBackGroundColor(holder, position);
+            setGbusFavImage(holder, busArrival);
         }
     }
 
@@ -267,7 +269,6 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                     long getMin = milliUntilFinished - (milliUntilFinished / (60 * 60 * 1000));
                     String min = String.valueOf(getMin / (60 * 1000));      // 몫
                     String second = String.valueOf((getMin % (60 * 1000)) / 1000);
-
                     if (flag == 1){
                         holder.binding.firstRemainTime.setText(min +" 분 " + second +" 초 ");
                     }else{
@@ -285,7 +286,7 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                 }
             }.start();
         }catch(Exception e){
-            Log.d("kkang", "Exception in searchdetailadapter gbussetRemainTime method msg : " + e.getMessage());
+            Log.d("SearchDetailViewHolder", "Exception in searchdetailadapter gbussetRemainTime method msg : " + e.getMessage());
             if (flag == 1){
                 holder.binding.firstRemainTime.setText("도착 정보가 없습니다");
             }else {
@@ -386,11 +387,26 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
 ////        Log.d("kkang", "call updatesbusstoplist" + sBusStopList.size() +" ");
 //    }
 
-    // 즐겨찾기 목록
+    public void updateFavListSbus(List<LocalFavStopBus> localFavStopBusList, List<StopUidSchList> lists){
+        this.localFavStopBusList = localFavStopBusList;
+        this.sBusStopList = lists;
+        notifyDataSetChanged();
+    }
+
+    // 즐겨찾기 목록 및 경기도 버스장 리스트 초기화
+    public void updateFavList(List<LocalFavStopBus> localFavStopBusList, List<BusArrivalList> lists){
+        this.localFavStopBusList = localFavStopBusList;
+        this.gBusStopList = lists;
+        notifyDataSetChanged();
+    }
+
+
+    // 즐겨찾기 목록 초기화
     public void updateFavList(List<LocalFavStopBus> localFavStopBusList){
         this.localFavStopBusList = localFavStopBusList;
         notifyDataSetChanged();
     }
+
 
     // 서울 정류장
     public void updateSBusStopList(List<StopUidSchList> lists, @Nullable String busId){
@@ -400,17 +416,19 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
     }
 
 
-    public void updateLists(List<StopUidSchList> lists, List<LocalFavStopBus> localFavStopBusList){
+    public void updateLists(List<StopUidSchList> lists){
         this.sBusStopList = lists;
-        this.localFavStopBusList = localFavStopBusList;
-//        this.localFavStopBusList = localFavStopBusList;
         notifyDataSetChanged();
-//        Log.d("kkang", "call updatesbusstoplist" + sBusStopList.size() +" ");
     }
 
-    public void updateGbusLists(List<BusArrivalList> lists, List<LocalFavStopBus> localFavStopBusList){
-        this.gBusStopList = lists;  this.localFavStopBusList = localFavStopBusList;
-        notifyDataSetChanged();
+    public void updateGbusLists(List<BusArrivalList> lists){
+        this.gBusStopList = lists;
+        Log.d("SearchDetailViewHolder", "updateGbusLists updated!");
+        try{
+            notifyDataSetChanged();
+        }catch (Exception e){
+            Log.d("SearchDetailViewHolder", "updateGbusLists updated error!" + e.getMessage());
+        }
     }
 
     // 경기도 정류장
@@ -435,6 +453,7 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
         StopDetailItemBinding binding;
         public SearchDetailViewHolder(@NonNull StopDetailItemBinding binding) {
             super(binding.getRoot());
+            Log.d("SearchDetailViewHolder", "SearchDetailViewHolder called!");
             this.binding = binding;
             // 노선 상세보기 클릭
             binding.stopDetailListLayout.setOnClickListener(view -> {
@@ -467,7 +486,7 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
         if (localFavStopBusList != null && !isClicked) {
             for (LocalFavStopBus lsb : localFavStopBusList) {
                 if (stopUidSch.getBusRouteId().equals(lsb.lfb_busId)) {
-                    Log.d("kkang", "on searchdetailadapter set fav image");
+                    Log.d("SearchDetailViewHolder", "on searchdetailadapter set fav image");
                     stopUidSch.setFlag(true);
                     holder.binding.addFav.setImageResource(R.drawable.ic_baseline_star_24);
                 }
@@ -480,40 +499,45 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                 stopUidSch.setFlag(false);
                 holder.binding.addFav.setImageResource(R.drawable.ic_baseline_star_border_24);
             }
+        }else{
+            stopUidSch.setFlag(false);
         }
     }
 
     // 경기도 정류장 버스 즐겨찾기 표시
     public void setGbusFavImage(SearchDetailViewHolder holder, BusArrivalList busArrivalList) {
+        Log.d("SearchDetailViewHolder", "busArrivalList is ::::::::::" + busArrivalList.isChkFlag() +" busnm :::::::::::" + busArrivalList.getRouteNm());
         if (localFavStopBusList != null && !isClicked) {
             for (LocalFavStopBus lsb : localFavStopBusList) {
                 if (busArrivalList.getRouteId().equals(lsb.lfb_busId)) {
-                    Log.d("kkang", "on searchdetailadapter set fav image");
+                    Log.d("SearchDetailViewHolder", "on searchdetailadapter set fav image");
                     busArrivalList.setChkFlag(true);
                     holder.binding.addFav.setImageResource(R.drawable.ic_baseline_star_24);
                 }
             }
         }else if (localFavStopBusList != null && isClicked){
             if (busArrivalList.isChkFlag()){
-                busArrivalList.setChkFlag(true);
+                Log.d("SearchDetailViewHolder", "if state isChkFlag is ::::::::::" + busArrivalList.isChkFlag() +" busnm :::::::::::" + busArrivalList.getRouteNm());
                 holder.binding.addFav.setImageResource(R.drawable.ic_baseline_star_24);
             }else{
-                busArrivalList.setChkFlag(false);
+                Log.d("SearchDetailViewHolder", " else state isChkFlag is ::::::::::" + busArrivalList.isChkFlag() +" busnm :::::::::::" + busArrivalList.getRouteNm());
                 holder.binding.addFav.setImageResource(R.drawable.ic_baseline_star_border_24);
             }
+        }else{
+            busArrivalList.setChkFlag(false);
         }
     }
 
-    @SuppressLint("ResourceAsColor")
+
     public void setBackGroundColor(SearchDetailViewHolder holder, int position){
         if (this.busId != null && sBusStopList.get(position).getBusRouteId().equals(busId)){
-            holder.binding.stopDetailListLayout.setBackgroundColor(R.color.yellow);
+            holder.binding.stopDetailListLayout.setBackgroundResource(R.drawable.detail_list_item_deco);
         }
     }
-    @SuppressLint("ResourceAsColor")
+
     public void setGbusBackGroundColor(SearchDetailViewHolder holder, int position){
         if (this.busId != null && gBusStopList.get(position).getRouteId().equals(busId)){
-            holder.binding.stopDetailListLayout.setBackgroundColor(R.color.yellow);
+            holder.binding.stopDetailListLayout.setBackgroundResource(R.drawable.detail_list_item_deco);
         }
     }
 
