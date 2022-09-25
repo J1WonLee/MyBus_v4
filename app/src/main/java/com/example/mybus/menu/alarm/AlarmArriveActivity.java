@@ -112,7 +112,14 @@ public class AlarmArriveActivity extends AppCompatActivity {
                 break;
 
             case android.R.id.home:
-                this.finish();
+                if (getIntent().getAction() != null){
+                    intent = new Intent(this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }else{
+                    this.finish();
+                }
+
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -405,8 +412,13 @@ public class AlarmArriveActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        if (getIntent().getAction() != null){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }else{
+            this.finish();
+        }
+
     }
 }

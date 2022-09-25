@@ -124,6 +124,7 @@ public class ArrAlarmService extends Service {
         Bundle args = new Bundle();
         args.putParcelable("busList", busSchList);
         notificationIntent.putExtras(args);
+        notificationIntent.setAction("com.example.mybus.fromNoti");
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,notificationIntent,PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         builder.setContentIntent(pendingIntent);
 

@@ -106,6 +106,7 @@ public class AlarmService extends Service {
         bundle = new Bundle();
         bundle.putParcelable("busList", busSchList);
         notificationIntent.putExtras(bundle);
+        notificationIntent.setAction("com.example.mybus.fromNoti");
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         builder.setContentIntent(pendingIntent);
         Notification notification = builder.build();

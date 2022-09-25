@@ -69,7 +69,13 @@
             android:exported="false" />
         <activity
             android:name=".menu.alarm.AlarmArriveActivity"
-            android:exported="false" />
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.example.mybus.fromNoti" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+        </activity>
         <activity
             android:name=".searchDetail.BusRouteDetailActivity"
             android:exported="false" />
