@@ -61,10 +61,12 @@ public class IntroActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
                 finish();
+                overridePendingTransition(R.anim.vertical_center, R.anim.none);
             }else{
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 finish();
+                overridePendingTransition(R.anim.vertical_center, R.anim.none);
             }
             return null;
         });

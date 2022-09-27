@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.example.mybus.ActivityAnimate;
 import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.databinding.ActivityOpenSourceBinding;
@@ -20,7 +21,7 @@ import com.example.mybus.databinding.ActivityOpenSourceBinding;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OpenSourceActivity extends AppCompatActivity {
+public class OpenSourceActivity extends AppCompatActivity implements ActivityAnimate {
     private ActivityOpenSourceBinding binding;
     private List<String> openSourceLists = new ArrayList<>();
     private RecyclerView recycler;
@@ -59,6 +60,7 @@ public class OpenSourceActivity extends AppCompatActivity {
             case android.R.id.home:     // 뒤로 가기 버튼
                 startActivity(intent);
                 finish();
+                exitAnimate();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -86,5 +88,15 @@ public class OpenSourceActivity extends AppCompatActivity {
 
         adapter.updateopenSourceLists(openSourceLists);
 
+    }
+
+    @Override
+    public void moveAnimate() {
+        overridePendingTransition(R.anim.vertical_center, R.anim.none);
+    }
+
+    @Override
+    public void exitAnimate() {
+        overridePendingTransition(R.anim.none, R.anim.vertical_exit);
     }
 }

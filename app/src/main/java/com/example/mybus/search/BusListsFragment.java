@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.mybus.ActivityAnimate;
 import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.apisearch.itemList.BusSchList;
@@ -29,6 +31,7 @@ import com.example.mybus.menu.LoginActivity;
 import com.example.mybus.searchDetail.BusRouteDetailActivity;
 import com.example.mybus.searchDetail.StopDetailActivity;
 import com.example.mybus.viewmodel.SearchViewModel;
+import com.google.android.gms.dynamic.IFragmentWrapper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -36,7 +39,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class BusListsFragment extends Fragment {
+public class BusListsFragment extends Fragment implements ActivityAnimate {
     private SearchViewModel searchViewModel;
     private FragmentBusListsBinding binding;
     private BusSearchListAdapter busSearchListAdapter;
@@ -110,6 +113,7 @@ public class BusListsFragment extends Fragment {
                 args.putParcelable("busList", busLists.get(position));
                 intent.putExtras(args);
                 startActivity(intent);
+                moveAnimate();
             }
         });
     }
@@ -174,11 +178,22 @@ public class BusListsFragment extends Fragment {
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
             getActivity().finish();
+            exitAnimate();
         });
     }
 
     public void getRecentChk(){
         sharedPreferences = getContext().getSharedPreferences(LoginActivity.sharedId, Context.MODE_PRIVATE);
         isRecentChk  = sharedPreferences.getBoolean("recentSch", true);
+    }
+
+    @Override
+    public void moveAnimate() {
+        requireActivity().overridePendingTransition(R.anim.vertical_center, R.anim.none);
+    }
+
+    @Override
+    public void exitAnimate() {
+        requireActivity().overridePendingTransition(R.anim.none, R.anim.vertical_exit);
     }
 }

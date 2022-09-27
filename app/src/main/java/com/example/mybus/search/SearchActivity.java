@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.mybus.ActivityAnimate;
 import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.databinding.ActivitySearchBinding;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements ActivityAnimate {
     private ActivitySearchBinding binding;
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
@@ -64,5 +65,16 @@ public class SearchActivity extends AppCompatActivity {
         Intent intent = new Intent(SearchActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
+        exitAnimate();
+    }
+
+    @Override
+    public void moveAnimate() {
+        overridePendingTransition(R.anim.vertical_center, R.anim.none);
+    }
+
+    @Override
+    public void exitAnimate() {
+        overridePendingTransition(R.anim.none, R.anim.vertical_exit);
     }
 }

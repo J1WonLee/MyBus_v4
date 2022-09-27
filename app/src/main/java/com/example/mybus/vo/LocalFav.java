@@ -29,11 +29,13 @@ public class LocalFav implements Serializable {
 
     private Date lf_order;   // 순서
 
+    private String rotueType;   // 버스일 경우에는 버스 type , 정류장은 "-1"
+
+    @Ignore
     public LocalFav() {
     }
 
-    @Ignore
-    public LocalFav(@NonNull String lf_id, String st_id, String lf_ord, String lf_name, String lf_desc, int lf_isBus, Date lf_order) {
+    public LocalFav(@NonNull String lf_id, String st_id, String lf_ord, String lf_name, String lf_desc, int lf_isBus, Date lf_order, String rotueType) {
         this.lf_id = lf_id;
         this.st_id = st_id;
         this.lf_ord = lf_ord;
@@ -41,6 +43,7 @@ public class LocalFav implements Serializable {
         this.lf_desc = lf_desc;
         this.lf_isBus = lf_isBus;
         this.lf_order = lf_order;
+        this.rotueType = rotueType;
     }
 
     @NonNull
@@ -98,5 +101,13 @@ public class LocalFav implements Serializable {
 
     public void setLf_order(Date lf_order) {
         this.lf_order = lf_order;
+    }
+
+    public String getRotueType() {
+        return rotueType;
+    }
+
+    public void setRotueType(String rotueType) {
+        this.rotueType = rotueType;
     }
 }

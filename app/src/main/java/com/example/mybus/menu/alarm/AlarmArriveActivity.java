@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,8 +19,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mybus.ActivityAnimate;
 import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.alarmservice.ArrAlarmService;
@@ -37,7 +40,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 // 도착 알람 설정
 @AndroidEntryPoint
-public class AlarmArriveActivity extends AppCompatActivity {
+public class AlarmArriveActivity extends AppCompatActivity implements ActivityAnimate {
     private ActivityAlarmArriveBinding binding;
     private Toolbar toolbar;
     private BusSchList busSchList;
@@ -49,10 +52,12 @@ public class AlarmArriveActivity extends AppCompatActivity {
     private boolean isEndF1;
     private boolean isEndF2;
     private GBusRouteArriveInfoList gBusRouteArriveInfo;
-    private SharedPreferences sharedPreferences;
-    private Gson gson;
+    private String stId;
+    private String routeId;
+    private int curFlag;
     private ArrAlarmPref arrAlarm;
     private Dialog dialog;
+    private boolean isDupliAlarm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +114,7 @@ public class AlarmArriveActivity extends AppCompatActivity {
             case R.id.action_home:
                 intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
+                finish();
                 break;
 
             case android.R.id.home:
@@ -322,6 +328,9 @@ public class AlarmArriveActivity extends AppCompatActivity {
                 if (arrAlarmPref!= null){
                     arrAlarm = arrAlarmPref;
                     if (arrAlarmPref.getStId().equals(busSchList.getStId()) && arrAlarmPref.getRouteId().equals(busSchList.getBusRouteId())){
+                        stId = arrAlarm.getStId();
+                        routeId = arrAlarm.getRouteId();
+                        curFlag = arrAlarm.getFlag();
                         if (arrAlarmPref.getFlag() == 1){
                             binding.addAlarm.setImageResource(R.drawable.ic_baseline_alarm_on_24);
                         }else{
@@ -372,12 +381,49 @@ public class AlarmArriveActivity extends AppCompatActivity {
         dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.arr_alarm_dialog);
+        if (stId.equals(busSchList.getStId()) && routeId.equals(busSchList.getBusRouteId()) && flag == curFlag){
+            isDupliAlarm = true;
+            TextView text  = dialog.findViewById(R.id.arr_alarm_text1);
+            dialog.findViewById(R.id.arr_alarm_text2).setVisibility(View.INVISIBLE);
+            text.setText("알람을 제거하시겠습니까?");
+        }
         dialog.show();
+        dialogListener(dialog, flag, isDupliAlarm);
+//        dialog.findViewById(R.id.arr_alarm_dialog_yes_btn).setOnClickListener(view -> {
+//            arrAlarmViewModel.deleteArrAlarm();
+//            stopArrAlarmService();
+//            if (flag == 1){
+//                if (arrInfoByRoute != null && !isEndF1){
+//                    startService(1);
+//                    insertArrAlarm(arrInfoByRoute.getStId(), arrInfoByRoute.getBusRouteId(), 1);
+//                }else if (gBusRouteArriveInfo != null && !isEndF1){
+//                    startGBusService(1);
+//                    insertArrAlarm(busSchList.getStId(), busSchList.getBusRouteId(), 1);
+//                }
+//            }else if (flag == 2){
+//                if (arrInfoByRoute != null && !isEndF2){
+//                    startService(2);
+//                    insertArrAlarm(arrInfoByRoute.getStId(), arrInfoByRoute.getBusRouteId(), 2);
+//                }else if (gBusRouteArriveInfo != null && !isEndF2){
+//                    startGBusService(2);
+//                    insertArrAlarm(busSchList.getStId(), busSchList.getBusRouteId(), 2);
+//                }
+//            }else{
+//                stopArrAlarmServiceDup();
+//            }
+//            dialog.cancel();
+//        });
 
+        dialog.findViewById(R.id.arr_alarm_dialog_no_btn).setOnClickListener(view -> {
+            dialog.cancel();
+        });
+    }
+
+    public void dialogListener(Dialog dialog, int flag, boolean isDupliAlarm){
         dialog.findViewById(R.id.arr_alarm_dialog_yes_btn).setOnClickListener(view -> {
             arrAlarmViewModel.deleteArrAlarm();
             stopArrAlarmService();
-            if (flag == 1){
+            if (flag == 1 && !isDupliAlarm){
                 if (arrInfoByRoute != null && !isEndF1){
                     startService(1);
                     insertArrAlarm(arrInfoByRoute.getStId(), arrInfoByRoute.getBusRouteId(), 1);
@@ -385,7 +431,7 @@ public class AlarmArriveActivity extends AppCompatActivity {
                     startGBusService(1);
                     insertArrAlarm(busSchList.getStId(), busSchList.getBusRouteId(), 1);
                 }
-            }else if (flag == 2){
+            }else if (flag == 2 && !isDupliAlarm){
                 if (arrInfoByRoute != null && !isEndF2){
                     startService(2);
                     insertArrAlarm(arrInfoByRoute.getStId(), arrInfoByRoute.getBusRouteId(), 2);
@@ -393,19 +439,25 @@ public class AlarmArriveActivity extends AppCompatActivity {
                     startGBusService(2);
                     insertArrAlarm(busSchList.getStId(), busSchList.getBusRouteId(), 2);
                 }
+            }else{
+                stopArrAlarmServiceDup();
             }
             dialog.cancel();
         });
 
-        dialog.findViewById(R.id.arr_alarm_dialog_no_btn).setOnClickListener(view -> {
-            dialog.cancel();
-        });
     }
 
     public void stopArrAlarmService(){
-        isEndF2 = false;    isEndF1 = false;
+        isEndF2 = false;    isEndF1 = false;    isDupliAlarm = false;
         Intent stopService = new Intent(AlarmArriveActivity.this, ArrAlarmService.class);
         stopService.putExtra("stopApiCall", "-1");
+        startService(stopService);
+    }
+
+    public void stopArrAlarmServiceDup(){
+        isEndF2 = false;    isEndF1 = false;    isDupliAlarm = false;
+        Intent stopService = new Intent(AlarmArriveActivity.this, ArrAlarmService.class);
+        stopService.putExtra("stopService", "stop");
         startService(stopService);
     }
 
@@ -416,9 +468,20 @@ public class AlarmArriveActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
+            exitAnimate();
         }else{
             this.finish();
+            exitAnimate();
         }
+    }
 
+    @Override
+    public void moveAnimate() {
+        overridePendingTransition(R.anim.vertical_center, R.anim.none);
+    }
+
+    @Override
+    public void exitAnimate() {
+        overridePendingTransition(R.anim.none, R.anim.vertical_exit);
     }
 }

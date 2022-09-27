@@ -1,5 +1,6 @@
 package com.example.mybus.menu.alarm;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mybus.R;
 import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.databinding.AddalarmFavBuslistItemBinding;
 import com.example.mybus.mainadapter.MainFavChildAdapter;
@@ -92,6 +94,7 @@ public class AddAlarmFavListChildAdapter extends  RecyclerView.Adapter<AddAlarmF
                     alarmIntent.putExtras(args);
                 }
                 holder.itemView.getContext().startActivity(alarmIntent);
+                ((Activity) holder.itemView.getContext()).overridePendingTransition(R.anim.vertical_center, R.anim.none);
             }
         });
     }

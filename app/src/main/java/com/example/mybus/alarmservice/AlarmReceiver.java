@@ -53,11 +53,4 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
     }
 
-    public void setWakeLock(Context context){
-        pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        wl = pm.newWakeLock( WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON , AlarmService.WAKELOCK_TAG);
-        // FULL_WAKE_LOCK PARTIAL_WAKE_LOCK
-        wl.acquire(10000);
-        Log.d("AlarmReceiver", "setWakeLock service");
-    }
 }

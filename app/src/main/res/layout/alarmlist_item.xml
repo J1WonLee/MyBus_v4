@@ -75,6 +75,7 @@
     <Switch
         android:id="@+id/onOff"
         android:layout_width="120dp"
+        android:switchMinWidth="100dp"
         android:layout_height="wrap_content"
         android:checked="true"
         app:layout_constraintBottom_toBottomOf="@+id/bus_name"

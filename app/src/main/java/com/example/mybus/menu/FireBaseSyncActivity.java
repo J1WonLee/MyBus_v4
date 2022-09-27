@@ -9,8 +9,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.mybus.ActivityAnimate;
 import com.example.mybus.MainActivity;
+import com.example.mybus.R;
 import com.example.mybus.databinding.ActivityFireBaseSyncBinding;
 import com.example.mybus.viewmodel.FireBaseSyncViewModel;
 import com.example.mybus.vo.LocalFav;
@@ -22,7 +25,7 @@ import java.util.List;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class FireBaseSyncActivity extends AppCompatActivity {
+public class FireBaseSyncActivity extends AppCompatActivity implements ActivityAnimate {
     private ActivityFireBaseSyncBinding binding;
     private FireBaseSyncViewModel fireBaseSyncViewModel;
     private SharedPreferences sharedPreferences;
@@ -58,6 +61,10 @@ public class FireBaseSyncActivity extends AppCompatActivity {
     public void getLoginId(){
         sharedPreferences = getSharedPreferences(LoginActivity.sharedId, MODE_PRIVATE);
         loginId = sharedPreferences.getString("loginId", null);
+        if (loginId == null){
+            finish();
+            exitAnimate();
+        }
     }
 
     public void getFbFavList(String loginId){
@@ -115,6 +122,7 @@ public class FireBaseSyncActivity extends AppCompatActivity {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            Toast.makeText(FireBaseSyncActivity.this, "동기화 완료!", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(FireBaseSyncActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();
@@ -123,5 +131,21 @@ public class FireBaseSyncActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        Toast.makeText(this, "동기화 중입니다 잠시만 기다려주세요", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void moveAnimate() {
+        overridePendingTransition(R.anim.vertical_center, R.anim.none);
+    }
+
+    @Override
+    public void exitAnimate() {
+        overridePendingTransition(R.anim.none, R.anim.vertical_exit);
     }
 }

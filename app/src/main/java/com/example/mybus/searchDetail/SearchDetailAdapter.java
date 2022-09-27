@@ -225,9 +225,11 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                     String second = String.valueOf((getMin % (60 * 1000)) / 1000);
 
                     if (flag == 1){
-                        holder.binding.firstRemainTime.setText(min +" 분 " + second +" 초 " + remainStops);
+                        holder.binding.firstRemainTime.setText(min +" 분 " + second +" 초 ");
+                        holder.binding.firstRemainStop.setText(remainStops);
                     }else{
-                        holder.binding.secondRemainTime.setText(min +" 분 " + second +" 초 " + remainStops);
+                        holder.binding.secondRemainTime.setText(min +" 분 " + second +" 초 ");
+                        holder.binding.secondRemainStop.setText(remainStops);
                     }
 
                 }
@@ -271,8 +273,10 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                     String second = String.valueOf((getMin % (60 * 1000)) / 1000);
                     if (flag == 1){
                         holder.binding.firstRemainTime.setText(min +" 분 " + second +" 초 ");
+                        holder.binding.firstRemainStop.setVisibility(View.INVISIBLE);
                     }else{
                         holder.binding.secondRemainTime.setText(min +" 분 " + second +" 초 ");
+                        holder.binding.secondRemainStop.setVisibility(View.INVISIBLE);
                     }
                 }
 

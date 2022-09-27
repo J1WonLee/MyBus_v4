@@ -32,68 +32,92 @@
                 tools:layout_editor_absoluteX="-16dp" />
 
             <!-- main에서 보여줄 영역 -->
+                <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/main_emtpy_img"
+                    android:src="@drawable/main_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                    app:layout_constraintVertical_bias="0.0" />
 
-            <androidx.recyclerview.widget.RecyclerView
-
-                android:id="@+id/main_recycler"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_margin="40dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <LinearLayout
-                android:background="@drawable/list_item_deco"
-                android:id="@+id/sliding_panel"
-                android:layout_width="350dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintVertical_bias="1.0"
-                app:layout_constraintTop_toTopOf="@+id/main_recycler">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/main_recycler"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_margin="40dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                    app:layout_constraintVertical_bias="0.0" />
 
                 <LinearLayout
+                    android:background="@drawable/list_item_deco"
+                    android:id="@+id/sliding_panel"
                     android:layout_width="350dp"
-                    android:layout_height="50dp"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintVertical_bias="1.0"
+                    app:layout_constraintTop_toTopOf="@+id/main_recycler">
 
-                    <TextView
-                        android:id="@+id/main_station_nm"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="정류장 이름 , 방면"
-                        android:textSize="20sp" />
+                    <LinearLayout
+                        android:layout_width="350dp"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
+                        <TextView
+                            android:id="@+id/main_station_nm"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="정류장 이름 , 방면"
+                            android:textSize="20sp" />
 
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:background="@drawable/button_deco"
-                        android:id="@+id/main_panel_shut_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left"
-                        android:text="닫기" />
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:background="@drawable/button_deco"
+                            android:id="@+id/main_panel_shut_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:text="닫기" />
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/panel_recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="400dp" />
 
                 </LinearLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/panel_recycler"
-                    android:layout_width="400dp"
-                    android:layout_height="400dp" />
-            </LinearLayout>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/main_refersh_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp"
+                android:layout_marginRight="30dp"
+                android:clickable="true"
+                app:backgroundTint="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@drawable/ic_baseline_refresh_24" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
 
@@ -105,5 +129,7 @@
             android:layout_gravity="start"
             app:headerLayout="@layout/navi_header"
             app:menu="@menu/navi_menu" />
+
+
     </androidx.drawerlayout.widget.DrawerLayout>
 </layout>

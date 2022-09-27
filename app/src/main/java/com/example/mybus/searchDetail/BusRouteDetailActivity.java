@@ -12,6 +12,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,6 +23,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.mybus.ActivityAnimate;
 import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.apisearch.itemList.BusPosList;
@@ -47,7 +49,7 @@ import java.util.List;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class BusRouteDetailActivity extends AppCompatActivity {
+public class BusRouteDetailActivity extends AppCompatActivity implements ActivityAnimate {
     private ActivityBusRouteDetailBinding binding;
     private Toolbar toolbar;
     private FloatingActionButton floatingActionButton;
@@ -66,6 +68,9 @@ public class BusRouteDetailActivity extends AppCompatActivity {
     private Dialog dialog;
     private SharedPreferences sharedPreferences;
     private String loginId;
+    private long mLastClickTime = 0L;
+    private String routeType = "-1";       //
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,7 +110,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
         collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.CollapsingToolbar_TitleText);
 
         collapsingToolbarLayout.setTitle("");
-        collapsingToolbarLayout.setBackgroundColor(getResources().getColor(R.color.green));
+        collapsingToolbarLayout.setBackgroundColor(getResources().getColor(R.color.yellow));
         appBarLayout = binding.stopAppbar;
 
 
@@ -119,7 +124,8 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                 }
                 if (scrollRange + verticalOffset == 0) {
                     collapsingToolbarLayout.setTitle(busSchList.getBusRouteNm());
-                    collapsingToolbarLayout.setBackgroundColor(getResources().getColor(R.color.green));
+                    collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
+                    collapsingToolbarLayout.setBackgroundColor(getResources().getColor(R.color.yellow));
                     showOption(R.id.action_add_fav);
                     isShow = true;
                 } else if (isShow) {
@@ -133,9 +139,12 @@ public class BusRouteDetailActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(BusRouteDetailActivity.this, SearchActivity.class);
-                startActivity(intent);
+                if (getIntent().getAction() != null){
+                    Intent intent = new Intent(BusRouteDetailActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
                 finish();
+                exitAnimate();
             }
         });
 
@@ -148,7 +157,8 @@ public class BusRouteDetailActivity extends AppCompatActivity {
             }else{
                 Long now = System.currentTimeMillis();
                 Date date = new Date(now);
-                LocalFav localFav = new LocalFav(busSchList.getBusRouteId(), "0", "0" , busSchList.getBusRouteNm(), busSchList.getCorpNm(), 0, date);
+                LocalFav localFav = new LocalFav(busSchList.getBusRouteId(),"0" , "0" , busSchList.getBusRouteNm(), busSchList.getCorpNm(), 0, date, routeType);
+                // routeType 추가???
                 // 뷰 모델에서 즐겨찾기 작업 추가
                 busRouteSearchDetailViewModel.regitFav(localFav);
                 isFavSaved = true;
@@ -197,7 +207,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                     isFavSaved = !isFavSaved;
                     Long now = System.currentTimeMillis();
                     Date date = new Date(now);
-                    LocalFav localFav = new LocalFav(busSchList.getBusRouteId(), "0", "0" , busSchList.getBusRouteNm(), busSchList.getCorpNm(), 0, date);
+                    LocalFav localFav = new LocalFav(busSchList.getBusRouteId(),"0", "0" , busSchList.getBusRouteNm(), busSchList.getCorpNm(), 0, date, routeType);
                     busRouteSearchDetailViewModel.regitFav(localFav);
                     item.setIcon(R.drawable.ic_baseline_star_24);
                     favImage.setImageResource(R.drawable.ic_baseline_star_24);
@@ -208,8 +218,8 @@ public class BusRouteDetailActivity extends AppCompatActivity {
             case R.id.action_home:
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
-                break;
-            default:
+                finish();
+                exitAnimate();
                 break;
         }
         return true;
@@ -231,6 +241,9 @@ public class BusRouteDetailActivity extends AppCompatActivity {
     public void getDataFromIntent(){
         Bundle bundle = getIntent().getExtras();
         busSchList = bundle.getParcelable("busList");
+        if (busSchList.getRouteType() != null){
+            routeType = busSchList.getRouteType();
+        }
         if (busSchList != null){
             if (busSchList.getBusRouteId().startsWith("1")){
                 // 서울시 버스 인 경우
@@ -239,8 +252,6 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                 // 경기도 버스인 경우
                 setGbusRouteStation();
             }
-        }else{
-            // 정류장 상세보기에서 온 경우 routeId를 받아와야 함
         }
     }
 
@@ -263,6 +274,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
             public void onChanged(List<BusPosList> busPosLists) {
                 if (busPosLists != null){
                     adapter.updateRoutePosInfo(busPosLists);
+                    routeType = busPosLists.get(0).getBusType();
                 }
 
             }
@@ -278,6 +290,9 @@ public class BusRouteDetailActivity extends AppCompatActivity {
 //                    Log.d("BusRouteDetailActivity", "BusRouteDetail setGbusRouteStation gBusRouteStationLists : " +gBusRouteStationLists.size() );
                     gBusRouteStationList = gBusRouteStationLists;
                     adapter.updateGbusStationInfo(gBusRouteStationLists, busSchList.getStId());
+                    if (busSchList.getCorpNm().equals("-1")){
+                        busSchList.setCorpNm(gBusRouteStationList.get(0).getRegionName());
+                    }
                 }
             }
         });
@@ -327,6 +342,7 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                     args.putParcelable("stopList", stopSchList);
                     intent.putExtras(args);
                     startActivity(intent);
+                    moveAnimate();
                 }else if(gBusRouteStationList != null){
                     stopSchList.setStId(gBusRouteStationList.get(position).getStationId());
                     stopSchList.setStNm(gBusRouteStationList.get(position).getStationName());
@@ -335,20 +351,24 @@ public class BusRouteDetailActivity extends AppCompatActivity {
                     args.putParcelable("stopList", stopSchList);
                     intent.putExtras(args);
                     startActivity(intent);
+                    moveAnimate();
                 }
-
             }
         });
     }
 
     public void setFabListener(){
         floatingActionButton.setOnClickListener(view -> {
-            if (busSchList.getBusRouteId().startsWith("1")){
-                busRouteSearchDetailViewModel.getBusPositionList(busSchList.getBusRouteId());
-            }else if (busSchList.getBusRouteId().startsWith("2")){
-                busRouteSearchDetailViewModel.getGbusLocationList(busSchList.getBusRouteId());
+            if (SystemClock.elapsedRealtime() - mLastClickTime > 5000) {
+                if (busSchList.getBusRouteId().startsWith("1")) {
+                    busRouteSearchDetailViewModel.getBusPositionList(busSchList.getBusRouteId());
+                } else if (busSchList.getBusRouteId().startsWith("2")) {
+                    busRouteSearchDetailViewModel.getGbusLocationList(busSchList.getBusRouteId());
+                }
+            }else{
+                Log.d("BusRouteDetailActivity", "not time yet");
             }
-
+            mLastClickTime = SystemClock.elapsedRealtime();
         });
     }
 
@@ -416,5 +436,26 @@ public class BusRouteDetailActivity extends AppCompatActivity {
 
     public void insertFbFav(LocalFav  localFav,String loginId){
         busRouteSearchDetailViewModel.insertFbFav(localFav, loginId);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (getIntent().getAction() != null){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+        finish();
+        exitAnimate();
+    }
+
+    @Override
+    public void moveAnimate() {
+        overridePendingTransition(R.anim.vertical_center, R.anim.none);
+    }
+
+    @Override
+    public void exitAnimate() {
+        overridePendingTransition(R.anim.none, R.anim.vertical_exit);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.mybus.mainadapter;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mybus.R;
 import com.example.mybus.apisearch.itemList.BusArrivalList;
 import com.example.mybus.apisearch.itemList.GBusStopRouteList;
 import com.example.mybus.apisearch.itemList.StopRouteList;
@@ -53,7 +55,34 @@ public class MainFavAdapter extends RecyclerView.Adapter<MainFavAdapter.MainFavV
 
     public void setTitleContents(MainFavViewHolder holder, int position){
         holder.mainFavItemBinding.favStopBusName.setText(dataWithFavStopBusList.get(position).localFav.getLf_name());
-        holder.mainFavItemBinding.favStopBusDir.setText(dataWithFavStopBusList.get(position).localFav.getLf_desc()+" 방면");
+        if (dataWithFavStopBusList.get(position).localFav.getLf_isBus() == 0){
+            switch (dataWithFavStopBusList.get(position).localFav.getRotueType()){
+                case "1":
+                case "2":
+                case "3":
+                case "4":
+                case "5":
+                case "7":
+                    holder.mainFavItemBinding.favStopBusName.setTextColor(Color.rgb(0,0,220));
+                    break;
+                case "6":
+                case "8":
+                    holder.mainFavItemBinding.favStopBusName.setTextColor(Color.rgb(220,0,0));
+                    break;
+                default:
+                    if (dataWithFavStopBusList.get(position).localFav.getLf_name().length()>=4){
+                        holder.mainFavItemBinding.favStopBusName.setTextColor(Color.rgb(220,0,0));
+                    }else{
+                        holder.mainFavItemBinding.favStopBusName.setTextColor(Color.rgb(0,200,0));
+                    }
+                    break;
+            }
+        }
+        if (dataWithFavStopBusList.get(position).localFav.getLf_isBus() == 1){
+            holder.mainFavItemBinding.favStopBusDir.setText(dataWithFavStopBusList.get(position).localFav.getLf_desc()+" 방면");
+        }else{
+            holder.mainFavItemBinding.favStopBusDir.setText(dataWithFavStopBusList.get(position).localFav.getLf_desc());
+        }
         if (dataWithFavStopBusList.get(position).localFav.getLf_isBus() == 0){
             holder.mainFavItemBinding.stopBusListBtn.setVisibility(View.GONE);
         }

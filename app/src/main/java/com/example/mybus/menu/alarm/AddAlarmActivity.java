@@ -1,18 +1,27 @@
 package com.example.mybus.menu.alarm;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +30,7 @@ import android.view.View;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.mybus.ActivityAnimate;
 import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.alarmservice.AlarmReceiver;
@@ -29,13 +39,14 @@ import com.example.mybus.databinding.ActivityAddAlarmBinding;
 import com.example.mybus.menu.MyAlarmActivity;
 import com.example.mybus.viewmodel.AddAlarmViewModel;
 import com.example.mybus.vo.SchAlarmInfo;
+import com.google.android.gms.dynamic.IFragmentWrapper;
 
 import java.util.Calendar;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class AddAlarmActivity extends AppCompatActivity {
+public class AddAlarmActivity extends AppCompatActivity implements ActivityAnimate {
     private ActivityAddAlarmBinding binding;
     private BusSchList busSchList;
     private Toolbar toolbar;
@@ -48,6 +59,9 @@ public class AddAlarmActivity extends AppCompatActivity {
     private Bundle args;
     private AddAlarmViewModel addAlarmViewModel;
     private String dates = "";
+    private NotificationManager notificationManager;
+    private boolean isPermissioned;
+    private ActivityResultLauncher<Intent> permissionLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,13 +70,24 @@ public class AddAlarmActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         addAlarmViewModel = new ViewModelProvider(this).get(AddAlarmViewModel.class);
         initView();
+        registerPermission();
         getDataFromIntent();
         getDateFromBtn();
         binding.alarmTitle.setOnClickListener(view -> {
             Intent intent = new Intent(this, AddAlarmFavListActivity.class);
             startActivity(intent);
+            moveAnimate();
         });
         setComfirmBtn();
+
+        permissionLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == Activity.RESULT_OK){
+                    isPermissioned = true;
+                }
+            }
+        });
     }
 
     public void initView(){
@@ -89,10 +114,13 @@ public class AddAlarmActivity extends AppCompatActivity {
             case R.id.action_home:
                 intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
+                finish();
+                exitAnimate();
                 break;
 
             case android.R.id.home:
                 this.finish();
+                exitAnimate();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -110,16 +138,30 @@ public class AddAlarmActivity extends AppCompatActivity {
 
     public void setComfirmBtn(){
         binding.confirmBtn.setOnClickListener(view -> {
-            for (int i=1; i< weeks.length; i++){
-                if (weeks[i] == true){
-                    registerAlarm();
-                    weeks[0] = true;
-                    break;
+            if (isPermissioned){
+                for (int i=1; i< weeks.length; i++){
+                    if (weeks[i] == true){
+                        registerAlarm();
+                        weeks[0] = true;
+                        break;
+                    }
                 }
+                if (!weeks[0]){
+                    Toast.makeText(this, "요일을 선택해야 합니다", Toast.LENGTH_SHORT).show();
+                }
+            }else{
+                registerPermission();
             }
-            if (!weeks[0]){
-                Toast.makeText(this, "요일을 선택해야 합니다", Toast.LENGTH_SHORT).show();
-            }
+//            for (int i=1; i< weeks.length; i++){
+//                if (weeks[i] == true){
+//                    registerAlarm();
+//                    weeks[0] = true;
+//                    break;
+//                }
+//            }
+//            if (!weeks[0]){
+//                Toast.makeText(this, "요일을 선택해야 합니다", Toast.LENGTH_SHORT).show();
+//            }
         });
     }
 
@@ -176,6 +218,29 @@ public class AddAlarmActivity extends AppCompatActivity {
         binding.sun.setOnClickListener(dateClick);
     }
 
+    public void registerPermission(){
+        notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!notificationManager.isNotificationPolicyAccessGranted()){
+                Toast.makeText(getApplicationContext(), "권한을 허용해주세요", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                startActivity(intent);
+                permissionLauncher.launch(intent);
+//                ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_NOTIFICATION_POLICY}, 1000);
+            }else{
+                isPermissioned = true;
+            }
+        }
+    }
+
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        if (requestCode == 1000 && grantResults.length > 0){
+//            isPermissioned = true;
+//        }
+//    }
+
     public void registerAlarm(){
         args = new Bundle();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
@@ -220,6 +285,25 @@ public class AddAlarmActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MyAlarmActivity.class);
         startActivity(intent);
         finish();
+        exitAnimate();
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
+        finish();
+        exitAnimate();
+    }
+
+    @Override
+    public void moveAnimate() {
+        overridePendingTransition(R.anim.vertical_center, R.anim.none);
+    }
+
+    @Override
+    public void exitAnimate() {
+        overridePendingTransition(R.anim.none, R.anim.vertical_exit);
     }
 }

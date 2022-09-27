@@ -10,14 +10,12 @@
     </data>
 
     <LinearLayout
-        android:background="@drawable/search_detail_list_border"
-        android:id="@+id/list_item_layout"
-        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
+            android:layout_marginTop="5dp"
             android:id="@+id/city_name"
             android:background="@color/lightgray"
             android:visibility="gone"
@@ -25,18 +23,27 @@
             android:layout_height="wrap_content"
             android:text="서울 / 경기" />
 
-        <TextView
-            android:id="@+id/list_name"
+        <LinearLayout
+            android:background="@drawable/search_detail_list_border"
+            android:id="@+id/list_item_layout"
+            android:padding="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="노선, 정류장 이름" />
+            android:layout_height="60dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/list_desc"
-            android:layout_marginTop="6dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="노선, 정류장 설명" />
+            <TextView
+                android:id="@+id/list_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="노선, 정류장 이름" />
 
+            <TextView
+                android:id="@+id/list_desc"
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="노선, 정류장 설명" />
+
+        </LinearLayout>
     </LinearLayout>
 </layout>

@@ -1,5 +1,7 @@
 package com.example.mybus.mainadapter;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -11,7 +13,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mybus.ActivityAnimate;
 import com.example.mybus.MainActivity;
+import com.example.mybus.R;
 import com.example.mybus.apisearch.itemList.BusArrivalList;
 import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.apisearch.itemList.StopUidSchList;
@@ -23,7 +27,7 @@ import com.example.mybus.vo.LocalFavStopBus;
 
 import java.util.List;
 
-public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapter.MainFavChildViewHolder> {
+public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapter.MainFavChildViewHolder>{
     public List<LocalFavStopBus> localFavStopBusList;
     public List<StopUidSchList> stopUidSchList;
     public List<BusArrivalList> busArrivalList;
@@ -56,7 +60,6 @@ public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapte
             // 경기도 정류장인 경우
             gBusSetTexts(holder, position);
         }
-
         setListener(holder, position);
 
     }
@@ -71,11 +74,30 @@ public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapte
                 busLists.setStId(localFavStopBusList.get(position).getStId());
                 busLists.setBusRouteId(localFavStopBusList.get(position).getLfb_busId());
                 busLists.setBusRouteNm(localFavStopBusList.get(position).getLfb_busName());
-                busLists.setCorpNm("123");
+                busLists.setCorpNm("-1");
                 Intent intent = new Intent(holder.itemView.getContext(), BusRouteDetailActivity.class);
+                intent.setAction("com.example.mybus.fromMain");
                 args.putParcelable("busList", busLists);
                 intent.putExtras(args);
                 holder.itemView.getContext().startActivity(intent);
+                ((Activity)holder.itemView.getContext()).overridePendingTransition(R.anim.vertical_center, R.anim.none);
+            }
+        });
+
+        holder.favBuslistItemBinding.busRemainTimeWrap.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Log.d("MainFavChildAdapter", localFavStopBusList.get(position).getLfb_busId());
+                busLists.setStId(localFavStopBusList.get(position).getStId());
+                busLists.setBusRouteId(localFavStopBusList.get(position).getLfb_busId());
+                busLists.setBusRouteNm(localFavStopBusList.get(position).getLfb_busName());
+                busLists.setCorpNm("123");
+                Intent intent = new Intent(holder.itemView.getContext(), BusRouteDetailActivity.class);
+                intent.setAction("com.example.mybus.fromMain");
+                args.putParcelable("busList", busLists);
+                intent.putExtras(args);
+                holder.itemView.getContext().startActivity(intent);
+                ((Activity)holder.itemView.getContext()).overridePendingTransition(R.anim.vertical_center, R.anim.none);
             }
         });
 
@@ -91,6 +113,7 @@ public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapte
                 args.putParcelable("busList", busLists);
                 alarmIntent.putExtras(args);
                 holder.itemView.getContext().startActivity(alarmIntent);
+                ((Activity)holder.itemView.getContext()).overridePendingTransition(R.anim.vertical_center, R.anim.none);
             }
         });
     }

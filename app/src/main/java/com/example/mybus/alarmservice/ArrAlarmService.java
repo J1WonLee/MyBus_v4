@@ -79,8 +79,7 @@ public class ArrAlarmService extends Service {
             stopForegroundService();
         }else if(intent.getStringExtra("stopApiCall") != null){
             stopApiCalls();
-        }
-        else{
+        }else{
             Bundle bundle = intent.getExtras();
             busSchList = bundle.getParcelable("busSchList");
             serviceKey = intent.getStringExtra("serviceKey");

@@ -115,7 +115,7 @@ public class BusRouteSearchDetailViewModel extends ViewModel {
                         .subscribeWith(new DisposableSingleObserver<BusPositionSearchWrap>() {
                             @Override
                             public void onSuccess(@NonNull BusPositionSearchWrap busPositionSearchWraps) {
-                                Log.d("kkang", "BusRouteSearchDetailViewModel getBusPositionList onSuccess ");
+                                Log.d("BusRouteDetailActivity", "BusRouteSearchDetailViewModel getBusPositionList onSuccess ");
                                 if (busPositionSearchWraps.getBusPositionSearch().getItemList() != null ){
                                     busPositionSearchWrap = busPositionSearchWraps;
                                     Collections.sort(busPositionSearchWrap.getBusPositionSearch().getItemList());
@@ -207,9 +207,10 @@ public class BusRouteSearchDetailViewModel extends ViewModel {
                             public void onSuccess(@NonNull List<LocalFav> localFavs) {
                                 if (localFavs != null && localFavs.size() > 0){
                                     isFavSaved.setValue(localFavs.size());
-                                }else{
-                                    getLocalFavStopBus(lfId);
                                 }
+//                                else{
+//                                    getLocalFavStopBus(lfId);
+//                                }
                             }
 
                             @Override

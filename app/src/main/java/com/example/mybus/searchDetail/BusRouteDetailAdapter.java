@@ -75,9 +75,10 @@ public class BusRouteDetailAdapter extends RecyclerView.Adapter<BusRouteDetailAd
     // 서울시 버스 위치 정보
     public void updateRoutePosInfo(List<BusPosList> busPosLists){
         this.busPosList = busPosLists;
-        for (BusPosList lists : busPosList){
-            notifyItemChanged(Integer.valueOf(lists.getSectOrd()));
-        }
+//        for (BusPosList lists : busPosList){
+//            notifyItemChanged(Integer.valueOf(lists.getSectOrd()));
+//        }
+        notifyDataSetChanged();
     }
 
     // 경기도 정류장 정보
@@ -93,9 +94,10 @@ public class BusRouteDetailAdapter extends RecyclerView.Adapter<BusRouteDetailAd
     public void updateGbusLocationList(List<GBusLocationList> gBusLocationLists){
         Log.d("kkang", "busroutedetailadapter updateGbusLocationList called");
         this.gBusLocationList = gBusLocationLists;
-        for (GBusLocationList lists : gBusLocationList){
-            notifyItemChanged(lists.getStationSeq());
-        }
+//        for (GBusLocationList lists : gBusLocationList){
+//            notifyItemChanged(lists.getStationSeq());
+//        }
+        notifyDataSetChanged();
     }
 
 

@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.mybus.ActivityAnimate;
 import com.example.mybus.MainActivity;
+import com.example.mybus.R;
 import com.example.mybus.databinding.ActivityLoginBinding;
 import com.example.mybus.firebaserepo.FbRepository;
 import com.example.mybus.roomrepo.BusRoomRepository;
@@ -21,7 +23,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements ActivityAnimate {
     private ActivityLoginBinding binding;
     private boolean isLogin = false;        // 로그인 성공 여부
     private SharedPreferences sharedPreferences;
@@ -43,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
+            moveAnimate();
         });
 
         binding.kakaoLogin.setOnClickListener(view -> {
@@ -95,8 +98,19 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 finish();
+                moveAnimate();
             }
             return null;
         });
+    }
+
+    @Override
+    public void moveAnimate() {
+        overridePendingTransition(R.anim.vertical_center, R.anim.none);
+    }
+
+    @Override
+    public void exitAnimate() {
+        overridePendingTransition(R.anim.none, R.anim.vertical_exit);
     }
 }

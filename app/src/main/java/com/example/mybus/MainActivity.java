@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.mybus.apisearch.itemList.BusArrivalList;
@@ -51,6 +53,7 @@ import com.example.mybus.vo.LocalFavStopBus;
 import com.example.mybus.vo.User;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.kakao.sdk.user.UserApiClient;
 
@@ -62,7 +65,7 @@ import java.util.List;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ActivityAnimate {
     private KakaoLogin kakaoLogin;
     private ActivityMainBinding binding;
     private Toolbar toolbar;
@@ -89,11 +92,15 @@ public class MainActivity extends AppCompatActivity {
     private String lfId;
     private SharedPreferences sharedPreferences;
     private String loginId;
-
+    private long mBackPressTime = 0L;
+    private ImageView mainEmtpyImage;
+    private FloatingActionButton floatingActionButton;
+    private long mLastClickTime = 0L;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.vertical_center, R.anim.none);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         setContentView(binding.getRoot());
         initMenu();
@@ -111,13 +118,14 @@ public class MainActivity extends AppCompatActivity {
         setRecyclerListener();
         setSlideDownListener();
 //        setChildAdapterListener();
-
+        setRefreshBtnListener();
 
     }
 
     public void initMenu(){
         kakaoLogin = new KakaoLogin();
         toolbar = binding.toolbar;
+        floatingActionButton = binding.mainRefershBtn;
         slidingPanel = binding.slidingPanel;
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -138,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
                             Intent intent2 = new Intent(this, LoginActivity.class);
                             startActivity(intent2);
                             finish();
+                            moveAnimate();
                         }else{
                             // 로그인 된 상태
                             mainViewModel.delete();
@@ -147,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
                             Intent intent3 = new Intent(this, LoginActivity.class);
                             startActivity(intent3);
                             finish();
+                            moveAnimate();
                         }
                         return null;
                     });
@@ -154,29 +164,37 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.move_my_alarm:
                     Intent goAlarm = new Intent(this, MyAlarmActivity.class);
                     startActivity(goAlarm);
+                    moveAnimate();
                     break;
                 case R.id.move_home_edit:
                     // 홈 화면 편집으로 이동
                     Intent goHomeEdit = new Intent(this, HomeEditActivity.class);
                     goHomeEdit.putExtra("favlists",  dataWithFavStopBusArrayList);
                     startActivity(goHomeEdit);
-                    finish();
+                    moveAnimate();
                     break;
                 case R.id.move_open_source:
                     // 오픈소스 정보로 이동
                     Intent goOpenSource = new Intent(this, OpenSourceActivity.class);
                     startActivity(goOpenSource);
+                    moveAnimate();
                     break;
                 case R.id.move_fb_sync:
                     // 파이어베이스 데이터 받아오기로 이동
-                    Intent goFbSync = new Intent(this, FireBaseSyncActivity.class);
-                    startActivity(goFbSync);
-                    finish();
+                    if (loginId != null){
+                        Intent goFbSync = new Intent(this, FireBaseSyncActivity.class);
+                        startActivity(goFbSync);
+                        moveAnimate();
+                        finish();
+                    }else{
+                        Toast.makeText(this, "로그인 후 이용 가능 합니다", Toast.LENGTH_SHORT).show();
+                    }
                     break;
             }
             return false;
         });
     }
+
 
     public void chkUser(){
         mainViewModel.mUser.observe(this, new Observer<User>() {
@@ -188,13 +206,23 @@ public class MainActivity extends AppCompatActivity {
                     txt.setText(user.getUser_name());
 
                     ImageView img = header.findViewById(R.id.profile);
-                    Glide.with(MainActivity.this).load(user.getUser_thunbnail()).placeholder(R.drawable.ic_baseline_dehaze_24).error(R.drawable.ic_baseline_dehaze_24).into(img);
+                    Glide.with(MainActivity.this)
+                            .load(user.getUser_thunbnail())
+                            .placeholder(R.drawable.ic_baseline_dehaze_24)
+                            .error(R.drawable.ic_baseline_dehaze_24)
+                            .override(170,170)
+                            .into(img);
                 }else{
                     TextView txt = header.findViewById(R.id.name);
                     txt.setText("비회원");
 
                     ImageView img = header.findViewById(R.id.profile);
-                    Glide.with(MainActivity.this).load(R.drawable.ic_baseline_home_24).placeholder(R.drawable.ic_baseline_dehaze_24).error(R.drawable.ic_baseline_dehaze_24).into(img);
+                    Glide.with(MainActivity.this)
+                            .load(R.drawable.ic_baseline_home_24)
+                            .placeholder(R.drawable.ic_baseline_dehaze_24)
+                            .error(R.drawable.ic_baseline_dehaze_24)
+                            .override(250,250)
+                            .into(img);
                 }
             }
         });
@@ -211,6 +239,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.toolbar_search:
                 Intent intent = new Intent(this, SearchActivity.class);
                 startActivity(intent);
+                moveAnimate();
                 break;
 
             case R.id.toolbar_home_edit:
@@ -218,6 +247,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent2 = new Intent(this, HomeEditActivity.class);
                 intent2.putExtra("favlists",  dataWithFavStopBusArrayList);
                 startActivity(intent2);
+                moveAnimate();
                 break;
         }
 
@@ -229,7 +259,12 @@ public class MainActivity extends AppCompatActivity {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)){
             drawerLayout.closeDrawer(GravityCompat.START);
         }else{
-            super.onBackPressed();
+            if (System.currentTimeMillis() > mBackPressTime + 2000){
+                mBackPressTime = System.currentTimeMillis();
+                Toast.makeText(this, "뒤로 버튼을 한번 더 누르면 종료됩니다", Toast.LENGTH_SHORT).show();
+            }else if (System.currentTimeMillis() <=mBackPressTime+2000){
+                finish();
+            }
         }
     }
 
@@ -260,11 +295,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<DataWithFavStopBus> dataWithFavStopBuses) {
                 Log.d("MainActivity", ":::::::::::::::::: getFavBusList onchanged!!");
-                dataWithFavStopBus = dataWithFavStopBuses;
-                dataWithFavStopBusArrayList = (ArrayList<DataWithFavStopBus>) dataWithFavStopBuses;
-                getFavArrTime();
-                getGbusFavArrTime();
+                if (dataWithFavStopBuses.size() > 0){
+                    dataWithFavStopBus = dataWithFavStopBuses;
+                    dataWithFavStopBusArrayList = (ArrayList<DataWithFavStopBus>) dataWithFavStopBuses;
+                    getFavArrTime();
+                    getGbusFavArrTime();
 //                adapter.updateDataWithFavStopBusList(dataWithFavStopBuses);
+                }else{
+                    mainEmtpyImage = binding.mainEmtpyImg;
+                    mainEmtpyImage.setVisibility(View.VISIBLE);
+                }
             }
         });
     }
@@ -326,6 +366,7 @@ public class MainActivity extends AppCompatActivity {
                     // 숨길때는 해당 정류장 목록 보여주는 어뎁터에서 숨겨줘야 함.
 //                    slideDown();
                 }else{
+                    floatingActionButton.setVisibility(View.GONE);
                     slideUp(dataWithFavStopBus.get(position));
                 }
                 isUp = !isUp;
@@ -344,9 +385,11 @@ public class MainActivity extends AppCompatActivity {
                         busSchList.setBusRouteNm(dataWithFavStopBus.get(position).localFav.getLf_name());
                         busSchList.setCorpNm(dataWithFavStopBus.get(position).localFav.getLf_desc());
                         intent = new Intent(v.getContext(), BusRouteDetailActivity.class);
+                        intent.setAction("com.example.mybus.fromMain");
                         args.putParcelable("busList", busSchList);
                         intent.putExtras(args);
                         startActivity(intent);
+                        moveAnimate();
                     }else if (dataWithFavStopBus.get(position).localFav.getLf_isBus() == 1){
                         // 정류장 일 경우 ,
                         StopSchList stopSchList = new StopSchList();
@@ -355,9 +398,11 @@ public class MainActivity extends AppCompatActivity {
                         stopSchList.setNextDir(dataWithFavStopBus.get(position).localFav.getLf_desc());
                         stopSchList.setStNm(dataWithFavStopBus.get(position).localFav.getLf_name());
                         intent = new Intent(v.getContext(), StopDetailActivity.class);
+                        intent.setAction("com.example.mybus.fromMain");
                         args.putParcelable("stopList", stopSchList);
                         intent.putExtras(args);
                         startActivity(intent);
+                        moveAnimate();
                     }
                 }
             }
@@ -424,6 +469,7 @@ public class MainActivity extends AppCompatActivity {
         binding.mainPanelShutBtn.setOnClickListener(view -> {
             slideDown();
             isUp = !isUp;
+            floatingActionButton.setVisibility(View.VISIBLE);
         });
     }
 
@@ -487,12 +533,39 @@ public class MainActivity extends AppCompatActivity {
         mainStopBusListAdapter.isClicked = false;
     }
 
+    public void setRefreshBtnListener(){
+        floatingActionButton.setOnClickListener(view -> {
+            try {
+                if (SystemClock.elapsedRealtime() - mLastClickTime > 5000) {
+                    Intent intent = getIntent();
+                    finish();
+                    overridePendingTransition(0, 0);
+                    startActivity(intent);
+                    overridePendingTransition(0, 0);
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
+            }
+            catch (Exception e){
+                Log.d("MainActivity", "setRefreshBtnListener error : " + e.getMessage());
+            }
+        });
+    }
+
     // 사용자 로그인 정보 받아온다.
     public void getLoginId(){
         sharedPreferences = getSharedPreferences(LoginActivity.sharedId, MODE_PRIVATE);
         loginId = sharedPreferences.getString("loginId", null);
     }
 
+    @Override
+    public void moveAnimate() {
+        overridePendingTransition(R.anim.vertical_center, R.anim.none);
+    }
+
+    @Override
+    public void exitAnimate() {
+        overridePendingTransition(R.anim.none, R.anim.vertical_exit);
+    }
 }
 
 

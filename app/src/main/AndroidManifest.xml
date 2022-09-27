@@ -9,7 +9,8 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
-
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"
+        tools:remove ="android:maxSdkVersion"/>
     <application
         android:name=".hiltapp.MyBusApplication"
         android:allowBackup="true"
@@ -78,10 +79,22 @@
         </activity>
         <activity
             android:name=".searchDetail.BusRouteDetailActivity"
-            android:exported="false" />
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.example.mybus.fromMain" />
+                <action android:name="com.example.mybus.fromSearch" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".searchDetail.StopDetailActivity"
-            android:exported="false" />
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.example.mybus.fromMain" />
+                <action android:name="com.example.mybus.fromSearch" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".menu.alarm.AddAlarmActivity"
             android:exported="false"

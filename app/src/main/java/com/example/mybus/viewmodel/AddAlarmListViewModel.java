@@ -36,7 +36,7 @@ public class AddAlarmListViewModel extends ViewModel {
 
     public void getFavStopBus(){
         compositeDisposable.add(
-                busRoomRepository.getFavStopBus()
+                busRoomRepository.getFavStopBusForAlarm()
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(new DisposableSingleObserver<List<DataWithFavStopBus>>() {

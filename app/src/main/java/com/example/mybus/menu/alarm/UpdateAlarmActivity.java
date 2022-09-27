@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.mybus.ActivityAnimate;
 import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.alarmservice.AlarmReceiver;
@@ -37,7 +38,7 @@ import java.util.List;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class UpdateAlarmActivity extends AppCompatActivity {
+public class UpdateAlarmActivity extends AppCompatActivity implements ActivityAnimate {
     private ActivityAddAlarmBinding binding;
     private AlarmManager alarmManager;
     private TimePicker timePicker;
@@ -80,6 +81,7 @@ public class UpdateAlarmActivity extends AppCompatActivity {
                     Intent myAlarmIntent = new Intent(UpdateAlarmActivity.this, MyAlarmActivity.class);
                     startActivity(myAlarmIntent);
                     finish();
+                    exitAnimate();
                 }
             }
         });
@@ -106,14 +108,16 @@ public class UpdateAlarmActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent intent;
         switch (item.getItemId()){
-            case R.id.action_home:
+            case android.R.id.home:
                 intent = new Intent(this, MyAlarmActivity.class);
                 startActivity(intent);
-                finish();
+                this.finish();
+                exitAnimate();
                 break;
 
-            case android.R.id.home:
+            case R.id.action_home:
                 this.finish();
+                exitAnimate();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -126,6 +130,7 @@ public class UpdateAlarmActivity extends AppCompatActivity {
             prevSchAlarmInfo = bundle.getParcelable("prevUpdatedAlarm");
         }else{
             finish();
+            exitAnimate();
         }
         if (schAlarmInfo != null){
             binding.alarmTitle.setText(schAlarmInfo.getAlarm_stop_nm() + " / " + schAlarmInfo.getAlarm_bus_nm() +"번 버스");
@@ -288,5 +293,15 @@ public class UpdateAlarmActivity extends AppCompatActivity {
         schAlarmInfo.setAlarm_date(selectTime);
         schAlarmInfo.setWeeks(dates);
         updateAlarmViewModel.updateAlarm(schAlarmInfo);
+    }
+
+    @Override
+    public void moveAnimate() {
+        overridePendingTransition(R.anim.vertical_center, R.anim.none);
+    }
+
+    @Override
+    public void exitAnimate() {
+        overridePendingTransition(R.anim.none, R.anim.vertical_exit);
     }
 }

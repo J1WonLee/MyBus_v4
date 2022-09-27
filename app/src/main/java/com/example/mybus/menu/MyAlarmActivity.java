@@ -20,8 +20,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.mybus.ActivityAnimate;
 import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.alarmservice.AlarmReceiver;
@@ -40,7 +42,7 @@ import java.util.List;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class MyAlarmActivity extends AppCompatActivity {
+public class MyAlarmActivity extends AppCompatActivity implements ActivityAnimate {
     private ActivityMyAlarmBinding binding;
     private Toolbar toolbar;
     private RecyclerView recyclerView;
@@ -52,6 +54,8 @@ public class MyAlarmActivity extends AppCompatActivity {
     private boolean[] weeks = {false, false, false, false, false, false, false, false};
     private boolean[] cancelWeeks = {};
     private Bundle bundle;
+    private ImageView alarmEmtpyImg;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,10 +98,11 @@ public class MyAlarmActivity extends AppCompatActivity {
             case R.id.action_add:
                 intent = new Intent(this, AddAlarmActivity.class);
                 startActivity(intent);
-                finish();
+                moveAnimate();
                 break;
             case android.R.id.home:
                 finish();
+                exitAnimate();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -108,10 +113,14 @@ public class MyAlarmActivity extends AppCompatActivity {
         myAlarmViewModel.schAlarmList.observe(this, new Observer<List<SchAlarmInfo>>() {
             @Override
             public void onChanged(List<SchAlarmInfo> schAlarmInfos) {
-                if (schAlarmInfos != null){
+                if (schAlarmInfos != null && schAlarmInfos.size()>0 ){
                     Log.d("MyAlarmActivity", schAlarmInfos.size()+" is size");
                     schAlarmInfo = schAlarmInfos;
                     adapter.updateschAlarmInfoList(schAlarmInfo);
+                }else{
+                    adapter.updateschAlarmInfoList(null);
+                    alarmEmtpyImg = binding.alarmEmtpy;
+                    alarmEmtpyImg.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -163,6 +172,7 @@ public class MyAlarmActivity extends AppCompatActivity {
                 updateAlarmIntent.putExtras(bundle);
                 startActivity(updateAlarmIntent);
                 finish();
+                moveAnimate();
             }
         });
     }
@@ -237,6 +247,7 @@ public class MyAlarmActivity extends AppCompatActivity {
         intent.putExtras(new Bundle());
         PendingIntent pIntent = PendingIntent.getBroadcast(this, alarmId , intent, PendingIntent.FLAG_IMMUTABLE);
         Log.d("AddAlarmActivity", "cancel alarm call");
+        Toast.makeText(this,"알람을 종료했습니다", Toast.LENGTH_SHORT).show();
         alarmManager.cancel(pIntent);
     }
 
@@ -244,5 +255,15 @@ public class MyAlarmActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         myAlarmViewModel.updateSchAlarm(schAlarmInfo);
+    }
+
+    @Override
+    public void moveAnimate() {
+        overridePendingTransition(R.anim.vertical_center, R.anim.none);
+    }
+
+    @Override
+    public void exitAnimate() {
+        overridePendingTransition(R.anim.none, R.anim.vertical_exit);
     }
 }

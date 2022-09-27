@@ -235,6 +235,10 @@ public class BusRoomRepository {
         return busDao.getFavStopBus();
     }
 
+    public Single<List<DataWithFavStopBus>> getFavStopBusForAlarm(){
+        return busDao.getFavStopBusForAlarm();
+    }
+
     public Single<List<LocalFavStopBus>> getFavStopBusLists(String lsbId){
         return busDao.getLocalFavStopBusLists(lsbId);
     }

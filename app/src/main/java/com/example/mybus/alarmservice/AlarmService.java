@@ -12,10 +12,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.WindowManager;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.example.mybus.R;
@@ -44,10 +46,9 @@ public class AlarmService extends Service {
     private NotificationCompat.Builder builder;
     private Bundle bundle;
     private BusSchList busSchList;
-    private PowerManager pm;
+    private Vibrator vibrator;
+
     public AlarmService() {}
-    public static String WAKELOCK_TAG = "wakeTag";
-    private PowerManager.WakeLock wl;
 
     @Override
     public void onCreate() {
@@ -72,9 +73,17 @@ public class AlarmService extends Service {
             if (busSchList != null){
 //                getArrInfoByRoute(busSchList.getStId(), busSchList.getBusRouteId(), busSchList.getCorpNm());
                 generateNotification();
+                startVibrate();
             }
         }
         return START_NOT_STICKY;
+    }
+
+    public void startVibrate(){
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createWaveform(new long[] {2000,1000,2000, 1000},new int[] {0,100, 0, 200}, -1));
+        }
     }
 
     public void generateNotification(){
@@ -85,12 +94,13 @@ public class AlarmService extends Service {
 
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            String channelId = "SchAlarm";
+            String channelId = "SchAlarmV1";
             String channelName = "SchAlarmCh";
             NotificationChannel notificationChannel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH);
             notificationChannel.enableLights(true);
             notificationChannel.setLightColor(Color.RED);
             notificationChannel.enableVibration(true);
+            notificationChannel.setBypassDnd(true);
             manager.createNotificationChannel(notificationChannel);
             builder = new NotificationCompat.Builder(this, channelId);
         }else{
@@ -100,6 +110,8 @@ public class AlarmService extends Service {
         builder.setWhen(System.currentTimeMillis());
         builder.setContentTitle(busSchList.getBusRouteNm());
         builder.setContentText("버스 도착 알람이 도착하였습니다!!");
+        builder.setCategory(NotificationCompat.CATEGORY_ALARM);
+
         builder.addAction(R.drawable.ic_baseline_directions_bus_24, "확인", deletePendingIntent);
 
         Intent notificationIntent = new Intent(this, AlarmArriveActivity.class);
@@ -110,6 +122,7 @@ public class AlarmService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         builder.setContentIntent(pendingIntent);
         Notification notification = builder.build();
+
         startForeground(234, notification);
     }
 

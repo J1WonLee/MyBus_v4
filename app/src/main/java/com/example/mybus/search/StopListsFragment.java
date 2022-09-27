@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.mybus.ActivityAnimate;
 import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.apisearch.itemList.StopSchList;
@@ -36,7 +37,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class StopListsFragment extends Fragment {
+public class StopListsFragment extends Fragment implements ActivityAnimate {
     private SearchViewModel searchViewModel;
     private ViewPager2 viewPager2;
     private FragmentStopListsBinding binding;
@@ -117,12 +118,16 @@ public class StopListsFragment extends Fragment {
             @Override
             public void onItemClick(View v, int position) {
 //                Log.d("kkang", "position : " + stopLists.get(position).getArsId());
-                searchViewModel.insertRecentStopSch(stopLists.get(position));
-                Intent intent = new Intent(getActivity(), StopDetailActivity.class);
-                Bundle args = new Bundle();
-                args.putParcelable("stopList", stopLists.get(position));
-                intent.putExtras(args);
-                startActivity(intent);
+                if (!(stopLists.get(position).getArsId().equals("0"))){
+                    searchViewModel.insertRecentStopSch(stopLists.get(position));
+                    Intent intent = new Intent(getActivity(), StopDetailActivity.class);
+                    Bundle args = new Bundle();
+                    args.putParcelable("stopList", stopLists.get(position));
+                    intent.putExtras(args);
+                    startActivity(intent);
+                    moveAnimate();
+                }
+
             }
         });
     }
@@ -189,6 +194,17 @@ public class StopListsFragment extends Fragment {
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
             getActivity().finish();
+            exitAnimate();
         });
+    }
+
+    @Override
+    public void moveAnimate() {
+        requireActivity().overridePendingTransition(R.anim.vertical_center, R.anim.none);
+    }
+
+    @Override
+    public void exitAnimate() {
+        requireActivity().overridePendingTransition(R.anim.none, R.anim.vertical_exit);
     }
 }

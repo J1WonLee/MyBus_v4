@@ -10,11 +10,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.Fade;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.example.mybus.ActivityAnimate;
 import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.databinding.ActivityAddAlarmFavListBinding;
@@ -28,7 +30,7 @@ import java.util.List;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class AddAlarmFavListActivity extends AppCompatActivity {
+public class AddAlarmFavListActivity extends AppCompatActivity implements ActivityAnimate {
     private ActivityAddAlarmFavListBinding binding;
     private AddAlarmListViewModel addAlarmListViewModel;
     private List<DataWithFavStopBus> dataWithFavStopBusList;
@@ -52,6 +54,7 @@ public class AddAlarmFavListActivity extends AppCompatActivity {
     }
 
     public void initView(){
+        getWindow().setExitTransition(new Fade());
         toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(" 정류장 + 노선 선택 ");
@@ -74,10 +77,12 @@ public class AddAlarmFavListActivity extends AppCompatActivity {
                 intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 finish();
+//                exitAnimate();
                 break;
-            case android.R.id.home:     // 뒤로 가기 버튼
+            case android.R.id.home:     // 추가 버튼
                 startActivity(intent);
                 finish();
+//                moveAnimate();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -113,5 +118,22 @@ public class AddAlarmFavListActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+//        exitAnimate();
+    }
+
+    @Override
+    public void moveAnimate() {
+        overridePendingTransition(R.anim.vertical_center, R.anim.none);
+    }
+
+    @Override
+    public void exitAnimate() {
+        overridePendingTransition(R.anim.none, R.anim.vertical_exit);
     }
 }

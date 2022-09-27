@@ -41,6 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="노선 이름 이름"
+                    android:textColor="@color/black"
                     android:textSize="20sp" />
 
                 <TextView
@@ -97,9 +98,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:clickable="true"
+        app:borderWidth="0dp"
+        android:backgroundTint="@color/white"
         app:layout_anchorGravity="right"
         android:layout_marginLeft="280dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="50dp"
         app:srcCompat="@drawable/ic_baseline_refresh_24" />
 
 

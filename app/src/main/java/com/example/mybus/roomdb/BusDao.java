@@ -104,6 +104,10 @@ public interface BusDao {
     @Query("SELECT * FROM LOCAL_FAV order by lf_order desc")
     Single<List<DataWithFavStopBus>> getFavStopBus();
 
+    @Transaction
+    @Query("SELECT * FROM LOCAL_FAV where lf_isBus ='1' order by lf_order desc")
+    Single<List<DataWithFavStopBus>> getFavStopBusForAlarm();
+
     @Query("SELECT * FROM LOCAL_FAV_STOP_BUS where lfb_id =:lsbId  order by lfb_busId")
     Single<List<LocalFavStopBus>> getLocalFavStopBusLists(String lsbId);
 

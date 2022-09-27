@@ -20,6 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 
+import com.example.mybus.ActivityAnimate;
 import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.databinding.ActivityHomeEditBinding;
@@ -35,7 +36,7 @@ import java.util.List;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class HomeEditActivity extends AppCompatActivity {
+public class HomeEditActivity extends AppCompatActivity implements ActivityAnimate {
     private ActivityHomeEditBinding binding;
     private Toolbar toolbar;
     private List<DataWithFavStopBus> dataWithFavStopBusList = new ArrayList<>();
@@ -93,6 +94,7 @@ public class HomeEditActivity extends AppCompatActivity {
                 homeEditViewModel.updateAll(homeEditAdapter.getLocalFav());
                 startActivity(intent);
                 finish();
+                exitAnimate();
                 break;
 
             case android.R.id.home:     // 뒤로 가기 버튼
@@ -100,6 +102,7 @@ public class HomeEditActivity extends AppCompatActivity {
                 homeEditViewModel.updateAll(homeEditAdapter.getLocalFav());
                 startActivity(intent);
                 finish();
+                exitAnimate();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -175,6 +178,15 @@ public class HomeEditActivity extends AppCompatActivity {
 //        loginId = sharedPreferences.getString("loginId", null);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
+        finish();
+        exitAnimate();
+    }
+
     public void getPreferences(){
         sharedPreferences = getSharedPreferences(LoginActivity.sharedId, MODE_PRIVATE);
         isRecentChk  = sharedPreferences.getBoolean("recentSch", true);
@@ -191,5 +203,14 @@ public class HomeEditActivity extends AppCompatActivity {
         chkIsRemovedFb(homeEditAdapter.getRemoveList());
         updateFbFav(homeEditAdapter.getLocalFav());
     }
+
+    @Override
+    public void moveAnimate() {
+        overridePendingTransition(R.anim.vertical_center, R.anim.none);
+    }
+
+    @Override
+    public void exitAnimate() {
+        overridePendingTransition(R.anim.none, R.anim.vertical_exit);
+    }
 }
-// 내보내기 가져오기 fb

@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.mybus.ActivityAnimate;
 import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.apisearch.itemList.BusArrivalList;
@@ -43,7 +45,7 @@ import java.util.List;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class StopDetailActivity extends AppCompatActivity {
+public class StopDetailActivity extends AppCompatActivity implements ActivityAnimate {
     private ActivityStopDetailBinding binding;
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
@@ -108,6 +110,7 @@ public class StopDetailActivity extends AppCompatActivity {
                 }
                 if (scrollRange + verticalOffset == 0) {
                     collapsingToolbarLayout.setTitle(stopSchList.getStNm());
+                    collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
                     showOption(R.id.action_add_fav);
                     isShow = true;
                 } else if (isShow) {
@@ -121,9 +124,12 @@ public class StopDetailActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(StopDetailActivity.this, SearchActivity.class);
-                startActivity(intent);
+                if (getIntent().getAction() != null){
+                    Intent intent = new Intent(StopDetailActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
                 finish();
+                exitAnimate();
             }
         });
 
@@ -149,7 +155,7 @@ public class StopDetailActivity extends AppCompatActivity {
                 Date date = new Date(now);
                 LocalFav localFav = new LocalFav(lfid ,stopSchList.getStId()
                         , "0"
-                        ,stopSchList.getStNm(), stopSchList.getNextDir(), 1, date);
+                        ,stopSchList.getStNm(), stopSchList.getNextDir(), 1, date, "-1");
                 searchDetailViewModel.regitFav(localFav);
                 isFavSaved = true;
                 favImage.setImageResource(R.drawable.ic_baseline_star_24);
@@ -210,7 +216,7 @@ public class StopDetailActivity extends AppCompatActivity {
                     LocalFav localFav = new LocalFav(lfid
                             , stopSchList.getStId()
                             , stopUidSchList.get(0).getStaOrd()
-                            , stopSchList.getStNm(), stopSchList.getNextDir(), 1, date);
+                            , stopSchList.getStNm(), stopSchList.getNextDir(), 1, date, "-1");
                     searchDetailViewModel.regitFav(localFav);
                     item.setIcon(R.drawable.ic_baseline_star_24);
                     favImage.setImageResource(R.drawable.ic_baseline_star_24);
@@ -223,6 +229,8 @@ public class StopDetailActivity extends AppCompatActivity {
             case R.id.action_home:
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
+                finish();
+                exitAnimate();
                 break;
 
             default:
@@ -340,11 +348,12 @@ public class StopDetailActivity extends AppCompatActivity {
                 } else if (gbusBusLocationList != null) {
                     busLists.setBusRouteId(gbusBusLocationList.get(position).getRouteId());
                     busLists.setBusRouteNm(gbusBusLocationList.get(position).getRouteNm());
-                    busLists.setCorpNm(gbusBusLocationList.get(position).getFlag());
+                    busLists.setCorpNm("-1");
                 }
                 args.putParcelable("busList", busLists);
                 intent.putExtras(args);
                 startActivity(intent);
+                moveAnimate();
             }
 
             @Override
@@ -358,7 +367,7 @@ public class StopDetailActivity extends AppCompatActivity {
                 if (stopUidSchList != null) {
                     LocalFav localFav = new LocalFav(stopUidSchList.get(position).getArsId(), stopUidSchList.get(position).getStId()
                             , stopUidSchList.get(position).getStaOrd()
-                            , stopSchList.getStNm(), stopSchList.getNextDir(), 1, date);
+                            , stopSchList.getStNm(), stopSchList.getNextDir(), 1, date, "-1");
                     LocalFavStopBus localFavStopBus = new LocalFavStopBus(localFav.getLf_id()
                             , date
                             , stopUidSchList.get(position).getBusRouteId()
@@ -384,7 +393,7 @@ public class StopDetailActivity extends AppCompatActivity {
                     LocalFav localFav = new LocalFav(gbusBusLocationList.get(position).getStationId()
                             , gbusBusLocationList.get(position).getStationId()
                             , gbusBusLocationList.get(position).getStaOrder()
-                            , stopSchList.getStNm(), stopSchList.getNextDir(), 1, date);
+                            , stopSchList.getStNm(), stopSchList.getNextDir(), 1, date, "-1");
                     LocalFavStopBus localFavStopBus = new LocalFavStopBus(localFav.getLf_id()
                             , date
                             , gbusBusLocationList.get(position).getRouteId()
@@ -416,6 +425,7 @@ public class StopDetailActivity extends AppCompatActivity {
                     busLists.setBusRouteId(stopUidSchList.get(position).getBusRouteId());
                     busLists.setBusRouteNm(stopUidSchList.get(position).getRtNm());
                     busLists.setCorpNm(stopUidSchList.get(position).getStaOrd());                   // corpNm 대신 정류장 순번 넣음
+                    busLists.setRouteType(stopUidSchList.get(position).getRouteType());
                 } else if (gbusBusLocationList != null) {
                     busLists.setBusRouteId(gbusBusLocationList.get(position).getRouteId());
                     busLists.setBusRouteNm(gbusBusLocationList.get(position).getRouteNm());
@@ -424,6 +434,7 @@ public class StopDetailActivity extends AppCompatActivity {
                 args.putParcelable("busList", busLists);
                 goArrAlarm.putExtras(args);
                 startActivity(goArrAlarm);
+                moveAnimate();
             }
         });
     }
@@ -463,9 +474,24 @@ public class StopDetailActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent backIntent;
-        backIntent = new Intent(this, MainActivity.class);
-        startActivity(backIntent);
-        finish();
+        if (getIntent().getAction() != null){
+            Intent intent = new Intent(StopDetailActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }else{
+            finish();
+        }
+        exitAnimate();
+    }
+
+    @Override
+    public void moveAnimate() {
+        overridePendingTransition(R.anim.vertical_center, R.anim.none);
+    }
+
+    @Override
+    public void exitAnimate() {
+        overridePendingTransition(R.anim.none, R.anim.vertical_exit);
+//        overridePendingTransition(R.anim.slide_down, R.anim.slide_up);
     }
 }
