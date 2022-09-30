@@ -50,14 +50,13 @@ public class AddAlarmFavListActivity extends AppCompatActivity implements Activi
         getDataFromIntent();
         addAlarmListViewModel = new ViewModelProvider(this).get(AddAlarmListViewModel.class);
         getFavLists();
-
     }
 
     public void initView(){
         getWindow().setExitTransition(new Fade());
         toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(" 정류장 + 노선 선택 ");
+        getSupportActionBar().setTitle(" 즐겨찾기 선택 ");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24);
     }
@@ -75,6 +74,7 @@ public class AddAlarmFavListActivity extends AppCompatActivity implements Activi
         switch (item.getItemId()){
             case R.id.action_home:          // 홈 버튼
                 intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
 //                exitAnimate();

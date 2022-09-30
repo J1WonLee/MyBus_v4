@@ -59,9 +59,10 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                         // 공항 버스
                         holder.binding.BusSort.setVisibility(View.VISIBLE);
                         holder.binding.BusSort.setText("공항 버스");
+                        holder.binding.BusSort.setBackgroundResource(R.color.lightgray);
                         holder.binding.busRouteName.setText(stopUidSch.getRtNm());
-                        holder.binding.firstRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag1(), stopUidSch.getArrmsgSec1()));
-                        holder.binding.secondRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag2(), stopUidSch.getArrmsgSec2()));
+                        setRemainSeat(holder, stopUidSch.getArrmsgSec1(), stopUidSch.isFullFlag1 , 1);
+                        setRemainSeat(holder, stopUidSch.getArrmsgSec1(), stopUidSch.isFullFlag2, 2);
                         setRemainTime(holder, stopUidSch.getArrmsgSec1(), 1);
                         setRemainTime(holder, stopUidSch.getArrmsgSec2(), 2);
                         setBackGroundColor(holder, position);
@@ -71,9 +72,10 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                         // 마을
                         holder.binding.BusSort.setVisibility(View.VISIBLE);
                         holder.binding.BusSort.setText("마을 버스");
+                        holder.binding.BusSort.setBackgroundResource(R.color.lightgray);
                         holder.binding.busRouteName.setText(stopUidSch.getRtNm());
-                        holder.binding.firstRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag1(), stopUidSch.getArrmsgSec1()));
-                        holder.binding.secondRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag2(), stopUidSch.getArrmsgSec2()));
+                        setRemainSeat(holder, stopUidSch.getArrmsgSec1(), stopUidSch.isFullFlag1 , 1);
+                        setRemainSeat(holder, stopUidSch.getArrmsgSec1(), stopUidSch.isFullFlag2, 2);
                         setRemainTime(holder, stopUidSch.getArrmsgSec1(), 1);
                         setRemainTime(holder, stopUidSch.getArrmsgSec2(), 2);
                         setBackGroundColor(holder, position);
@@ -83,9 +85,10 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                         setFavImage(holder, stopUidSch);
                         holder.binding.BusSort.setVisibility(View.VISIBLE);
                         holder.binding.BusSort.setText("간선 버스");
+                        holder.binding.BusSort.setBackgroundResource(R.color.lightgray);
                         holder.binding.busRouteName.setText(stopUidSch.getRtNm());
-                        holder.binding.firstRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag1(), stopUidSch.getArrmsgSec1()));
-                        holder.binding.secondRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag2(), stopUidSch.getArrmsgSec2()));
+                        setRemainSeat(holder, stopUidSch.getArrmsgSec1(), stopUidSch.isFullFlag1 , 1);
+                        setRemainSeat(holder, stopUidSch.getArrmsgSec1(), stopUidSch.isFullFlag2, 2);
                         setRemainTime(holder, stopUidSch.getArrmsgSec1(), 1);
                         setRemainTime(holder, stopUidSch.getArrmsgSec2(), 2);
                         setBackGroundColor(holder, position);
@@ -95,9 +98,10 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                         setFavImage(holder, stopUidSch);
                         holder.binding.BusSort.setVisibility(View.VISIBLE);
                         holder.binding.BusSort.setText("지선 버스");
+                        holder.binding.BusSort.setBackgroundResource(R.color.lightgray);
                         holder.binding.busRouteName.setText(stopUidSch.getRtNm());
-                        holder.binding.firstRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag1(), stopUidSch.getArrmsgSec1()));
-                        holder.binding.secondRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag2(), stopUidSch.getArrmsgSec2()));
+                        setRemainSeat(holder, stopUidSch.getArrmsgSec1(), stopUidSch.isFullFlag1 , 1);
+                        setRemainSeat(holder, stopUidSch.getArrmsgSec1(), stopUidSch.isFullFlag2, 2);
                         setRemainTime(holder, stopUidSch.getArrmsgSec1(), 1);
                         setRemainTime(holder, stopUidSch.getArrmsgSec2(), 2);
                         break;
@@ -106,9 +110,10 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                         setFavImage(holder, stopUidSch);
                         holder.binding.BusSort.setVisibility(View.VISIBLE);
                         holder.binding.BusSort.setText("순환 버스");
+                        holder.binding.BusSort.setBackgroundResource(R.color.lightgray);
                         holder.binding.busRouteName.setText(stopUidSch.getRtNm());
-                        holder.binding.firstRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag1(), stopUidSch.getArrmsgSec1()));
-                        holder.binding.secondRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag2(), stopUidSch.getArrmsgSec2()));
+                        setRemainSeat(holder, stopUidSch.getArrmsgSec1(), stopUidSch.isFullFlag1 , 1);
+                        setRemainSeat(holder, stopUidSch.getArrmsgSec1(), stopUidSch.isFullFlag2, 2);
                         setRemainTime(holder, stopUidSch.getArrmsgSec1(), 1);
                         setRemainTime(holder, stopUidSch.getArrmsgSec2(), 2);
                         break;
@@ -117,9 +122,10 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                         setFavImage(holder, stopUidSch);
                         holder.binding.BusSort.setVisibility(View.VISIBLE);
                         holder.binding.BusSort.setText("광역 버스");
+                        holder.binding.BusSort.setBackgroundResource(R.color.lightgray);
                         holder.binding.busRouteName.setText(stopUidSch.getRtNm());
-                        holder.binding.firstRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag1(), stopUidSch.getArrmsgSec1()));
-                        holder.binding.secondRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag2(), stopUidSch.getArrmsgSec2()));
+                        setRemainSeat(holder, stopUidSch.getArrmsgSec1(), stopUidSch.isFullFlag1 , 1);
+                        setRemainSeat(holder, stopUidSch.getArrmsgSec1(), stopUidSch.isFullFlag2, 2);
                         setRemainTime(holder, stopUidSch.getArrmsgSec1(), 1);
                         setRemainTime(holder, stopUidSch.getArrmsgSec2(), 2);
                         break;
@@ -128,9 +134,10 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                         setFavImage(holder, stopUidSch);
                         holder.binding.BusSort.setVisibility(View.VISIBLE);
                         holder.binding.BusSort.setText("인천 버스");
+                        holder.binding.BusSort.setBackgroundResource(R.color.lightgray);
                         holder.binding.busRouteName.setText(stopUidSch.getRtNm());
-                        holder.binding.firstRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag1(), stopUidSch.getArrmsgSec1()));
-                        holder.binding.secondRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag2(), stopUidSch.getArrmsgSec2()));
+                        setRemainSeat(holder, stopUidSch.getArrmsgSec1(), stopUidSch.isFullFlag1 , 1);
+                        setRemainSeat(holder, stopUidSch.getArrmsgSec1(), stopUidSch.isFullFlag2, 2);
                         setRemainTime(holder, stopUidSch.getArrmsgSec1(), 1);
                         setRemainTime(holder, stopUidSch.getArrmsgSec2(), 2);
                         break;
@@ -139,9 +146,10 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                         setFavImage(holder, stopUidSch);
                         holder.binding.BusSort.setVisibility(View.VISIBLE);
                         holder.binding.BusSort.setText("경기 버스");
+                        holder.binding.BusSort.setBackgroundResource(R.color.lightgray);
                         holder.binding.busRouteName.setText(stopUidSch.getRtNm());
-                        holder.binding.firstRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag1(), stopUidSch.getArrmsgSec1()));
-                        holder.binding.secondRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag2(), stopUidSch.getArrmsgSec2()));
+                        setRemainSeat(holder, stopUidSch.getArrmsgSec1(), stopUidSch.isFullFlag1 , 1);
+                        setRemainSeat(holder, stopUidSch.getArrmsgSec1(), stopUidSch.isFullFlag2, 2);
                         setRemainTime(holder, stopUidSch.getArrmsgSec1(), 1);
                         setRemainTime(holder, stopUidSch.getArrmsgSec2(), 2);
                         break;
@@ -149,19 +157,21 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                         // 폐지
                         holder.binding.BusSort.setVisibility(View.VISIBLE);
                         holder.binding.BusSort.setText("폐지");
+                        holder.binding.BusSort.setBackgroundResource(R.color.lightgray);
                         holder.binding.busRouteName.setText(stopUidSch.getRtNm());
                         holder.binding.firstRemainTime.setText("폐지");
                         holder.binding.secondRemainTime.setText("폐지");
-                        holder.binding.firstRemainSeat.setText("폐지");
-                        holder.binding.secondRemainSeat.setText("폐지");
+                        holder.binding.firstRemainStop.setVisibility(View.INVISIBLE);
+                        holder.binding.secondRemainStop.setVisibility(View.INVISIBLE);
                         break;
                     case "0":
                         // 공용
                         holder.binding.BusSort.setVisibility(View.VISIBLE);
                         holder.binding.BusSort.setText("공용");
+                        holder.binding.BusSort.setBackgroundResource(R.color.lightgray);
                         holder.binding.busRouteName.setText(stopUidSch.getRtNm());
-                        holder.binding.firstRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag1(), stopUidSch.getArrmsgSec1()));
-                        holder.binding.secondRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag2(), stopUidSch.getArrmsgSec2()));
+                        setRemainSeat(holder, stopUidSch.getArrmsgSec1(), stopUidSch.isFullFlag1 , 1);
+                        setRemainSeat(holder, stopUidSch.getArrmsgSec1(), stopUidSch.isFullFlag2, 2);
                         setRemainTime(holder, stopUidSch.getArrmsgSec1(), 1);
                         setRemainTime(holder, stopUidSch.getArrmsgSec2(), 2);
                         break;
@@ -179,8 +189,8 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
             holder.binding.busRouteName.setText(busArrival.getRouteNm());
             gBusSetRemainTime(holder, busArrival.getPredictTime1(), 1);
             gBusSetRemainTime(holder, busArrival.getPredictTime2(), 2);
-            gBusSetRemainSeat(holder, busArrival.getRemainSeatCnt1(), 1);
-            gBusSetRemainSeat(holder, busArrival.getRemainSeatCnt2(), 2);
+            gBusSetRemainSeat(holder, busArrival.getRemainSeatCnt1(), busArrival.getLocationNo1(), 1);
+            gBusSetRemainSeat(holder, busArrival.getRemainSeatCnt2(), busArrival.getLocationNo2(),2);
             setGbusBackGroundColor(holder, position);
             setGbusFavImage(holder, busArrival);
         }
@@ -191,19 +201,20 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
             // 새로운 버스 타입 등장한 경우
             holder.binding.BusSort.setVisibility(View.VISIBLE);
             holder.binding.BusSort.setText(setBusSort(stopUidSch.getRouteType()));
+            holder.binding.BusSort.setBackgroundResource(R.color.lightgray);
             holder.binding.busRouteName.setText(stopUidSch.getRtNm());
             holder.binding.firstRemainTime.setText(stopUidSch.getArrmsgSec1());
             setRemainTime(holder, stopUidSch.getArrmsgSec1(), 1);
             setRemainTime(holder, stopUidSch.getArrmsgSec2(), 2);
-            holder.binding.firstRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag1(), stopUidSch.getArrmsgSec1()));
-            holder.binding.secondRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag2(), stopUidSch.getArrmsgSec2()));
+            setRemainSeat(holder, stopUidSch.getArrmsgSec1(), stopUidSch.isFullFlag1 , 1);
+            setRemainSeat(holder, stopUidSch.getArrmsgSec2(), stopUidSch.isFullFlag2, 2);
         }else{
             holder.binding.BusSort.setVisibility(View.GONE);
             holder.binding.busRouteName.setText(stopUidSch.getRtNm());
             setRemainTime(holder, stopUidSch.getArrmsgSec1(), 1);
             setRemainTime(holder, stopUidSch.getArrmsgSec2(), 2);
-            holder.binding.firstRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag1(), stopUidSch.getArrmsgSec1()));
-            holder.binding.secondRemainSeat.setText(setFullFlag(stopUidSch.getIsFullFlag2(), stopUidSch.getArrmsgSec2()));
+            setRemainSeat(holder, stopUidSch.getArrmsgSec1(), stopUidSch.isFullFlag1 , 1);
+            setRemainSeat(holder, stopUidSch.getArrmsgSec2(), stopUidSch.isFullFlag2, 2);
         }
     }
 
@@ -273,10 +284,8 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
                     String second = String.valueOf((getMin % (60 * 1000)) / 1000);
                     if (flag == 1){
                         holder.binding.firstRemainTime.setText(min +" 분 " + second +" 초 ");
-                        holder.binding.firstRemainStop.setVisibility(View.INVISIBLE);
                     }else{
                         holder.binding.secondRemainTime.setText(min +" 분 " + second +" 초 ");
-                        holder.binding.secondRemainStop.setVisibility(View.INVISIBLE);
                     }
                 }
 
@@ -356,18 +365,40 @@ public class SearchDetailAdapter extends RecyclerView.Adapter<SearchDetailAdapte
         }
     }
 
-    public void gBusSetRemainSeat(SearchDetailViewHolder holder, String seat, int flag){
+    public void setRemainSeat(SearchDetailViewHolder holder, String time, String fullFlag , int flag){
+        try{
+            String remainStops = time.substring(time.indexOf('[')+1, time.indexOf(']'));
+            String isFull = setFullFlag(fullFlag, time);
+            if (flag == 1){
+                holder.binding.firstRemainStop.setText(remainStops + " " + isFull);
+            }else{
+                holder.binding.secondRemainStop.setText(remainStops + " " + isFull);
+            }
+        }catch(Exception e){
+            if (flag == 1){
+                holder.binding.firstRemainStop.setText(" ");
+            }else{
+                holder.binding.secondRemainStop.setText(" ");
+            }
+        }
+
+
+
+    }
+
+    public void gBusSetRemainSeat(SearchDetailViewHolder holder, String seat, String stops , int flag){
+        String remainStops = stops.equals("") ? " " : stops + "번째 전";
          if (flag == 1){
              if (seat.equals("-1")){
-                 holder.binding.firstRemainSeat.setText("없음");
+                 holder.binding.firstRemainStop.setText(remainStops);
              }else{
-                 holder.binding.firstRemainSeat.setText(seat);
+                 holder.binding.firstRemainStop.setText(remainStops + " " + seat);
              }
          }else{
              if (seat.equals("-1")){
-                 holder.binding.secondRemainSeat.setText("없음");
+                 holder.binding.secondRemainStop.setText(remainStops);
              }else{
-                 holder.binding.secondRemainSeat.setText(seat);
+                 holder.binding.secondRemainStop.setText(remainStops +" " + seat);
              }
          }
     }

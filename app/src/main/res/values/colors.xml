@@ -10,7 +10,16 @@
     <color name="gray">#9E9E9E</color>
     <color name="green">#20F040</color>
     <color name="yellow">#FFAA1D</color>
-    <color name="lightgray">#E4E3E3</color>
+    <color name="lightgray">#eeeef0</color>
     <color name="orange">#FF9500</color>
     <color name="lightred">#F1AAA9</color>
+    <color name="cursorColor">#191919</color>
+    <color name="editTextBaseLine">#FF000000</color>
+    <color name="darkgray">#989898</color>
+    <color name="lightBlue">#1717FD</color>
+    <color name="lightGreen">#008A00</color>
+    <color name="o5">#0D000000</color>
+    <color name="o0">#00000000</color>
+    <color name="tt">#1A000000</color>
+    <color name="transparent">#1A000000</color>
 </resources>

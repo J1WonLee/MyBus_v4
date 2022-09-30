@@ -200,8 +200,8 @@ public class ArrAlarmService extends Service {
     }
 
     public void stopForegroundService(){
-        stopForeground(true);
         stopSelf();
+        stopForeground(true);
         busRoomRepository.deleteArrAlarm();
         compositeDisposable.dispose();
         deleteFlag.setValue(1);

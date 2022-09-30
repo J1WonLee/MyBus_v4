@@ -3,12 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:shape="rectangle">
+    android:shape="oval">
+    <corners android:radius="10dp"/>
+    <stroke android:width="0.5px" android:color="@color/black"/>
     <solid android:color="@color/white" />
-    <corners
-        android:bottomLeftRadius="5dp"
-        android:bottomRightRadius="5dp"
-        android:topLeftRadius="5dp"
-        android:topRightRadius="5dp" />
-
 </shape>

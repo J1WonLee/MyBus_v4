@@ -93,8 +93,8 @@ public class AddAlarmFavListChildAdapter extends  RecyclerView.Adapter<AddAlarmF
                     args.putParcelable("busList", busLists);
                     alarmIntent.putExtras(args);
                 }
+                alarmIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 holder.itemView.getContext().startActivity(alarmIntent);
-                ((Activity) holder.itemView.getContext()).overridePendingTransition(R.anim.vertical_center, R.anim.none);
             }
         });
     }

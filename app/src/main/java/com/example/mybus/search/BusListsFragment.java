@@ -1,11 +1,13 @@
 package com.example.mybus.search;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -16,10 +18,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Slide;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.mybus.ActivityAnimate;
@@ -49,6 +56,8 @@ public class BusListsFragment extends Fragment implements ActivityAnimate {
     private FloatingActionButton floatingActionButton;
     private SharedPreferences sharedPreferences;
     private boolean isRecentChk = true;
+    private EditText inputText;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +67,8 @@ public class BusListsFragment extends Fragment implements ActivityAnimate {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bus_lists, container, false);
+        inputText = binding.searchBusInput;
+        getEditFocus();
         getRecentChk();
         initRecycler();
         setFabClick();
@@ -79,18 +90,18 @@ public class BusListsFragment extends Fragment implements ActivityAnimate {
             }
         });
 
-
-
-        searchViewModel.getSharedData().observe(requireActivity(), new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                binding.searchBusInput.setText(s);
-                searchViewModel.getBusLists(s);
-            }
-        });
         if (isRecentChk)                setInitContents();
         setAutoResult();
         return binding.getRoot();
+    }
+
+    public void getEditFocus(){
+        inputText.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                inputText.requestFocus();
+            }
+        });
     }
 
     public void initRecycler(){
@@ -112,8 +123,8 @@ public class BusListsFragment extends Fragment implements ActivityAnimate {
                 Bundle args = new Bundle();
                 args.putParcelable("busList", busLists.get(position));
                 intent.putExtras(args);
-                startActivity(intent);
-                moveAnimate();
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+//                moveAnimate();
             }
         });
     }
@@ -164,6 +175,12 @@ public class BusListsFragment extends Fragment implements ActivityAnimate {
                     }
                 }
         );
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        binding.searchBusInput.requestFocus();
     }
 
     @Override

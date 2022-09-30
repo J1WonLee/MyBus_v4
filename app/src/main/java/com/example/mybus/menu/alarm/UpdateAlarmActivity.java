@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.ActivityOptions;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -14,6 +15,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -110,14 +112,15 @@ public class UpdateAlarmActivity extends AppCompatActivity implements ActivityAn
         switch (item.getItemId()){
             case android.R.id.home:
                 intent = new Intent(this, MyAlarmActivity.class);
-                startActivity(intent);
-                this.finish();
-                exitAnimate();
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+                this.finishAfterTransition();
                 break;
 
             case R.id.action_home:
-                this.finish();
-                exitAnimate();
+                intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                this.finishAfterTransition();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -192,37 +195,37 @@ public class UpdateAlarmActivity extends AppCompatActivity implements ActivityAn
                     case R.id.mon:
                         weeks[2] = !weeks[2];
                         if (weeks[2])   binding.mon.setBackgroundResource(R.drawable.button_click_deco);
-                        else            binding.mon.setBackgroundResource(R.drawable.button_deco);
+                        else            binding.mon.setBackgroundResource(R.drawable.days_button_deco);
                         break;
                     case R.id.tue:
                         weeks[3] = !weeks[3];
                         if (weeks[3])   binding.tue.setBackgroundResource(R.drawable.button_click_deco);
-                        else            binding.tue.setBackgroundResource(R.drawable.button_deco);
+                        else            binding.tue.setBackgroundResource(R.drawable.days_button_deco);
                         break;
                     case R.id.wen:
                         weeks[4] = !weeks[4];
                         if (weeks[4])   binding.wen.setBackgroundResource(R.drawable.button_click_deco);
-                        else            binding.wen.setBackgroundResource(R.drawable.button_deco);
+                        else            binding.wen.setBackgroundResource(R.drawable.days_button_deco);
                         break;
                     case R.id.thr:
                         weeks[5] = !weeks[5];
                         if (weeks[5])   binding.thr.setBackgroundResource(R.drawable.button_click_deco);
-                        else            binding.thr.setBackgroundResource(R.drawable.button_deco);
+                        else            binding.thr.setBackgroundResource(R.drawable.days_button_deco);
                         break;
                     case R.id.fri:
                         weeks[6] = !weeks[6];
                         if (weeks[6])   binding.fri.setBackgroundResource(R.drawable.button_click_deco);
-                        else            binding.fri.setBackgroundResource(R.drawable.button_deco);
+                        else            binding.fri.setBackgroundResource(R.drawable.days_button_deco);
                         break;
                     case R.id.sat:
                         weeks[7] = !weeks[7];
                         if (weeks[7])   binding.sat.setBackgroundResource(R.drawable.button_click_deco);
-                        else            binding.sat.setBackgroundResource(R.drawable.button_deco);
+                        else            binding.sat.setBackgroundResource(R.drawable.days_button_deco);
                         break;
                     case R.id.sun:
                         weeks[1] = !weeks[1];
                         if (weeks[1])   binding.sun.setBackgroundResource(R.drawable.button_click_deco);
-                        else            binding.sun.setBackgroundResource(R.drawable.button_deco);
+                        else            binding.sun.setBackgroundResource(R.drawable.days_button_deco);
                         break;
                 }
             }
@@ -278,6 +281,7 @@ public class UpdateAlarmActivity extends AppCompatActivity implements ActivityAn
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
         alarmIntent.setAction("start_alarm");
         alarmIntent.putExtra("weekDays", weeks);
+        alarmIntent.putExtra("selectTime", selectTime);
         args.putParcelable("busList", busSchList);
         alarmIntent.putExtras(args);
         PendingIntent alarmPending = PendingIntent.getBroadcast(this, alarmId, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
@@ -293,6 +297,12 @@ public class UpdateAlarmActivity extends AppCompatActivity implements ActivityAn
         schAlarmInfo.setAlarm_date(selectTime);
         schAlarmInfo.setWeeks(dates);
         updateAlarmViewModel.updateAlarm(schAlarmInfo);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAfterTransition();
     }
 
     @Override

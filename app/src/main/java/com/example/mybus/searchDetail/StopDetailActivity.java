@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mybus.ActivityAnimate;
 import com.example.mybus.MainActivity;
@@ -126,40 +127,50 @@ public class StopDetailActivity extends AppCompatActivity implements ActivityAni
             public void onClick(View view) {
                 if (getIntent().getAction() != null){
                     Intent intent = new Intent(StopDetailActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 }
-                finish();
-                exitAnimate();
+                finishAfterTransition();
+//                exitAnimate();
             }
         });
 
 
         favImage.setOnClickListener(view -> {
-            String lfid=null;
-            if (stopSchList.getStId().startsWith("1")){
-                lfid = stopSchList.getArsId();
-            }else if (stopSchList.getStId().startsWith("2")){
-                lfid = stopSchList.getStId();
-            }
-            if (isFavSaved){
-                // 정류장 즐겨찾기 삭제 시, 외래키도 같이 지운다.
-                // 삭제 후 정류장 리스트들 null로 초기화 후 adapter update
-                searchDetailViewModel.deleteLocalFav(lfid);
-                searchDetailAdapter.updateFavList(null);
-                isFavSaved = false;
-                favImage.setImageResource(R.drawable.ic_baseline_star_border_24);
-                searchDetailViewModel.deleteFbFabInStopDetail(lfid, loginId);
+            if (stopUidSchList != null || gbusBusLocationList != null){
+                String lfid=null;
+                String staOrder = null;
+                if (stopSchList.getStId().startsWith("1")){
+                    lfid = stopSchList.getArsId();
+                    staOrder = stopUidSchList.get(0).getStaOrd();
+                }else if (stopSchList.getStId().startsWith("2")){
+                    lfid = stopSchList.getStId();
+                    staOrder = gbusBusLocationList.get(0).getStaOrder();
+                }
+                if (isFavSaved){
+                    // 정류장 즐겨찾기 삭제 시, 외래키도 같이 지운다.
+                    // 삭제 후 정류장 리스트들 null로 초기화 후 adapter update
+                    removeFbFav(lfid);
+//                    searchDetailViewModel.deleteLocalFav(lfid);
+//                    searchDetailAdapter.updateFavList(null);
+                    isFavSaved = false;
+                    favImage.setImageResource(R.drawable.ic_baseline_star_border_24);
+//                    searchDetailViewModel.deleteFbFabInStopDetail(lfid, loginId);
+                }else{
+                    searchDetailAdapter.isFirstClicked = true;
+                    Long now = System.currentTimeMillis();
+                    Date date = new Date(now);
+                    registerFbFav(lfid, staOrder, date);
+//                    LocalFav localFav = new LocalFav(lfid ,stopSchList.getStId()
+//                            , "0"
+//                            ,stopSchList.getStNm(), stopSchList.getNextDir(), 1, date, "-1");
+//                    searchDetailViewModel.regitFav(localFav);
+                    isFavSaved = true;
+                    favImage.setImageResource(R.drawable.ic_baseline_star_24);
+//                    searchDetailViewModel.insertFbFav(localFav, loginId);
+                }
             }else{
-                searchDetailAdapter.isFirstClicked = true;
-                Long now = System.currentTimeMillis();
-                Date date = new Date(now);
-                LocalFav localFav = new LocalFav(lfid ,stopSchList.getStId()
-                        , "0"
-                        ,stopSchList.getStNm(), stopSchList.getNextDir(), 1, date, "-1");
-                searchDetailViewModel.regitFav(localFav);
-                isFavSaved = true;
-                favImage.setImageResource(R.drawable.ic_baseline_star_24);
-                searchDetailViewModel.insertFbFav(localFav, loginId);
+                Toast.makeText(this, "새로 고침 후 다시 이용 해 주세요", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -193,43 +204,55 @@ public class StopDetailActivity extends AppCompatActivity implements ActivityAni
         switch(item.getItemId()){
             case R.id.action_add_fav:
                 String lfid=null;
+                String staOrder = null;
                 Log.d("StopDetailActivity", "stopdetail activity , actionaddfav clicked");
-                Long now = System.currentTimeMillis();
-                Date date = new Date(now);
-                if (stopSchList.getStId().startsWith("1")){
-                    lfid = stopSchList.getArsId();
-                }else if (stopSchList.getStId().startsWith("2")){
-                    lfid = stopSchList.getStId();
-                }
-                if (lfid!=null && isFavSaved){
-                    // 삭제
-                    isFavSaved = !isFavSaved;
-                    searchDetailViewModel.deleteLocalFav(lfid);
-                    searchDetailAdapter.updateFavList(null);
-                    item.setIcon(R.drawable.ic_baseline_star_border_24);
-                    favImage.setImageResource(R.drawable.ic_baseline_star_border_24);
-                    searchDetailViewModel.deleteFbFabInStopDetail(lfid, loginId);
+                if (stopUidSchList == null && gbusBusLocationList == null){
+                    Toast.makeText(this, "새로 고침 후 다시 이용 해 주세요", Toast.LENGTH_SHORT).show();
+                    break;
+                }else{
+                    Long now = System.currentTimeMillis();
+                    Date date = new Date(now);
+                    if (stopSchList.getStId().startsWith("1")){
+                        lfid = stopSchList.getArsId();
+                        staOrder = stopUidSchList.get(0).getStaOrd();
+                    }else if (stopSchList.getStId().startsWith("2")){
+                        lfid = stopSchList.getStId();
+                        staOrder = gbusBusLocationList.get(0).getStaOrder();
+                    }
+                    if (lfid!=null && isFavSaved){
+                        // 삭제
+                        isFavSaved = !isFavSaved;
+//                        searchDetailViewModel.deleteLocalFav(lfid);
+//                        searchDetailAdapter.updateFavList(null);
+                        removeFbFav(lfid);
+                        item.setIcon(R.drawable.ic_baseline_star_border_24);
+                        favImage.setImageResource(R.drawable.ic_baseline_star_border_24);
 
-                }else if (lfid != null && !isFavSaved){
-                    // 추가
-                    isFavSaved = !isFavSaved;
-                    LocalFav localFav = new LocalFav(lfid
-                            , stopSchList.getStId()
-                            , stopUidSchList.get(0).getStaOrd()
-                            , stopSchList.getStNm(), stopSchList.getNextDir(), 1, date, "-1");
-                    searchDetailViewModel.regitFav(localFav);
-                    item.setIcon(R.drawable.ic_baseline_star_24);
-                    favImage.setImageResource(R.drawable.ic_baseline_star_24);
-                    // 추가
-                    searchDetailViewModel.insertFbFav(localFav, loginId);
 
+                    }else if (lfid != null && !isFavSaved){
+                        // 추가
+                        isFavSaved = !isFavSaved;
+//                        LocalFav localFav = new LocalFav(lfid
+//                                , stopSchList.getStId()
+//                                , stopUidSchList.get(0).getStaOrd()
+//                                , stopSchList.getStNm(), stopSchList.getNextDir(), 1, date, "-1");
+//                        searchDetailViewModel.regitFav(localFav);
+//                        item.setIcon(R.drawable.ic_baseline_star_24);
+//                        favImage.setImageResource(R.drawable.ic_baseline_star_24);
+//                        // 추가
+//                        searchDetailViewModel.insertFbFav(localFav, loginId);
+                        registerFbFav(lfid, staOrder, date);
+                        item.setIcon(R.drawable.ic_baseline_star_24);
+                        favImage.setImageResource(R.drawable.ic_baseline_star_24);
+                    }
                 }
+
                 break;
 
             case R.id.action_home:
                 Intent intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                finish();
                 exitAnimate();
                 break;
 
@@ -237,6 +260,23 @@ public class StopDetailActivity extends AppCompatActivity implements ActivityAni
                 break;
         }
         return true;
+    }
+
+    public void registerFbFav(String lfid, String staOrder, Date date){
+        LocalFav localFav = new LocalFav(lfid
+                , stopSchList.getStId()
+                , staOrder
+                , stopSchList.getStNm(), stopSchList.getNextDir(), 1, date, "-1");
+        searchDetailViewModel.regitFav(localFav);
+        // 추가
+        Log.d("StopDetailActivity", "login id : " + loginId);
+        searchDetailViewModel.insertFbFav(localFav, loginId);
+    }
+
+    public void removeFbFav(String lfid){
+        searchDetailViewModel.deleteLocalFav(lfid);
+        searchDetailAdapter.updateFavList(null);
+        searchDetailViewModel.deleteFbFabInStopDetail(lfid, loginId);
     }
 
     public void showOption(int id){
@@ -310,7 +350,8 @@ public class StopDetailActivity extends AppCompatActivity implements ActivityAni
                     gbusBusLocationList = busArrivalLists;
                     searchDetailAdapter.updateGBusStopList(gbusBusLocationList, stopSchList.getBusId());
                 }else{
-                    Log.d("kkang", "StopDetailActivity busArrivalLists is null!");
+//                    Log.d("kkang", "StopDetailActivity busArrivalLists is null!");
+                    gbusBusLocationList = null;
                     recyclerView.setVisibility(View.GONE);
                     emptyview.setVisibility(View.VISIBLE);
                 }
@@ -352,7 +393,7 @@ public class StopDetailActivity extends AppCompatActivity implements ActivityAni
                 }
                 args.putParcelable("busList", busLists);
                 intent.putExtras(args);
-                startActivity(intent);
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(StopDetailActivity.this).toBundle());
                 moveAnimate();
             }
 
@@ -476,12 +517,11 @@ public class StopDetailActivity extends AppCompatActivity implements ActivityAni
         super.onBackPressed();
         if (getIntent().getAction() != null){
             Intent intent = new Intent(StopDetailActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            finish();
-        }else{
-            finish();
         }
-        exitAnimate();
+        finishAfterTransition();
+//        exitAnimate();
     }
 
     @Override

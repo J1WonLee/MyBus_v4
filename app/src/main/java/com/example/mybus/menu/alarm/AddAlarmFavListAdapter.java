@@ -57,6 +57,7 @@ public class AddAlarmFavListAdapter extends RecyclerView.Adapter<AddAlarmFavList
     public void setTitleContents(AddAlarmFavListViewHolder holder, int position){
         if (dataWithFavStopBusList.get(position).localFavStopBusList.size() > 0){
             holder.addalarmFavItemBinding.favStopBusName.setText(dataWithFavStopBusList.get(position).localFav.getLf_name());
+            holder.addalarmFavItemBinding.favStopBusDir.setText(dataWithFavStopBusList.get(position).localFav.getLf_desc() +" 방면");
         }
     }
 

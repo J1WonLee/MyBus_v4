@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.example.mybus.ActivityAnimate;
 import com.example.mybus.MainActivity;
@@ -87,22 +88,19 @@ public class HomeEditActivity extends AppCompatActivity implements ActivityAnima
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         Log.d("HomeEditActivity", "getItemId :::::::::::::::" + item.getItemId());
         switch (item.getItemId()){
             case R.id.action_home:          // 홈 버튼
                 chkIsRemoved();
                 homeEditViewModel.updateAll(homeEditAdapter.getLocalFav());
                 startActivity(intent);
-                finish();
-                exitAnimate();
                 break;
 
             case android.R.id.home:     // 뒤로 가기 버튼
                 chkIsRemoved();
                 homeEditViewModel.updateAll(homeEditAdapter.getLocalFav());
                 startActivity(intent);
-                finish();
-                exitAnimate();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -138,6 +136,7 @@ public class HomeEditActivity extends AppCompatActivity implements ActivityAnima
 
     public void setImageListener(){
         deleteImg.setOnClickListener(view ->{
+            Toast.makeText(this," 최근 검색 기록을 삭제했습니다", Toast.LENGTH_SHORT).show();
             homeEditViewModel.deleteRecentSch();
         });
     }
@@ -182,9 +181,9 @@ public class HomeEditActivity extends AppCompatActivity implements ActivityAnima
     public void onBackPressed() {
         super.onBackPressed();
         Intent i = new Intent(this, MainActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
-        finish();
-        exitAnimate();
+
     }
 
     public void getPreferences(){

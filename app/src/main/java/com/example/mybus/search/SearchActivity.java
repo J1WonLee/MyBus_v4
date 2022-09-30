@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -44,6 +45,7 @@ public class SearchActivity extends AppCompatActivity implements ActivityAnimate
         viewPagerAdapter = new ViewPagerAdapter(this);
         viewPager2.setAdapter(viewPagerAdapter);
         connectTab();
+        setTabSelected();
 
         searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
     }
@@ -59,13 +61,20 @@ public class SearchActivity extends AppCompatActivity implements ActivityAnimate
         }).attach();
     }
 
+    public void setTabSelected(){
+        tabLayout.setTabTextColors(Color.rgb(0,0,0), Color.rgb(241,170,169));
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(SearchActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
-        exitAnimate();
+        moveMain();
+    }
+
+    public void moveMain(){
+        Intent mainIntent = new Intent(this, MainActivity.class);
+        mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(mainIntent);
     }
 
     @Override

@@ -33,11 +33,13 @@ public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapte
     public List<BusArrivalList> busArrivalList;
     private CountDownTimer countDownTimer;
     public static ChildOnItemClickListener mListener;
+    private String stNm;
 
-    public MainFavChildAdapter(List<LocalFavStopBus> localFavStopBusList, List<StopUidSchList> stopUidSchLists, List<BusArrivalList> busArrivalLists) {
+    public MainFavChildAdapter(List<LocalFavStopBus> localFavStopBusList, List<StopUidSchList> stopUidSchLists, List<BusArrivalList> busArrivalLists, String stNm) {
         this.localFavStopBusList = localFavStopBusList;
         this.stopUidSchList = stopUidSchLists;
         this.busArrivalList = busArrivalLists;
+        this.stNm = stNm;
 //        Log.d("MainFavChildAdapter", "size of list : " + localFavStopBusList.size());
     }
 
@@ -152,8 +154,8 @@ public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapte
                     localFavStopBusList.get(position).setStId(lists.getStationId());
                     if (lists.getRouteId().equals(localFavStopBusList.get(position).getLfb_busId())){
                         localFavStopBusList.get(position).setLfb_sectOrd(lists.getStaOrder());
-                        gBusSetRemainTime(holder, lists.getPredictTime1(), 1);
-                        gBusSetRemainTime(holder, lists.getPredictTime2(), 2);
+                        gBusSetRemainTime(holder, lists.getPredictTime1(), lists.getLocationNo1(), 1);
+                        gBusSetRemainTime(holder, lists.getPredictTime2(), lists.getLocationNo2(), 2);
                     }
                 }
             }
@@ -206,8 +208,9 @@ public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapte
         }
     }
 
-    public void gBusSetRemainTime(MainFavChildViewHolder holder, String time, int flag){
+    public void gBusSetRemainTime(MainFavChildViewHolder holder, String time, String stops, int flag){
         try{
+            String remainStops = stops.equals("") ? "" : stops + "번째 전";
             long conversionTime = 0;
             String getMinute = time;
             int getSeconds = 0;
@@ -222,9 +225,9 @@ public class MainFavChildAdapter extends RecyclerView.Adapter<MainFavChildAdapte
                     String second = String.valueOf((getMin % (60 * 1000)) / 1000);
 
                     if (flag == 1){
-                        holder.favBuslistItemBinding.firstRemainTime.setText(min +" 분 " + second +" 초 ");
+                        holder.favBuslistItemBinding.firstRemainTime.setText(min +" 분 " + second +" 초 " + " " + remainStops);
                     }else{
-                        holder.favBuslistItemBinding.secondRemainTime.setText(min +" 분 " + second +" 초 ");
+                        holder.favBuslistItemBinding.secondRemainTime.setText(min +" 분 " + second +" 초 " +  " " + remainStops);
                     }
                 }
 

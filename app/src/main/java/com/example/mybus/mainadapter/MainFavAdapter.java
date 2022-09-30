@@ -63,7 +63,7 @@ public class MainFavAdapter extends RecyclerView.Adapter<MainFavAdapter.MainFavV
                 case "4":
                 case "5":
                 case "7":
-                    holder.mainFavItemBinding.favStopBusName.setTextColor(Color.rgb(0,0,220));
+                    holder.mainFavItemBinding.favStopBusName.setTextColor(Color.rgb(0,200,0));
                     break;
                 case "6":
                 case "8":
@@ -89,7 +89,7 @@ public class MainFavAdapter extends RecyclerView.Adapter<MainFavAdapter.MainFavV
     }
 
     public void setChildAdapter(MainFavViewHolder holder, int position){
-        mainFavChildAdapter =  new MainFavChildAdapter(dataWithFavStopBusList.get(position).localFavStopBusList, stopUidSchList, busArrivalList);
+        mainFavChildAdapter =  new MainFavChildAdapter(dataWithFavStopBusList.get(position).localFavStopBusList, stopUidSchList, busArrivalList , dataWithFavStopBusList.get(position).localFav.getLf_name());
         holder.mainFavItemBinding.nestedRv.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
         holder.mainFavItemBinding.nestedRv.setAdapter(mainFavChildAdapter);
     }

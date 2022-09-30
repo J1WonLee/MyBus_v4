@@ -13,12 +13,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +36,7 @@ import com.example.mybus.menu.LoginActivity;
 import com.example.mybus.searchDetail.SearchDetailAdapter;
 import com.example.mybus.viewmodel.ArrAlarmViewModel;
 import com.example.mybus.vo.ArrAlarmPref;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -58,6 +61,8 @@ public class AlarmArriveActivity extends AppCompatActivity implements ActivityAn
     private ArrAlarmPref arrAlarm;
     private Dialog dialog;
     private boolean isDupliAlarm;
+    private FloatingActionButton floatingActionButton;
+    private long mLastClickTime = 0L;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +73,7 @@ public class AlarmArriveActivity extends AppCompatActivity implements ActivityAn
         initView();
         setAlarmImage();
         getDataFromIntent();
+        setRefreshBtnListener();
 
         // 알람 삭제시 반영.
         ArrAlarmService.deleteFlag.observe(this, new Observer<Integer>() {
@@ -92,6 +98,7 @@ public class AlarmArriveActivity extends AppCompatActivity implements ActivityAn
     }
 
     public void initView(){
+        floatingActionButton = binding.arrAlarmRefreshBtn;
         toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(" 도착 알람 ");
@@ -113,6 +120,7 @@ public class AlarmArriveActivity extends AppCompatActivity implements ActivityAn
         switch (item.getItemId()){
             case R.id.action_home:
                 intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
                 break;
@@ -120,12 +128,12 @@ public class AlarmArriveActivity extends AppCompatActivity implements ActivityAn
             case android.R.id.home:
                 if (getIntent().getAction() != null){
                     intent = new Intent(this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     finish();
                 }else{
                     this.finish();
                 }
-
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -135,8 +143,15 @@ public class AlarmArriveActivity extends AppCompatActivity implements ActivityAn
         Bundle bundle = getIntent().getExtras();
         if (bundle != null){
             busSchList = bundle.getParcelable("busList");
+            getArriveInfo();
         }
-        if (bundle != null && busSchList != null){
+//        if (bundle != null && busSchList != null){
+//
+//        }
+    }
+
+    public void getArriveInfo(){
+        if (busSchList != null){
             if (busSchList.getStId().startsWith("2")){
                 // 경기도 버스인 경우
                 arrAlarmViewModel.getGBusArrInfoByRoute(busSchList.getStId(), busSchList.getBusRouteId(), busSchList.getCorpNm());
@@ -381,10 +396,16 @@ public class AlarmArriveActivity extends AppCompatActivity implements ActivityAn
         dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.arr_alarm_dialog);
+        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        params.windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setAttributes(params);
+
         if (stId.equals(busSchList.getStId()) && routeId.equals(busSchList.getBusRouteId()) && flag == curFlag){
             isDupliAlarm = true;
-            TextView text  = dialog.findViewById(R.id.arr_alarm_text1);
-            dialog.findViewById(R.id.arr_alarm_text2).setVisibility(View.INVISIBLE);
+            TextView text  = dialog.findViewById(R.id.arr_alarm_text2);
+            dialog.findViewById(R.id.arr_alarm_text1).setVisibility(View.INVISIBLE);
             text.setText("알람을 제거하시겠습니까?");
         }
         dialog.show();
@@ -461,17 +482,30 @@ public class AlarmArriveActivity extends AppCompatActivity implements ActivityAn
         startService(stopService);
     }
 
+    public void setRefreshBtnListener(){
+        floatingActionButton.setOnClickListener(view -> {
+            try {
+                if (SystemClock.elapsedRealtime() - mLastClickTime > 5000) {
+                    getArriveInfo();
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
+            }
+            catch (Exception e){
+                Log.d("MainActivity", "setRefreshBtnListener error : " + e.getMessage());
+            }
+        });
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         if (getIntent().getAction() != null){
             Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            finish();
             exitAnimate();
         }else{
-            this.finish();
-            exitAnimate();
+            finishAfterTransition();
         }
     }
 

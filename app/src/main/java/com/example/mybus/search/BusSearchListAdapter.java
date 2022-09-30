@@ -2,6 +2,7 @@ package com.example.mybus.search;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mybus.MainActivity;
+import com.example.mybus.R;
 import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.databinding.SearchListItemBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -35,14 +37,17 @@ public class BusSearchListAdapter extends RecyclerView.Adapter<BusSearchListAdap
             holder.binding.cityName.setVisibility(View.GONE);
             holder.binding.listName.setText(b.getBusRouteNm());
             holder.binding.listDesc.setText(setListDesc(b.getRouteType()));
+            setTextColor(holder, b.getRouteType());
         }else{
             // 검색 목록 보여주기
             // 첫번째 아이템 중 서울 버스인 경우
+            setTextColor(holder, b.getRouteType());
             if (position == 0 && b.getBusRouteId().startsWith("1")){
                 holder.binding.cityName.setText("서울");
                 holder.binding.cityName.setVisibility(View.VISIBLE);
                 holder.binding.listName.setText(b.getBusRouteNm());
                 holder.binding.listDesc.setText(setListDesc(b.getRouteType()));
+                setTextColor(holder, b.getRouteType());
             }else if (position == 0 && b.getBusRouteId().startsWith("16")){
                 // 검색결과 인천 버스만 존재할 경우
                 holder.binding.cityName.setText("인천");
@@ -75,6 +80,27 @@ public class BusSearchListAdapter extends RecyclerView.Adapter<BusSearchListAdap
             }
         }
 
+    }
+
+    public void setTextColor(SearchViewHolder holder, String type){
+        switch (type){
+            case "1":
+            case "7":
+                holder.binding.listName.setTextColor(Color.rgb(0,0, 200));
+                break;
+            case "2":
+            case "3":
+            case "4":
+            case "5":
+                holder.binding.listName.setTextColor(Color.rgb(0,200, 0));
+                break;
+            case "6":
+                holder.binding.listName.setTextColor(Color.rgb(180,20, 10));
+            case "8":
+                holder.binding.listName.setTextColor(Color.rgb(180,20, 10));
+            default:
+                holder.binding.listName.setTextColor(Color.rgb(180,20, 10));
+        }
     }
 
     @Override

@@ -12,31 +12,40 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-        <item name="colorAccent">@color/lightred</item>
+        <item name="colorAccent">@color/cursorColor</item>
         <item name="colorControlNormal">@color/black</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorHint">@color/lightgray</item>
     </style>
 
+    <style name="Transparent" parent="@style/Theme.AppCompat">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
 
     <style name="BaseAppTheme" parent="android:Theme.Material">
         <item name="android:windowActivityTransitions">true</item>
-
         <!-- specify enter and exit transitions -->
         <item name="android:windowEnterTransition">@android:transition/fade</item>
         <item name="android:windowExitTransition">@android:transition/fade</item>
-
     </style>
 
     <style name="CollapsingToolbar.TitleText" parent="TextAppearance.Design.CollapsingToolbar.Expanded" >
-        <item name="android:textSize">10dp</item>
+        <item name="android:textSize">15dp</item>
     </style>
 
     <style name="ExpandedAppBar" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textSize">28sp</item>
+        <item name="android:textSize">28dp</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="CollapsedAppBar" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">20dp</item>
         <item name="android:textStyle">normal</item>
     </style>
 </resources>

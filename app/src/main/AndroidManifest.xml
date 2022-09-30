@@ -2,15 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.mybus">
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"
-        tools:remove ="android:maxSdkVersion"/>
+    <uses-permission
+        android:name="android.permission.ACCESS_NOTIFICATION_POLICY"
+        tools:remove="android:maxSdkVersion" />
+
     <application
         android:name=".hiltapp.MyBusApplication"
         android:allowBackup="true"
@@ -23,10 +24,21 @@
         android:theme="@style/Theme.MyBus"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <receiver
+            android:name=".alarmservice.RepeatAlarmReceiver"
+            android:directBootAware="true"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".menu.alarm.UpdateAlarmActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".alarmservice.AlarmService"
@@ -35,19 +47,23 @@
 
         <receiver
             android:name=".alarmservice.AlarmReceiver"
-            android:exported="true">
+            android:directBootAware="true"
+            android:exported="false">
             <intent-filter>
                 <action android:name="stop_alarm" />
                 <action android:name="start_alarm" />
                 <action android:name="com.example.mybus.alarmservice.SchAlarm_Start" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
 
         <activity
             android:name=".menu.alarm.AddAlarmFavListActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
         <receiver
             android:name=".alarmservice.ArrAlarmNotiReceiver"
@@ -67,50 +83,61 @@
 
         <activity
             android:name=".menu.FireBaseSyncActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Transparent"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".menu.alarm.AlarmArriveActivity"
-            android:exported="false" >
+            android:exported="false"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.example.mybus.fromNoti" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".searchDetail.BusRouteDetailActivity"
-            android:exported="false" >
+            android:exported="false"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.example.mybus.fromMain" />
                 <action android:name="com.example.mybus.fromSearch" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
             android:name=".searchDetail.StopDetailActivity"
-            android:exported="false" >
+            android:exported="false"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.example.mybus.fromMain" />
                 <action android:name="com.example.mybus.fromSearch" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
             android:name=".menu.alarm.AddAlarmActivity"
             android:exported="false"
-            android:parentActivityName=".MainActivity" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".search.SearchActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".menu.OpenSourceActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".menu.HomeEditActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".menu.MyAlarmActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
@@ -128,15 +155,19 @@
         </activity>
         <activity
             android:name=".menu.LoginActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".IntroActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

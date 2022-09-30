@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_marginBottom="10dp"
     android:background="@color/white"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="160dp">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/stopbus_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="노선 번호 / 정류장 이름"
-        android:textSize="11sp"
+        android:text="노선 번호 "
+        android:textSize="20dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="15dp"
+        android:autoSizeMaxTextSize="25dp"
+        android:autoSizePresetSizes="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.089"
@@ -23,67 +28,86 @@
     <ImageButton
         android:id="@+id/edit_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="28dp"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@+id/stopbus_name"
         app:layout_constraintEnd_toStartOf="@+id/del_Btn"
-        app:layout_constraintHorizontal_bias="0.357"
+        app:layout_constraintHorizontal_bias="0.678"
         app:layout_constraintStart_toEndOf="@+id/stopbus_name"
-        app:layout_constraintTop_toTopOf="@+id/stopbus_name"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/ic_baseline_edit_24" />
 
     <ImageButton
         android:id="@+id/del_Btn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="36dp"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@+id/edit_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/edit_button"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/ic_baseline_delete_24" />
 
     <TextView
         android:id="@+id/bus_name"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
+        android:autoSizeMaxTextSize="35dp"
+        android:autoSizeMinTextSize="15dp"
+        android:autoSizePresetSizes="2dp"
+        android:autoSizeTextType="uniform"
         android:text="시간"
-        android:textSize="22sp"
+        android:textSize="35dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/stopbus_name"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/stopbus_name"
         app:layout_constraintTop_toBottomOf="@+id/stopbus_name"
-        app:layout_constraintVertical_bias="0.301" />
+        app:layout_constraintVertical_bias="0.196" />
 
     <TextView
         android:id="@+id/dates"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp"
         android:text="요일"
-        android:textSize="10sp"
+        android:textSize="13dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/bus_name"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/bus_name"
         app:layout_constraintTop_toBottomOf="@+id/bus_name"
-        app:layout_constraintVertical_bias="0.777" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <Switch
         android:id="@+id/onOff"
         android:layout_width="120dp"
-        android:switchMinWidth="100dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
         android:checked="true"
+        android:switchMinWidth="80dp"
         app:layout_constraintBottom_toBottomOf="@+id/bus_name"
         app:layout_constraintEnd_toEndOf="@+id/del_Btn"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/edit_button"
         app:layout_constraintTop_toTopOf="@+id/bus_name"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.2" />
+
+    <TextView
+        android:id="@+id/routeName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="routeName"
+        android:textSize="15dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12dp"
+        android:autoSizeMaxTextSize="18dp"
+        android:autoSizePresetSizes="2dp"
+        app:layout_constraintBottom_toBottomOf="@+id/stopbus_name"
+        app:layout_constraintStart_toEndOf="@+id/stopbus_name"
+        app:layout_constraintTop_toTopOf="@+id/stopbus_name" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

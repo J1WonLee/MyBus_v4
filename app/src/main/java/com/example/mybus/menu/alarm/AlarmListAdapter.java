@@ -1,5 +1,6 @@
 package com.example.mybus.menu.alarm;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.CompoundButton;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mybus.R;
 import com.example.mybus.databinding.AlarmlistItemBinding;
 import com.example.mybus.mainadapter.MainFavAdapter;
 import com.example.mybus.vo.SchAlarmInfo;
@@ -45,14 +47,38 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.Alar
         notifyDataSetChanged();
     }
 
+    public void updatesSchAlarmOnOff(List<SchAlarmInfo> schAlarmInfoList, int position){
+        this.schAlarmInfoList = schAlarmInfoList;
+        notifyItemChanged(position);
+    }
+
     public void setTexts(AlarmListViewHolder holder, int position){
-        holder.binding.stopbusName.setText(schAlarmInfoList.get(position).getAlarm_bus_nm() + " - " +schAlarmInfoList.get(position).getAlarm_stop_nm());
+        holder.binding.stopbusName.setText(schAlarmInfoList.get(position).getAlarm_stop_nm());
+        holder.binding.routeName.setText(schAlarmInfoList.get(position).getAlarm_bus_nm());
         holder.binding.dates.setText(setDates(schAlarmInfoList.get(position).getWeeks()));
         holder.binding.busName.setText(setTimes(schAlarmInfoList.get(position).getAlarm_date()));
         if (schAlarmInfoList.get(position).isOn()){
             holder.binding.onOff.setChecked(true);
+            holder.binding.dates.setTextColor(Color.rgb(0, 0, 0));
+            holder.binding.busName.setTextColor(Color.rgb(0,0,0));
+            holder.binding.editButton.setColorFilter(holder.itemView.getContext().getResources().getColor(R.color.black));
+            holder.binding.delBtn.setColorFilter(holder.itemView.getContext().getResources().getColor(R.color.black));
+            setTextColor(holder, position);
         }else{
             holder.binding.onOff.setChecked(false);
+            holder.binding.stopbusName.setTextColor(Color.rgb(158, 158, 158));
+            holder.binding.dates.setTextColor(Color.rgb(158, 158, 158));
+            holder.binding.busName.setTextColor(Color.rgb(158,158,158));
+            holder.binding.editButton.setColorFilter(holder.itemView.getContext().getResources().getColor(R.color.lightgray));
+            holder.binding.delBtn.setColorFilter(holder.itemView.getContext().getResources().getColor(R.color.lightgray));
+        }
+    }
+
+    public void setTextColor(AlarmListViewHolder holder, int position){
+        if (schAlarmInfoList.get(position).getAlarm_id().startsWith("1")){
+            holder.binding.stopbusName.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.lightBlue));
+        }else{
+            holder.binding.stopbusName.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.lightGreen));
         }
     }
 

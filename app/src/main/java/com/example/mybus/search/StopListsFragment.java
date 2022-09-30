@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mybus.ActivityAnimate;
 import com.example.mybus.MainActivity;
@@ -36,6 +39,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.regex.Pattern;
 
 public class StopListsFragment extends Fragment implements ActivityAnimate {
     private SearchViewModel searchViewModel;
@@ -49,6 +53,7 @@ public class StopListsFragment extends Fragment implements ActivityAnimate {
     private FloatingActionButton floatingActionButton;
     private SharedPreferences sharedPreferences;
     private boolean isRecentChk = true;
+    private EditText inputText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,16 +63,11 @@ public class StopListsFragment extends Fragment implements ActivityAnimate {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_stop_lists, container, false);
+        getEditFocus();
         setFabClick();
         getRecentChk();
+        setEditTextFilter();
         searchViewModel = new ViewModelProvider(getActivity()).get(SearchViewModel.class);
-        searchViewModel.getSharedData().observe(requireActivity(), new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                // 좌우 스와이프시 자동검색이지만 자동검색 기능 고려해봐야함(트래픽 다씀 0902)
-            }
-        });
-
         initRecycler();
 
 //        searchViewModel.mutableLiveData.observe(getViewLifecycleOwner(), new Observer<List<StopSearchUidWrap>>() {
@@ -103,6 +103,13 @@ public class StopListsFragment extends Fragment implements ActivityAnimate {
         return binding.getRoot();
     }
 
+    public void getEditFocus(){
+        inputText = binding.searchStopInput;
+        inputText.isFocusableInTouchMode();
+        inputText.setFocusable(true);
+        inputText.requestFocus();
+    }
+
     public void initRecycler(){
         recyclerView = binding.searchStopLists;
         stopListAdapter = new StopSearchListAdapter();
@@ -133,6 +140,12 @@ public class StopListsFragment extends Fragment implements ActivityAnimate {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        binding.searchStopInput.requestFocus();
+    }
+
+    @Override
     public void onPause() {
         searchViewModel.setSharedData(binding.searchStopInput.getText().toString());
         super.onPause();
@@ -142,6 +155,21 @@ public class StopListsFragment extends Fragment implements ActivityAnimate {
         if (binding.searchStopInput.getText().toString().length() <= 0){
             searchViewModel.getRecentStopSchList();
         }
+    }
+
+    // EDIT TEXT 특수문자 막기
+    public void setEditTextFilter(){
+        inputText.setFilters(new InputFilter[]{new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                Pattern ps = Pattern.compile("^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\\u318D\\u119E\\u11A2\\u2022\\u2025a\\u00B7\\uFE55]+$");
+                if (source.equals("") || ps.matcher(source).matches()) {
+                    return source;
+                }
+                Toast.makeText(getContext(), "한글, 영문, 숫자만 입력 가능합니다.", Toast.LENGTH_SHORT).show();
+                return "";
+            }
+        },new InputFilter.LengthFilter(9)});
     }
     
     // 자동검색 기능 삭제 고려

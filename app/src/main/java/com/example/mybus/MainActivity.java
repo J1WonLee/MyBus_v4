@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements ActivityAnimate {
     private ImageView mainEmtpyImage;
     private FloatingActionButton floatingActionButton;
     private long mLastClickTime = 0L;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements ActivityAnimate {
         toolbar = binding.toolbar;
         floatingActionButton = binding.mainRefershBtn;
         slidingPanel = binding.slidingPanel;
+        mainEmtpyImage = binding.ivEmpty;
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -135,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements ActivityAnimate {
         navi = binding.navigation;
         header = navi.getHeaderView(0);
         headerBinding = NaviHeaderBinding.bind(header);
+        menu = navi.getMenu();
 
         // 네비게이션 아이템 클릭 이벤트
         navi.setNavigationItemSelectedListener(menuItem -> {
@@ -145,18 +149,18 @@ public class MainActivity extends AppCompatActivity implements ActivityAnimate {
                             // 로그인 안 된 상태
                             Intent intent2 = new Intent(this, LoginActivity.class);
                             startActivity(intent2);
-                            finish();
-                            moveAnimate();
+                            exitAnimate();
                         }else{
                             // 로그인 된 상태
                             mainViewModel.delete();
                             UserApiClient.getInstance().logout(errors ->{
                                 return null;
                             });
+                            Toast.makeText(this, "로그아웃", Toast.LENGTH_SHORT).show();
+                            colearLogin();
                             Intent intent3 = new Intent(this, LoginActivity.class);
                             startActivity(intent3);
-                            finish();
-                            moveAnimate();
+                            exitAnimate();
                         }
                         return null;
                     });
@@ -184,8 +188,6 @@ public class MainActivity extends AppCompatActivity implements ActivityAnimate {
                     if (loginId != null){
                         Intent goFbSync = new Intent(this, FireBaseSyncActivity.class);
                         startActivity(goFbSync);
-                        moveAnimate();
-                        finish();
                     }else{
                         Toast.makeText(this, "로그인 후 이용 가능 합니다", Toast.LENGTH_SHORT).show();
                     }
@@ -204,6 +206,7 @@ public class MainActivity extends AppCompatActivity implements ActivityAnimate {
                     Log.d("kkang", "logined user :" + user.getUser_name());
                     TextView txt = header.findViewById(R.id.name);
                     txt.setText(user.getUser_name());
+                    menu.findItem(R.id.move_login).setTitle("로그아웃");
 
                     ImageView img = header.findViewById(R.id.profile);
                     Glide.with(MainActivity.this)
@@ -218,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements ActivityAnimate {
 
                     ImageView img = header.findViewById(R.id.profile);
                     Glide.with(MainActivity.this)
-                            .load(R.drawable.ic_baseline_home_24)
+                            .load(R.drawable.ic_baseline_person_24)
                             .placeholder(R.drawable.ic_baseline_dehaze_24)
                             .error(R.drawable.ic_baseline_dehaze_24)
                             .override(250,250)
@@ -291,6 +294,7 @@ public class MainActivity extends AppCompatActivity implements ActivityAnimate {
 
     public void getFavBusList(){
         mainViewModel.getFavStopBus();
+
         mainViewModel.localFavStopBusLists.observe(this, new Observer<List<DataWithFavStopBus>>() {
             @Override
             public void onChanged(List<DataWithFavStopBus> dataWithFavStopBuses) {
@@ -301,9 +305,10 @@ public class MainActivity extends AppCompatActivity implements ActivityAnimate {
                     getFavArrTime();
                     getGbusFavArrTime();
 //                adapter.updateDataWithFavStopBusList(dataWithFavStopBuses);
+                    mainEmtpyImage.setVisibility(View.GONE);
                 }else{
-                    mainEmtpyImage = binding.mainEmtpyImg;
                     mainEmtpyImage.setVisibility(View.VISIBLE);
+                    setEmptyImageListener();
                 }
             }
         });
@@ -537,11 +542,12 @@ public class MainActivity extends AppCompatActivity implements ActivityAnimate {
         floatingActionButton.setOnClickListener(view -> {
             try {
                 if (SystemClock.elapsedRealtime() - mLastClickTime > 5000) {
-                    Intent intent = getIntent();
-                    finish();
-                    overridePendingTransition(0, 0);
-                    startActivity(intent);
-                    overridePendingTransition(0, 0);
+//                    Intent intent = getIntent();
+//                    finish();
+//                    overridePendingTransition(0, 0);
+//                    startActivity(intent);
+//                    overridePendingTransition(0, 0);
+                    getFavBusList();
                 }
                 mLastClickTime = SystemClock.elapsedRealtime();
             }
@@ -551,10 +557,24 @@ public class MainActivity extends AppCompatActivity implements ActivityAnimate {
         });
     }
 
+    public void setEmptyImageListener(){
+        mainEmtpyImage.setOnClickListener(view -> {
+            Intent searchIntent = new Intent(this, SearchActivity.class);
+            startActivity(searchIntent);
+            moveAnimate();
+        });
+    }
+
     // 사용자 로그인 정보 받아온다.
     public void getLoginId(){
         sharedPreferences = getSharedPreferences(LoginActivity.sharedId, MODE_PRIVATE);
         loginId = sharedPreferences.getString("loginId", null);
+    }
+
+    public void colearLogin(){
+        sharedPreferences = getSharedPreferences(LoginActivity.sharedId, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove("loginId");   editor.commit();
     }
 
     @Override

@@ -127,8 +127,8 @@ public class AlarmService extends Service {
     }
 
     public void stopForegroundService(){
-        stopForeground(true);
         stopSelf();
+        stopForeground(true);
         Log.d("AlarmService", "stop service");
     }
 

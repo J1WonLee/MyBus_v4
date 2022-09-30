@@ -17,35 +17,37 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.01"
+            app:layout_constraintVertical_bias="0.0"
+            tools:layout_editor_absoluteX="0dp"
             app:menu="@menu/menu_alarm_list"
             />
 
 
-        <ImageView
-            android:background="@android:color/transparent"
-            android:id="@+id/alarm_cion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            app:srcCompat="@drawable/ic_baseline_access_alarms_24" />
+    <ImageView
+        android:id="@+id/alarm_cion"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:srcCompat="@drawable/ic_baseline_access_alarms_24" />
 
-        <TextView
-            android:id="@+id/alarm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="564dp"
-            android:text="스케줄 알람"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.501"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/alarm_cion"
-            app:layout_constraintVertical_bias="1.0" />
+    <TextView
+        android:id="@+id/alarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="564dp"
+        android:text="스케줄 알람"
+        android:textSize="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/alarm_cion"
+        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:padding="10dp"
@@ -59,18 +61,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/alarm"
         app:layout_constraintVertical_bias="0.035" />
-
-    <ImageView
-        android:src="@drawable/alarm_emtpy"
-        android:visibility="gone"
-        android:id="@+id/alarm_emtpy"
+    <LinearLayout
+        android:id="@+id/my_alarm_empty_wrap"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="300dp"
+        android:orientation="vertical"
+        android:padding="50dp"
+        android:layout_marginTop="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/alarm"
-        app:layout_constraintVertical_bias="0.035"/>
+        app:layout_constraintVertical_bias="0.035"
+        android:gravity="center_vertical"
+        >
+
+        <TextView
+
+            android:id="@+id/my_alarm_empty_text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="즐겨찾기 목록에서 선택하여 \n스케줄 알림을 설정할 수 있습니다"
+            android:textSize="19dp"
+            android:layout_gravity="center"
+            android:gravity="center" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

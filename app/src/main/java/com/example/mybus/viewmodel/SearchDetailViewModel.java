@@ -94,6 +94,8 @@ public class SearchDetailViewModel extends ViewModel {
                                   if (stopSearchUidWrap.getStopSearchUid().getItemLists() != null){
                                       Collections.sort(stopSearchUidWrap.getStopSearchUid().getItemLists());
                                       stopUidSchList.setValue(stopSearchUidWrap.getStopSearchUid().getItemLists());
+                                  }else{
+                                      stopUidSchList.setValue(null);
                                   }
 
                               }

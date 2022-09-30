@@ -13,12 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="192dp" >
         <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:background="@color/teal_200"
+            android:background="@color/darkgray"
             android:id="@+id/stopDetailCollapsing"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="@color/yellow"
-            app:scrimAnimationDuration="300"
+            app:contentScrim="@color/darkgray"
+            app:scrimAnimationDuration="100"
+            app:collapsedTitleGravity="left|center_horizontal"
             app:layout_scrollFlags="scroll|exitUntilCollapsed" >
 
             <LinearLayout
@@ -51,20 +52,22 @@
                     android:text="첫 정류장  종점 정류장"
                     android:textSize="10sp" />
                 <LinearLayout
-                    android:padding="10dp"
+                    android:padding="5dp"
                     android:orientation="horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <ImageView
-                        android:src="@drawable/ic_baseline_star_border_24"
-                        android:id="@+id/stop_detail_add_fav"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
                     <TextView
                         android:id="@+id/show_stop_info_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="즐겨찾기 추가" />
+                        android:text="즐겨찾기 추가"
+                        />
+                    <ImageView
+                        android:src="@drawable/ic_baseline_star_border_24"
+                        android:id="@+id/stop_detail_add_fav"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp" />
                 </LinearLayout>
             </LinearLayout>
 

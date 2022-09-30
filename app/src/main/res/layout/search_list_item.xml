@@ -15,10 +15,13 @@
         android:orientation="vertical">
 
         <TextView
-            android:layout_marginTop="5dp"
             android:id="@+id/city_name"
             android:background="@color/lightgray"
             android:visibility="gone"
+            android:textSize="13dp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="6dp"
+            android:autoSizeMaxTextSize="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="서울 / 경기" />
@@ -28,11 +31,16 @@
             android:id="@+id/list_item_layout"
             android:padding="10dp"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/list_name"
+                android:textSize="15dp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="10dp"
+                android:autoSizeMaxTextSize="20dp"
+                android:autoSizePresetSizes="2dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="노선, 정류장 이름" />
@@ -40,10 +48,14 @@
             <TextView
                 android:id="@+id/list_desc"
                 android:layout_marginTop="4dp"
+                android:textSize="15dp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="10dp"
+                android:autoSizeMaxTextSize="20dp"
+                android:autoSizePresetSizes="2dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="노선, 정류장 설명" />
-
         </LinearLayout>
     </LinearLayout>
 </layout>

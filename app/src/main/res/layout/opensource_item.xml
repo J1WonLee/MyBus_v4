@@ -8,7 +8,7 @@
     android:padding="20dp"
     android:layout_marginBottom="20dp"
     android:layout_width="match_parent"
-    android:layout_height="80dp">
+    android:layout_height="wrap_content">
 
     <TextView
         android:layout_gravity="left"
@@ -16,6 +16,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="opensource_name"
+        android:textSize="15dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="10dp"
+        android:autoSizeMaxTextSize="18dp"
+        android:autoSizePresetSizes="2dp"
         />
 
     <TextView
@@ -26,5 +31,10 @@
         android:text="opensource_link"
         android:autoLink="web"
         android:clickable="true"
+        android:textSize="13dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="10dp"
+        android:autoSizeMaxTextSize="15dp"
+        android:autoSizePresetSizes="2dp"
         />
 </LinearLayout>

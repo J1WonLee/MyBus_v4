@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActivityOptions;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -21,12 +22,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.mybus.ActivityAnimate;
 import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.alarmservice.AlarmReceiver;
+import com.example.mybus.alarmservice.RepeatAlarmReceiver;
 import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.databinding.ActivityMyAlarmBinding;
 import com.example.mybus.menu.alarm.AddAlarmActivity;
@@ -54,7 +57,7 @@ public class MyAlarmActivity extends AppCompatActivity implements ActivityAnimat
     private boolean[] weeks = {false, false, false, false, false, false, false, false};
     private boolean[] cancelWeeks = {};
     private Bundle bundle;
-    private ImageView alarmEmtpyImg;
+    private LinearLayout emptyLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,7 @@ public class MyAlarmActivity extends AppCompatActivity implements ActivityAnimat
 
     public void initView(){
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        emptyLayout = binding.myAlarmEmptyWrap;
        toolbar = binding.toolbar;
        setSupportActionBar(toolbar);
        getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -97,11 +101,12 @@ public class MyAlarmActivity extends AppCompatActivity implements ActivityAnimat
         switch (item.getItemId()){
             case R.id.action_add:
                 intent = new Intent(this, AddAlarmActivity.class);
-                startActivity(intent);
-                moveAnimate();
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
                 break;
             case android.R.id.home:
-                finish();
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
                 exitAnimate();
                 break;
         }
@@ -117,10 +122,10 @@ public class MyAlarmActivity extends AppCompatActivity implements ActivityAnimat
                     Log.d("MyAlarmActivity", schAlarmInfos.size()+" is size");
                     schAlarmInfo = schAlarmInfos;
                     adapter.updateschAlarmInfoList(schAlarmInfo);
+                    emptyLayout.setVisibility(View.GONE);
                 }else{
                     adapter.updateschAlarmInfoList(null);
-                    alarmEmtpyImg = binding.alarmEmtpy;
-                    alarmEmtpyImg.setVisibility(View.VISIBLE);
+                    emptyLayout.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -145,13 +150,14 @@ public class MyAlarmActivity extends AppCompatActivity implements ActivityAnimat
                 if (v.isPressed()){
                     if (isChecked){
                         // 알람을 킨다
-                         Log.d("MyAlarmActivity", "is selected!");
                          chkWeekDays(schAlarmInfo.get(position).getWeeks());
                          setAlarmManager(schAlarmInfo.get(position));
                          schAlarmInfo.get(position).setOn(true);
+                        adapter.updatesSchAlarmOnOff(schAlarmInfo, position);
                     }else{// 알람을 끈다
                         delAlarm(schAlarmInfo.get(position));
                         schAlarmInfo.get(position).setOn(false);
+                        adapter.updatesSchAlarmOnOff(schAlarmInfo, position);
                     }
                 }
             }
@@ -165,14 +171,14 @@ public class MyAlarmActivity extends AppCompatActivity implements ActivityAnimat
 
             @Override
             public void onEditBtnClick(View v, int position) {
-                // 알람 수정 페이지로 이동
-                bundle = new Bundle();
-                bundle.putParcelable("updateAlarm", schAlarmInfo.get(position));
-                Intent updateAlarmIntent = new Intent(v.getContext(), UpdateAlarmActivity.class);
-                updateAlarmIntent.putExtras(bundle);
-                startActivity(updateAlarmIntent);
-                finish();
-                moveAnimate();
+                // 켜져 있을 때에만, 알람 수정 페이지로 이동
+                if (schAlarmInfo.get(position).isOn()){
+                    bundle = new Bundle();
+                    bundle.putParcelable("updateAlarm", schAlarmInfo.get(position));
+                    Intent updateAlarmIntent = new Intent(v.getContext(), UpdateAlarmActivity.class);
+                    updateAlarmIntent.putExtras(bundle);
+                    startActivity(updateAlarmIntent, ActivityOptions.makeSceneTransitionAnimation(MyAlarmActivity.this).toBundle());
+                }
             }
         });
     }
@@ -241,14 +247,34 @@ public class MyAlarmActivity extends AppCompatActivity implements ActivityAnimat
 
     public void delAlarm(SchAlarmInfo schAlarmInfo){
         int alarmId = Integer.parseInt(schAlarmInfo.getAlarm_id().substring(0,3) + schAlarmInfo.getAlarm_busId().substring(0,3)+schAlarmInfo.getStOrder());
+        int repeatId = Integer.parseInt(schAlarmInfo.getAlarm_id().substring(0,4) + schAlarmInfo.getAlarm_busId().substring(0,3)+schAlarmInfo.getStOrder());
         Intent intent = new Intent(this, AlarmReceiver.class);
         intent.setAction("start_alarm");
         intent.putExtra("weekDays", cancelWeeks);
+        intent.putExtra("selectTime", 0);
         intent.putExtras(new Bundle());
         PendingIntent pIntent = PendingIntent.getBroadcast(this, alarmId , intent, PendingIntent.FLAG_IMMUTABLE);
         Log.d("AddAlarmActivity", "cancel alarm call");
         Toast.makeText(this,"알람을 종료했습니다", Toast.LENGTH_SHORT).show();
         alarmManager.cancel(pIntent);
+        offRepeatingAlarm(repeatId);
+    }
+
+    public void offRepeatingAlarm(int id){
+        Intent intent = new Intent(this, RepeatAlarmReceiver.class);
+        intent.putExtra("weekdays", cancelWeeks);
+        intent.putExtras(new Bundle());
+        PendingIntent pIntent = PendingIntent.getBroadcast(this, id , intent, PendingIntent.FLAG_IMMUTABLE);
+        alarmManager.cancel(pIntent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        exitAnimate();
     }
 
     @Override

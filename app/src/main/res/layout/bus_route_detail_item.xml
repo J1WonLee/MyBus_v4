@@ -28,16 +28,19 @@
                 android:layout_height="wrap_content" >
                 <TextView
                     android:visibility="invisible"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="8dp"
                     android:id="@+id/bus_route_first_name"
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
-                    android:text="1234"
-                    android:textSize="8sp" />
+                    android:text="서울74사"
+                    android:textSize="8dp"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="7dp"
+                    android:autoSizeMaxTextSize="8dp" />
 
                 <ImageView
                     android:visibility="invisible"
-                    android:layout_marginLeft="-5dp"
+                    android:layout_marginLeft="-3dp"
                     android:id="@+id/bus_first_image"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_baseline_directions_bus_24"
@@ -60,16 +63,19 @@
                 android:layout_height="wrap_content" >
                 <TextView
                     android:visibility="invisible"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="4dp"
                     android:id="@+id/bus_route_second_name"
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
-                    android:text="1234"
-                    android:textSize="8sp" />
+                    android:text="서울74사"
+                    android:textSize="8dp"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="7dp"
+                    android:autoSizeMaxTextSize="8dp"/>
 
                 <ImageView
                     android:visibility="invisible"
-                    android:layout_marginLeft="-5dp"
+                    android:layout_marginLeft="-3dp"
                     android:id="@+id/bus_second_image"
                     android:src="@drawable/ic_baseline_directions_bus_24"
                     android:layout_width="wrap_content"
@@ -92,16 +98,19 @@
                 android:layout_height="wrap_content" >
                 <TextView
                     android:visibility="invisible"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="6dp"
                     android:id="@+id/bus_route_third_name"
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
-                    android:text="1234"
-                    android:textSize="8sp" />
+                    android:text="서울74사"
+                    android:textSize="8dp"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="7dp"
+                    android:autoSizeMaxTextSize="8dp" />
 
                 <ImageView
                     android:visibility="invisible"
-                    android:layout_marginLeft="-5dp"
+                    android:layout_marginLeft="-3dp"
                     android:scaleType="center"
                     android:id="@+id/bus_third_image"
                     android:src="@drawable/ic_baseline_directions_bus_24"
@@ -134,7 +143,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="23dp"
                 android:text="정류장 명"
-                android:textSize="12sp" />
+                android:textSize="12dp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="10dp"
+                android:autoSizeMaxTextSize="14dp"
+                />
 
 
             <TextView
@@ -142,7 +155,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="정류장 번호"
-                android:textSize="10sp" />
+                android:textSize="10dp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="10dp"
+                android:autoSizeMaxTextSize="12dp"
+                />
 
 
         </LinearLayout>

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     android:id="@+id/main_fav_buslist_wrap"
-    android:background="@drawable/search_detail_list_border"
+    android:background="@drawable/search_detail_list_border_up"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <LinearLayout
-
         android:padding="10dp"
         android:orientation="horizontal"
         android:id="@+id/fav_contents"
@@ -17,6 +16,11 @@
         <TextView
             android:layout_gravity="center_vertical"
             android:id="@+id/bus_name"
+            android:textSize="18dp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="15dp"
+            android:autoSizeMaxTextSize="25dp"
+            android:autoSizePresetSizes="2dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="버스 이름" />

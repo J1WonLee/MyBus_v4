@@ -112,6 +112,7 @@ public class FbRepository implements FbService{
     public void deleteFbFab(LocalFav localFav, String loginId) {
         try{
             databaseReference.child("FavList").child(loginId).child(localFav.getLf_id()).removeValue();
+            databaseReference.child("FsbList").child(loginId).child(localFav.getLf_id()).removeValue();
         }catch(Exception e){
             Log.d("FbRepository", "ERROR ON deleteFbFab  home edit " + e.getMessage());
         }

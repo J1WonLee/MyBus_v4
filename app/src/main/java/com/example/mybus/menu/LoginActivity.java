@@ -104,6 +104,21 @@ public class LoginActivity extends AppCompatActivity implements ActivityAnimate 
         });
     }
 
+    // onbackpressed -> move main
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        moveToMain();
+    }
+
+    public void moveToMain(){
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
     @Override
     public void moveAnimate() {
         overridePendingTransition(R.anim.vertical_center, R.anim.none);

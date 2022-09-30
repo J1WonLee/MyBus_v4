@@ -57,6 +57,7 @@ public class OpenSourceActivity extends AppCompatActivity implements ActivityAni
         Intent intent = new Intent(this, MainActivity.class);
         switch (item.getItemId()){
             case R.id.action_home:          // 홈 버튼
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             case android.R.id.home:     // 뒤로 가기 버튼
                 startActivity(intent);
                 finish();
@@ -87,7 +88,12 @@ public class OpenSourceActivity extends AppCompatActivity implements ActivityAni
         openSourceLists.add("공공데이터, https://www.data.go.kr/");
 
         adapter.updateopenSourceLists(openSourceLists);
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     @Override

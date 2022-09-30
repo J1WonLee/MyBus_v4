@@ -13,12 +13,14 @@
         android:layout_width="match_parent"
         android:layout_height="192dp" >
         <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:background="@color/darkgray"
             android:id="@+id/stopDetailCollapsing"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="@color/yellow"
-            app:scrimAnimationDuration="150"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed" >
+            app:contentScrim="@color/darkgray"
+            app:scrimAnimationDuration="100"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:collapsedTitleGravity="left|center_horizontal">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -80,6 +82,14 @@
         android:id="@+id/stopDetailRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <TextView
+        android:id="@+id/route_detail_no_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="결과가 없습니다"
+        android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

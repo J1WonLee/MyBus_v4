@@ -124,6 +124,7 @@ public class FireBaseSyncActivity extends AppCompatActivity implements ActivityA
                         public void run() {
                             Toast.makeText(FireBaseSyncActivity.this, "동기화 완료!", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(FireBaseSyncActivity.this, MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                             finish();
                         }
