@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +55,7 @@ public class StopListsFragment extends Fragment implements ActivityAnimate {
     private SharedPreferences sharedPreferences;
     private boolean isRecentChk = true;
     private EditText inputText;
+    private InputMethodManager inputManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,7 +65,10 @@ public class StopListsFragment extends Fragment implements ActivityAnimate {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_stop_lists, container, false);
-        getEditFocus();
+        inputText = binding.searchStopInput;
+        inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        hideKeyboard();
+//        getEditFocus();
         setFabClick();
         getRecentChk();
         setEditTextFilter();
@@ -103,8 +108,14 @@ public class StopListsFragment extends Fragment implements ActivityAnimate {
         return binding.getRoot();
     }
 
+    public void hideKeyboard(){
+        inputText.setOnClickListener(view -> {
+            inputManager.showSoftInput(inputText, 0);
+        });
+    }
+
     public void getEditFocus(){
-        inputText = binding.searchStopInput;
+
         inputText.isFocusableInTouchMode();
         inputText.setFocusable(true);
         inputText.requestFocus();
@@ -142,6 +153,7 @@ public class StopListsFragment extends Fragment implements ActivityAnimate {
     @Override
     public void onResume() {
         super.onResume();
+        inputManager.hideSoftInputFromWindow(inputText.getWindowToken(), 0);
         binding.searchStopInput.requestFocus();
     }
 

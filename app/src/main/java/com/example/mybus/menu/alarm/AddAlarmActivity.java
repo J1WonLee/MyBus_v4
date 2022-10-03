@@ -19,6 +19,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ import com.example.mybus.R;
 import com.example.mybus.alarmservice.AlarmReceiver;
 import com.example.mybus.apisearch.itemList.BusSchList;
 import com.example.mybus.databinding.ActivityAddAlarmBinding;
+import com.example.mybus.menu.LoginActivity;
 import com.example.mybus.menu.MyAlarmActivity;
 import com.example.mybus.viewmodel.AddAlarmViewModel;
 import com.example.mybus.vo.SchAlarmInfo;
@@ -64,6 +66,7 @@ public class AddAlarmActivity extends AppCompatActivity implements ActivityAnima
     private NotificationManager notificationManager;
     private boolean isPermissioned;
     private ActivityResultLauncher<Intent> permissionLauncher;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -281,6 +284,8 @@ public class AddAlarmActivity extends AppCompatActivity implements ActivityAnima
             }
         }
         addAlarmViewModel.insertSchAlarm(new SchAlarmInfo(busSchList.getStId(), busSchList.getBusRouteId(), busSchList.getStStationNm(), busSchList.getBusRouteNm(), dates, selectTime, busSchList.getCorpNm()));
+        saveOnShared(selectTime);
+
         Intent intent = new Intent(this, MyAlarmActivity.class);
         startActivity(intent, ActivityOptions.makeTaskLaunchBehind().toBundle());
         this.finishAfterTransition();
@@ -302,5 +307,19 @@ public class AddAlarmActivity extends AppCompatActivity implements ActivityAnima
     @Override
     public void exitAnimate() {
         overridePendingTransition(R.anim.none, R.anim.vertical_exit);
+    }
+
+    public void saveOnShared(long selectTime){
+        // sharedpreference에 저장
+        sharedPreferences = getApplicationContext().getSharedPreferences(LoginActivity.sharedId, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putLong("selectedTime",selectTime);
+        editor.putString("dates", dates);
+        editor.putString("busName", busSchList.getBusRouteNm());
+        editor.putString("stNm", busSchList.getStStationNm());
+        editor.putString("busRoute", busSchList.getBusRouteId());
+        editor.putString("stId", busSchList.getStId());
+        editor.putString("stOrder", busSchList.getCorpNm());
+        editor.commit();
     }
 }

@@ -4,11 +4,8 @@
         android:id="@+id/move_login"
         android:title="로그인" />
     <item
-        android:id="@+id/move_my_alarm"
-        android:title="알람 " />
-    <item
-        android:id="@+id/move_home_edit"
-        android:title="홈 편집" />
+        android:id="@+id/move_setting"
+        android:title="설정" />
     <item
         android:id="@+id/move_open_source"
         android:title="오픈소스 정보" />

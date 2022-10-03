@@ -105,9 +105,10 @@ public class MyAlarmActivity extends AppCompatActivity implements ActivityAnimat
                 startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
                 break;
             case android.R.id.home:
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                exitAnimate();
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(intent);
+//                exitAnimate();
+                finishAfterTransition();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -272,9 +273,10 @@ public class MyAlarmActivity extends AppCompatActivity implements ActivityAnimat
     public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        exitAnimate();
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(intent);
+//        exitAnimate();
+        finishAfterTransition();
     }
 
     @Override

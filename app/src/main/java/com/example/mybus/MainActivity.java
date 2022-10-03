@@ -43,6 +43,7 @@ import com.example.mybus.menu.HomeEditActivity;
 import com.example.mybus.menu.LoginActivity;
 import com.example.mybus.menu.MyAlarmActivity;
 import com.example.mybus.menu.OpenSourceActivity;
+import com.example.mybus.menu.SettingActivity;
 import com.example.mybus.search.SearchActivity;
 import com.example.mybus.searchDetail.BusRouteDetailActivity;
 import com.example.mybus.searchDetail.BusRouteDetailAdapter;
@@ -105,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements ActivityAnimate {
         overridePendingTransition(R.anim.vertical_center, R.anim.none);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         setContentView(binding.getRoot());
+        chkIsSync();
         initMenu();
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         mainViewModel.getUser();
@@ -165,14 +167,9 @@ public class MainActivity extends AppCompatActivity implements ActivityAnimate {
                         return null;
                     });
                     break;
-                case R.id.move_my_alarm:
-                    Intent goAlarm = new Intent(this, MyAlarmActivity.class);
-                    startActivity(goAlarm);
-                    moveAnimate();
-                    break;
-                case R.id.move_home_edit:
+                case R.id.move_setting:
                     // 홈 화면 편집으로 이동
-                    Intent goHomeEdit = new Intent(this, HomeEditActivity.class);
+                    Intent goHomeEdit = new Intent(this, SettingActivity.class);
                     goHomeEdit.putExtra("favlists",  dataWithFavStopBusArrayList);
                     startActivity(goHomeEdit);
                     moveAnimate();
@@ -195,6 +192,17 @@ public class MainActivity extends AppCompatActivity implements ActivityAnimate {
             }
             return false;
         });
+    }
+
+    public void chkIsSync(){
+//        if (getIntent().getBooleanExtra("isLoginFirst", false)){
+//            Intent intent = new Intent(this, FireBaseSyncActivity.class);
+//            startActivity(intent);
+//        }
+        if (getIntent().getBooleanExtra("isLoginFirst", false)){
+            Intent intent = new Intent(MainActivity.this, FireBaseSyncActivity.class);
+            startActivity(intent);
+        }
     }
 
 

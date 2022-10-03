@@ -29,9 +29,12 @@ public class HomeEditAdapter extends RecyclerView.Adapter<HomeEditAdapter.HomeEd
     }
 
     public void setLocalFavList(List<DataWithFavStopBus> dataWithFavStopBusList){
-        for (int i =0; i< dataWithFavStopBusList.size(); i++){
-            localFavList.add(dataWithFavStopBusList.get(i).localFav);
+        if (dataWithFavStopBusList != null){
+            for (int i =0; i< dataWithFavStopBusList.size(); i++){
+                localFavList.add(dataWithFavStopBusList.get(i).localFav);
+            }
         }
+
     }
 
     @NonNull

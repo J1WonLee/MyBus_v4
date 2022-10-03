@@ -43,6 +43,7 @@ public class LoginActivity extends AppCompatActivity implements ActivityAnimate 
         binding.nologin.setOnClickListener(view -> {
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            intent.putExtra("isLoginFirst", true);
             startActivity(intent);
             finish();
             moveAnimate();
@@ -96,9 +97,9 @@ public class LoginActivity extends AppCompatActivity implements ActivityAnimate 
                 editor.putString("loginId", user.getId().toString());
                 editor.commit();
                 Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra("isLoginFirst", true);
                 startActivity(intent);
                 finish();
-                moveAnimate();
             }
             return null;
         });

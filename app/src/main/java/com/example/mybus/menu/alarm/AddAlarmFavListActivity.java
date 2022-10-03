@@ -15,12 +15,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.mybus.ActivityAnimate;
 import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.databinding.ActivityAddAlarmFavListBinding;
 import com.example.mybus.menu.MyAlarmActivity;
+import com.example.mybus.search.SearchActivity;
 import com.example.mybus.viewmodel.AddAlarmListViewModel;
 import com.example.mybus.vo.DataWithFavStopBus;
 import com.example.mybus.vo.SchAlarmInfo;
@@ -39,6 +43,8 @@ public class AddAlarmFavListActivity extends AppCompatActivity implements Activi
     private AddAlarmFavListAdapter adapter;
     private Bundle bundle;
     private SchAlarmInfo schAlarmInfo;
+    private LinearLayout linearLayout;
+    private TextView clickText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +61,8 @@ public class AddAlarmFavListActivity extends AppCompatActivity implements Activi
     public void initView(){
         getWindow().setExitTransition(new Fade());
         toolbar = binding.toolbar;
+        linearLayout = binding.linerClickWrap;
+        clickText = binding.tvClick;
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(" 즐겨찾기 선택 ");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -107,16 +115,27 @@ public class AddAlarmFavListActivity extends AppCompatActivity implements Activi
         addAlarmListViewModel.localFavStopBusLists.observe(this, new Observer<List<DataWithFavStopBus>>() {
             @Override
             public void onChanged(List<DataWithFavStopBus> dataWithFavStopBuses) {
-                if (dataWithFavStopBuses != null){
+                if (dataWithFavStopBuses != null && dataWithFavStopBuses.size()>0){
                     dataWithFavStopBusList = dataWithFavStopBuses;
+                    linearLayout.setVisibility(View.GONE);
                     if (schAlarmInfo != null){
                         adapter.updateDataWithFavStopBusList(dataWithFavStopBusList, schAlarmInfo);
                     }else{
                         adapter.updateDataWithFavStopBusList(dataWithFavStopBusList);
                     }
-
+                }else{
+                    showClickLayout();
                 }
             }
+        });
+    }
+
+    public void showClickLayout(){
+        linearLayout.setVisibility(View.VISIBLE);
+        clickText.setOnClickListener(view -> {
+            Intent intent = new Intent(AddAlarmFavListActivity.this, SearchActivity.class);
+            intent.putExtra("isAlarm", true);
+            startActivity(intent);
         });
     }
 

@@ -88,19 +88,20 @@ public class HomeEditActivity extends AppCompatActivity implements ActivityAnima
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         Log.d("HomeEditActivity", "getItemId :::::::::::::::" + item.getItemId());
         switch (item.getItemId()){
             case R.id.action_home:          // 홈 버튼
                 chkIsRemoved();
                 homeEditViewModel.updateAll(homeEditAdapter.getLocalFav());
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 break;
 
             case android.R.id.home:     // 뒤로 가기 버튼
                 chkIsRemoved();
                 homeEditViewModel.updateAll(homeEditAdapter.getLocalFav());
-                startActivity(intent);
+//                finishAfterTransition();
+                moveIntent();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -180,10 +181,17 @@ public class HomeEditActivity extends AppCompatActivity implements ActivityAnima
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(this, MainActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
+        moveIntent();
+    }
 
+    public void moveIntent(){
+        if(getIntent().getBooleanExtra("fromSetting", false)){
+            finishAfterTransition();
+        }else{
+            Intent i = new Intent(this, MainActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(i);
+        }
     }
 
     public void getPreferences(){

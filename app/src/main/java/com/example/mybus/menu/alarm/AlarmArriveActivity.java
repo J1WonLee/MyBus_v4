@@ -69,6 +69,8 @@ public class AlarmArriveActivity extends AppCompatActivity implements ActivityAn
         super.onCreate(savedInstanceState);
         binding = ActivityAlarmArriveBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+
         arrAlarmViewModel = new ViewModelProvider(this).get(ArrAlarmViewModel.class);
         initView();
         setAlarmImage();

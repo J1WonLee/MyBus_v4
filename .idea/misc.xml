@@ -82,15 +82,34 @@
         <entry key="..\:/gwl/MyBus3-master/app/src/main/res/layout/home_edit_item.xml" value="0.23505434782608695" />
         <entry key="..\:/gwl/MyBus3-master/app/src/main/res/layout/opensource_item.xml" value="0.12335359675785208" />
         <entry key="..\:/gwl/MyBus_v4/app/src/main/res/drawable/customborder.xml" value="0.1765" />
+        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/drawable/detail_list_item_deco.xml" value="0.1645" />
+        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/drawable/dialog_button_deco.xml" value="0.1645" />
         <entry key="..\:/gwl/MyBus_v4/app/src/main/res/drawable/dialog_custom_border.xml" value="0.1765" />
+        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/drawable/item_list_customborder.xml" value="0.1645" />
         <entry key="..\:/gwl/MyBus_v4/app/src/main/res/drawable/item_list_customborder_bottom.xml" value="0.1765" />
+        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/drawable/list_item_deco.xml" value="0.1645" />
+        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/drawable/search_detail_list_border.xml" value="0.1645" />
+        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/drawable/search_detail_list_border_up.xml" value="0.1645" />
+        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/drawable/shape_main_bus_list_border_up.xml" value="0.1645" />
+        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/drawable/shape_setting_list_border_bottom.xml" value="0.1645" />
+        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/layout/activity_add_alarm.xml" value="0.1875" />
+        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/layout/activity_add_alarm_fav_list.xml" value="0.1875" />
+        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/layout/activity_alarm_arrive.xml" value="0.144" />
         <entry key="..\:/gwl/MyBus_v4/app/src/main/res/layout/activity_bus_route_detail.xml" value="0.10989583333333333" />
+        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/layout/activity_fire_base_sync.xml" value="0.1875" />
+        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/layout/activity_home_edit.xml" value="0.1875" />
+        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/layout/activity_main.xml" value="0.1875" />
+        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/layout/activity_setting.xml" value="0.2" />
         <entry key="..\:/gwl/MyBus_v4/app/src/main/res/layout/activity_stop_detail.xml" value="0.25" />
         <entry key="..\:/gwl/MyBus_v4/app/src/main/res/layout/bus_route_detail_item.xml" value="0.25" />
         <entry key="..\:/gwl/MyBus_v4/app/src/main/res/layout/fragment_bus_lists.xml" value="0.10989583333333333" />
+        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/layout/navi_header.xml" value="0.1875" />
         <entry key="..\:/gwl/MyBus_v4/app/src/main/res/layout/route_detail_dialog.xml" value="0.176" />
         <entry key="..\:/gwl/MyBus_v4/app/src/main/res/layout/stop_detail_item.xml" value="0.10989583333333333" />
+        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/menu/menu_add_arrive_alarm.xml" value="0.25364583333333335" />
+        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/menu/menu_alarm_list.xml" value="0.25364583333333335" />
         <entry key="..\:/gwl/MyBus_v4/app/src/main/res/menu/menu_search_detail.xml" value="0.1953125" />
+        <entry key="..\:/gwl/MyBus_v4/app/src/main/res/menu/navi_menu.xml" value="0.25364583333333335" />
       </map>
     </option>
   </component>

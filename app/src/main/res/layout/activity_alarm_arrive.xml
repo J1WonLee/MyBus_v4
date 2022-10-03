@@ -22,50 +22,49 @@
         app:titleCentered="true" />
 
 
-    <TextView
-        android:id="@+id/first_remain_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="56dp"
-        android:text="n분 n초"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toTopOf="@+id/bus_route_name"
-        app:layout_constraintStart_toEndOf="@+id/bus_route_name" />
+        <TextView
+            android:id="@+id/first_remain_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="56dp"
+            android:text="n분 n초"
+            android:textSize="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/bus_route_name"
+            app:layout_constraintStart_toEndOf="@+id/bus_route_name" />
 
     <TextView
         android:id="@+id/bus_route_name"
-        android:layout_width="70dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="140dp"
         android:text="노선 번호"
-        android:textSize="14sp"
-        app:layout_constraintHorizontal_bias="1.0"
+        android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <TextView
-        android:id="@+id/second_remain_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="n분 n초"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="@+id/first_remain_time"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/first_remain_time"
-        app:layout_constraintTop_toBottomOf="@+id/first_remain_time" />
+            android:id="@+id/second_remain_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="n분 n초"
+            android:textSize="15dp"
+            app:layout_constraintEnd_toEndOf="@+id/first_remain_time"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/first_remain_time"
+            app:layout_constraintTop_toBottomOf="@+id/first_remain_time" />
 
 
-    <ImageView
-        android:id="@+id/add_alarm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/first_remain_seat"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/first_remain_seat"
-        app:srcCompat="@drawable/ic_baseline_add_alarm_24" />
+        <ImageView
+            android:id="@+id/add_alarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="27dp"
+            app:layout_constraintBottom_toBottomOf="@+id/first_remain_seat"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/first_remain_seat"
+            app:srcCompat="@drawable/ic_baseline_add_alarm_24" />
 
     <ImageView
         android:id="@+id/add_alarm2"
@@ -73,9 +72,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/second_remain_seat"
         app:layout_constraintEnd_toEndOf="@+id/add_alarm"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/add_alarm"
         app:layout_constraintTop_toTopOf="@+id/second_remain_seat"
-        app:layout_constraintVertical_bias="0.625"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/ic_baseline_add_alarm_24" />
 
     <TextView
@@ -83,23 +83,46 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="n전"
-        android:textSize="12sp"
+        android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="@+id/second_remain_time"
         app:layout_constraintEnd_toEndOf="@+id/first_remain_seat"
-        app:layout_constraintHorizontal_bias="0.0"
+
         app:layout_constraintStart_toStartOf="@+id/first_remain_seat"
-        app:layout_constraintTop_toTopOf="@+id/second_remain_time" />
+        app:layout_constraintTop_toTopOf="@+id/second_remain_time"
+       />
 
     <TextView
         android:id="@+id/first_remain_seat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
+        android:layout_marginEnd="60dp"
         android:text="n전"
-        android:textSize="12sp"
+        android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="@+id/first_remain_time"
         app:layout_constraintEnd_toStartOf="@+id/add_alarm"
-        app:layout_constraintTop_toTopOf="@+id/first_remain_time" />
+        app:layout_constraintTop_toTopOf="@+id/first_remain_time"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <LinearLayout
+        android:id="@+id/liner_click_text"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_marginTop="52dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/second_remain_time">
+
+        <TextView
+            android:id="@+id/here_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="'알람'을 클릭해서 도착 알림을 받아보세요"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"/>
+
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/arr_alarm_refresh_btn"

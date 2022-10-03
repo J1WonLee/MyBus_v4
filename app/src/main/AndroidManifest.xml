@@ -2,12 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.mybus">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission
         android:name="android.permission.ACCESS_NOTIFICATION_POLICY"
         tools:remove="android:maxSdkVersion" />
@@ -24,16 +26,29 @@
         android:theme="@style/Theme.MyBus"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".menu.SettingActivity"
+            android:exported="false" />
+
         <receiver
-            android:name=".alarmservice.RepeatAlarmReceiver"
+            android:name=".alarmservice.AlarmReceiver"
             android:directBootAware="true"
-            android:enabled="true"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
+                <action android:name="stop_alarm" />
+                <action android:name="start_alarm" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+                <action android:name="com.example.mybus.alarmservice.SchAlarm_Start" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".alarmservice.RepeatAlarmReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
 
         <activity
             android:name=".menu.alarm.UpdateAlarmActivity"
@@ -44,21 +59,6 @@
             android:name=".alarmservice.AlarmService"
             android:enabled="true"
             android:exported="true" />
-
-        <receiver
-            android:name=".alarmservice.AlarmReceiver"
-            android:directBootAware="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="stop_alarm" />
-                <action android:name="start_alarm" />
-                <action android:name="com.example.mybus.alarmservice.SchAlarm_Start" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
-                <action android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
 
         <activity
             android:name=".menu.alarm.AddAlarmFavListActivity"
@@ -84,8 +84,8 @@
         <activity
             android:name=".menu.FireBaseSyncActivity"
             android:exported="false"
-            android:theme="@style/Transparent"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Transparent" />
         <activity
             android:name=".menu.alarm.AlarmArriveActivity"
             android:exported="false"
@@ -125,6 +125,7 @@
         <activity
             android:name=".search.SearchActivity"
             android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:screenOrientation="portrait" />
         <activity
             android:name=".menu.OpenSourceActivity"

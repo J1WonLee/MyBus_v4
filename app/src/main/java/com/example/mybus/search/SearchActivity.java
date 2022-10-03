@@ -20,6 +20,7 @@ import com.example.mybus.ActivityAnimate;
 import com.example.mybus.MainActivity;
 import com.example.mybus.R;
 import com.example.mybus.databinding.ActivitySearchBinding;
+import com.example.mybus.menu.alarm.AddAlarmFavListActivity;
 import com.example.mybus.viewmodel.SearchViewModel;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -68,13 +69,24 @@ public class SearchActivity extends AppCompatActivity implements ActivityAnimate
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        moveMain();
+        if (getIntent().getBooleanExtra("isAlarm", false)){
+            moveAlarm();
+        }else{
+            moveMain();
+        }
+
     }
 
     public void moveMain(){
         Intent mainIntent = new Intent(this, MainActivity.class);
         mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(mainIntent);
+    }
+
+    public void moveAlarm(){
+        Intent moveAlarm = new Intent(this, AddAlarmFavListActivity.class);
+        startActivity(moveAlarm);
+        finishAfterTransition();
     }
 
     @Override

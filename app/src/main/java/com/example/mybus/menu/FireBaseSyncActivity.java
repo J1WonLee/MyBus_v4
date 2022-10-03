@@ -65,6 +65,7 @@ public class FireBaseSyncActivity extends AppCompatActivity implements ActivityA
             finish();
             exitAnimate();
         }
+//        if (loginId == null)        loginId = "2407768987";
     }
 
     public void getFbFavList(String loginId){
@@ -124,6 +125,7 @@ public class FireBaseSyncActivity extends AppCompatActivity implements ActivityA
                         public void run() {
                             Toast.makeText(FireBaseSyncActivity.this, "동기화 완료!", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(FireBaseSyncActivity.this, MainActivity.class);
+                            intent.putExtra("synced", true);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                             finish();

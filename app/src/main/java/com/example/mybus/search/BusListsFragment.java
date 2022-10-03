@@ -4,6 +4,7 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.input.InputManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -57,7 +59,7 @@ public class BusListsFragment extends Fragment implements ActivityAnimate {
     private SharedPreferences sharedPreferences;
     private boolean isRecentChk = true;
     private EditText inputText;
-
+    private InputMethodManager inputManager;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +70,8 @@ public class BusListsFragment extends Fragment implements ActivityAnimate {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bus_lists, container, false);
         inputText = binding.searchBusInput;
+        inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        hideKeyboard();
         getEditFocus();
         getRecentChk();
         initRecycler();
@@ -95,10 +99,17 @@ public class BusListsFragment extends Fragment implements ActivityAnimate {
         return binding.getRoot();
     }
 
+    public void hideKeyboard(){
+        inputText.setOnClickListener(view -> {
+            inputManager.showSoftInput(inputText, 0);
+        });
+    }
+
     public void getEditFocus(){
         inputText.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
+                hideKeyboard();
                 inputText.requestFocus();
             }
         });
@@ -180,6 +191,7 @@ public class BusListsFragment extends Fragment implements ActivityAnimate {
     @Override
     public void onResume() {
         super.onResume();
+        inputManager.hideSoftInputFromWindow(inputText.getWindowToken(), 0);
         binding.searchBusInput.requestFocus();
     }
 
